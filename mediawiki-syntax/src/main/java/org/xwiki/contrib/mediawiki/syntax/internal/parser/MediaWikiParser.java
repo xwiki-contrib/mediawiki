@@ -39,7 +39,7 @@ import org.xwiki.rendering.syntax.Syntax;
  * @version $Id: 82fb920b4209cb0616bebf0e226334e618a28144 $
  */
 @Component
-@Named("mediawiki/1.6")
+@Named(MediaWikiStreamParser.MEDIAWIKI_1_6_STRING)
 @Singleton
 public class MediaWikiParser implements Parser
 {
@@ -47,7 +47,7 @@ public class MediaWikiParser implements Parser
      * Streaming Markdown Parser.
      */
     @Inject
-    @Named("mediawiki/1.0")
+    @Named(MediaWikiStreamParser.MEDIAWIKI_1_6_STRING)
     private StreamParser mediawikiStreamParser;
 
     @Override

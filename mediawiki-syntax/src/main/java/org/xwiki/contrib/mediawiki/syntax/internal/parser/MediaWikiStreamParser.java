@@ -31,6 +31,7 @@ import org.apache.commons.io.IOUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.converter.EventConverter;
 import org.xwiki.rendering.listener.Listener;
+import org.xwiki.rendering.listener.MetaData;
 import org.xwiki.rendering.parser.ParseException;
 import org.xwiki.rendering.parser.StreamParser;
 import org.xwiki.rendering.syntax.Syntax;
@@ -44,7 +45,7 @@ import info.bliki.wiki.model.WikiModel;
  * @version $Id: fcd59f6c7ae81ffec64f5df3ca333eca4eaf18b3 $
  */
 @Component
-@Named("mediawiki/1.0")
+@Named(MediaWikiStreamParser.MEDIAWIKI_1_6_STRING)
 @Singleton
 public class MediaWikiStreamParser implements StreamParser
 {
@@ -57,6 +58,11 @@ public class MediaWikiStreamParser implements StreamParser
      * The syntax with version.
      */
     public static final Syntax MEDIAWIKI_1_6 = new Syntax(MEDIAWIKI, "1.6");
+
+    /**
+     * The String version of the syntax.
+     */
+    public static final String MEDIAWIKI_1_6_STRING = "mediawiki/1.6";
 
     @Inject
     private Provider<EventConverter> converterProvider;
@@ -74,14 +80,24 @@ public class MediaWikiStreamParser implements StreamParser
         EventConverter converter = this.converterProvider.get();
         converter.init(listener);
 
-        WikiModel wikiModel = new WikiModel("/${image}", "/${title}");
+        EventWikiModel wikiModel = new EventWikiModel();
 
-        // Parse
+        MetaData metaData = new MetaData();
+        metaData.addMetaData(MetaData.SYNTAX, getSyntax());
+
+        listener.beginDocument(metaData);
+
         try {
-            wikiModel.render(converter, IOUtils.toString(source), null, false, false);
-            // System.out.println(WikiModel.toHtml(IOUtils.toString(source)));
+            // Get content
+            String sourceString = IOUtils.toString(source);
+
+            // Parse
+            wikiModel.render(converter, sourceString, null, false, false);
+            //System.out.println(WikiModel.toHtml(sourceString));
         } catch (IOException e) {
             throw new ParseException("Failed to parse source", e);
         }
+
+        listener.endDocument(metaData);
     }
 }

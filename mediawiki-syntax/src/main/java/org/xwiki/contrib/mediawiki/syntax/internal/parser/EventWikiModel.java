@@ -17,23 +17,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
+package org.xwiki.contrib.mediawiki.syntax.internal.parser;
 
-import org.xwiki.filter.FilterException;
-import org.xwiki.rendering.block.AbstractBlock;
+import info.bliki.wiki.model.WikiModel;
 
-import info.bliki.wiki.model.IWikiModel;
-
-public class OnBlockEventGenerator extends AbstractBlockEventGenerator
+/**
+ * Custom WikiModel.
+ * 
+ * @version $Id$
+ */
+public class EventWikiModel extends WikiModel
 {
-    public OnBlockEventGenerator(AbstractBlock block)
+    /**
+     * Default constructor.
+     */
+    public EventWikiModel()
     {
-        super(block);
-    }
-
-    @Override
-    public void traverse(IWikiModel model) throws FilterException
-    {
-        this.block.traverse(getListener());
+        super("${image}", "${title}");
     }
 }

@@ -1,3 +1,22 @@
+/*
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
 import org.xwiki.filter.FilterException;
@@ -30,25 +49,30 @@ public abstract class AbstractEventGenerator implements EventGenerator
         return (AbstractEventGenerator) super.clone();
     }
 
-    protected void begin(Listener listener) throws FilterException
+    protected Listener getListener()
+    {
+        return this.converter.getListener();
+    }
+
+    protected void begin() throws FilterException
     {
         // To overwrite
     }
 
-    protected void end(Listener listener) throws FilterException
+    protected void end() throws FilterException
     {
         // To overwrite
     }
 
     @Override
-    public void traverse(Listener listener, IWikiModel model) throws FilterException
+    public void traverse(IWikiModel model) throws FilterException
     {
-        begin(listener);
+        begin();
 
         if (this.token instanceof TagNode) {
             this.converter.traverse(((TagNode) this.token).getChildren(), model);
         }
 
-        end(listener);
+        end();
     }
 }

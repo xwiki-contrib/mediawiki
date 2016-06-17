@@ -19,18 +19,20 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
-import org.xwiki.rendering.block.AbstractBlock;
+import java.util.Map;
+
+import org.xwiki.filter.FilterException;
 
 import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.TagNode;
+import info.bliki.wiki.model.IWikiModel;
 
-public abstract class AbstractBlockEventGenerator extends AbstractEventGenerator
+public class ParagraphEventGenerator extends AbstractEventGenerator
 {
-    protected AbstractBlock block;
+    private Map<String, String> parameters;
 
-    public AbstractBlockEventGenerator(AbstractBlock block)
+    public ParagraphEventGenerator()
     {
-        this.block = block;
     }
 
     @Override
@@ -39,17 +41,31 @@ public abstract class AbstractBlockEventGenerator extends AbstractEventGenerator
         super.init(token, converter);
 
         if (token instanceof TagNode) {
-            this.block.setParameters(((TagNode) token).getAttributes());
+            this.parameters = ((TagNode) token).getAttributes();
         }
     }
 
     @Override
-    public AbstractBlockEventGenerator clone() throws CloneNotSupportedException
+    public void begin()
     {
-        AbstractBlockEventGenerator blockEvent = (AbstractBlockEventGenerator) super.clone();
+        getListener().beginParagraph(this.parameters);
+    }
 
-        blockEvent.block = (AbstractBlock) this.block.clone();
+    @Override
+    public void end()
+    {
+        getListener().endParagraph(this.parameters);
+    }
 
-        return blockEvent;
+    @Override
+    public void traverse(IWikiModel model) throws FilterException
+    {
+        // FIXME: hack to workaround
+        // https://bitbucket.org/axelclk/info.bliki.wiki/issues/32/standalone-generate-an-empty-ptag-followed
+        if (this.token instanceof TagNode) {
+            if (!((TagNode) this.token).getChildren().isEmpty()) {
+                super.traverse(model);
+            }
+        }
     }
 }

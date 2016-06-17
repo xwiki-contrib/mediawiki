@@ -1,3 +1,22 @@
+/*
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
 import java.io.IOException;
@@ -10,7 +29,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
@@ -18,7 +36,6 @@ import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
 import org.xwiki.filter.FilterException;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.BulletedListBlock;
-import org.xwiki.rendering.block.DefinitionListBlock;
 import org.xwiki.rendering.block.FormatBlock;
 import org.xwiki.rendering.block.GroupBlock;
 import org.xwiki.rendering.block.HeaderBlock;
@@ -26,7 +43,6 @@ import org.xwiki.rendering.block.HorizontalLineBlock;
 import org.xwiki.rendering.block.ListItemBlock;
 import org.xwiki.rendering.block.NewLineBlock;
 import org.xwiki.rendering.block.NumberedListBlock;
-import org.xwiki.rendering.block.ParagraphBlock;
 import org.xwiki.rendering.block.TableBlock;
 import org.xwiki.rendering.block.TableCellBlock;
 import org.xwiki.rendering.block.TableHeadCellBlock;
@@ -43,15 +59,17 @@ import info.bliki.htmlcleaner.ContentToken;
 import info.bliki.htmlcleaner.TagNode;
 import info.bliki.htmlcleaner.TagToken;
 import info.bliki.wiki.filter.ITextConverter;
-import info.bliki.wiki.filter.WPCell;
 import info.bliki.wiki.filter.WPList;
-import info.bliki.wiki.filter.WPList.InternalList;
-import info.bliki.wiki.filter.WPListElement;
-import info.bliki.wiki.filter.WPRow;
 import info.bliki.wiki.filter.WPTable;
 import info.bliki.wiki.model.Configuration;
 import info.bliki.wiki.model.IWikiModel;
 import info.bliki.wiki.model.ImageFormat;
+import info.bliki.wiki.tags.BrTag;
+import info.bliki.wiki.tags.HrTag;
+import info.bliki.wiki.tags.NowikiTag;
+import info.bliki.wiki.tags.PreTag;
+import info.bliki.wiki.tags.SourceTag;
+import info.bliki.wiki.tags.TableOfContentTag;
 import info.bliki.wiki.tags.WPBoldItalicTag;
 import info.bliki.wiki.tags.util.INoBodyParsingTag;
 import info.bliki.wiki.tags.util.TagStack;
@@ -63,11 +81,11 @@ public class EventConverter implements ITextConverter
     private static final Map<String, EventGenerator> BLOCK_MAP = new HashMap<>();
 
     static {
-        BLOCK_MAP.put("br", new OnBlockEventGenerator(new NewLineBlock()));
-        BLOCK_MAP.put("hr", new OnBlockEventGenerator(new HorizontalLineBlock()));
+        BLOCK_MAP.put(new BrTag().getName(), new OnBlockEventGenerator(new NewLineBlock()));
+        BLOCK_MAP.put(new HrTag().getName(), new OnBlockEventGenerator(new HorizontalLineBlock()));
 
-        BLOCK_MAP.put("nowiki", new VerbatimEventGenerator(true));
-        BLOCK_MAP.put("pre", new VerbatimEventGenerator(false));
+        BLOCK_MAP.put(new NowikiTag().getName(), new VerbatimEventGenerator(true));
+        BLOCK_MAP.put(new PreTag().getName(), new VerbatimEventGenerator(false));
         // TODO: BLOCK_MAP.put("math", new MathTag());
         // TODO: BLOCK_MAP.put("embed", new EmbedTag());
         // TODO: BLOCK_MAP.put("ref", new RefTag());
@@ -75,38 +93,38 @@ public class EventConverter implements ITextConverter
 
         // see https://www.mediawiki.org/wiki/Extension:SyntaxHighlight
         BLOCK_MAP.put("syntaxhighlight", new SourceEventGenerator());
-        BLOCK_MAP.put("source", new SourceEventGenerator());
-        BLOCK_MAP.put("code", new SourceEventGenerator());
+        BLOCK_MAP.put(new SourceTag().getName(), new SourceEventGenerator());
+        BLOCK_MAP.put(Configuration.HTML_CODE_OPEN.getName(), new SourceEventGenerator());
 
         // TODO: BLOCK_MAP.put("a", HTML_A_OPEN);
-        BLOCK_MAP.put("h1",
+        BLOCK_MAP.put(Configuration.HTML_H1_OPEN.getName(),
             new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL1)));
-        BLOCK_MAP.put("h2",
+        BLOCK_MAP.put(Configuration.HTML_H2_OPEN.getName(),
             new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL2)));
-        BLOCK_MAP.put("h3",
+        BLOCK_MAP.put(Configuration.HTML_H3_OPEN.getName(),
             new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL3)));
-        BLOCK_MAP.put("h4",
+        BLOCK_MAP.put(Configuration.HTML_H4_OPEN.getName(),
             new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL4)));
-        BLOCK_MAP.put("h5",
+        BLOCK_MAP.put(Configuration.HTML_H5_OPEN.getName(),
             new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL5)));
-        BLOCK_MAP.put("h6",
+        BLOCK_MAP.put(Configuration.HTML_H6_OPEN.getName(),
             new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL6)));
 
-        BLOCK_MAP.put("em",
+        BLOCK_MAP.put(Configuration.HTML_EM_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.BOLD)));
-        BLOCK_MAP.put("i",
+        BLOCK_MAP.put(Configuration.HTML_ITALIC_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.ITALIC)));
-        BLOCK_MAP.put("b",
+        BLOCK_MAP.put(Configuration.HTML_BOLD_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.BOLD)));
-        BLOCK_MAP.put("bi", new BoldItalicEventGenerator());
-        BLOCK_MAP.put("strong",
+        BLOCK_MAP.put(new WPBoldItalicTag().getName(), new BoldItalicEventGenerator());
+        BLOCK_MAP.put(Configuration.HTML_STRONG_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.BOLD)));
-        BLOCK_MAP.put("u",
+        BLOCK_MAP.put(Configuration.HTML_UNDERLINE_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.UNDERLINED)));
-        BLOCK_MAP.put("tt",
+        BLOCK_MAP.put(Configuration.HTML_TT_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.MONOSPACE)));
 
-        BLOCK_MAP.put("p", new BeginEndBlockEventGenerator(new ParagraphBlock(Collections.<Block>emptyList())));
+        BLOCK_MAP.put(Configuration.HTML_PARAGRAPH_OPEN.getName(), new ParagraphEventGenerator());
 
         // TODO: BLOCK_MAP.put("blockquote", HTML_BLOCKQUOTE_OPEN);
 
@@ -116,31 +134,38 @@ public class EventConverter implements ITextConverter
         // TODO: BLOCK_MAP.put("big", HTML_BIG_OPEN);
         // TODO: BLOCK_MAP.put("del", HTML_DEL_OPEN);
 
-        BLOCK_MAP.put("sub",
+        BLOCK_MAP.put(Configuration.HTML_SUB_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.SUBSCRIPT)));
-        BLOCK_MAP.put("sup",
+        BLOCK_MAP.put(Configuration.HTML_SUP_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.SUPERSCRIPT)));
-        BLOCK_MAP.put("strike",
+        BLOCK_MAP.put(Configuration.HTML_STRIKE_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.STRIKEDOUT)));
 
-        BLOCK_MAP.put("{||}", new BeginEndBlockEventGenerator(new TableBlock(Collections.<Block>emptyList())));
+        BLOCK_MAP.put(new WPTable(null).getName(), new WPTableBlockEventGenerator());
 
-        BLOCK_MAP.put("table", new BeginEndBlockEventGenerator(new TableBlock(Collections.<Block>emptyList())));
-        BLOCK_MAP.put("th", new BeginEndBlockEventGenerator(new TableHeadCellBlock(Collections.<Block>emptyList())));
-        BLOCK_MAP.put("tr", new BeginEndBlockEventGenerator(new TableRowBlock(Collections.<Block>emptyList())));
-        BLOCK_MAP.put("td", new BeginEndBlockEventGenerator(new TableCellBlock(Collections.<Block>emptyList())));
+        BLOCK_MAP.put(Configuration.HTML_TABLE_OPEN.getName(),
+            new BeginEndBlockEventGenerator(new TableBlock(Collections.<Block>emptyList())));
+        BLOCK_MAP.put(Configuration.HTML_TH_OPEN.getName(),
+            new BeginEndBlockEventGenerator(new TableHeadCellBlock(Collections.<Block>emptyList())));
+        BLOCK_MAP.put(Configuration.HTML_TR_OPEN.getName(),
+            new BeginEndBlockEventGenerator(new TableRowBlock(Collections.<Block>emptyList())));
+        BLOCK_MAP.put(Configuration.HTML_TD_OPEN.getName(),
+            new BeginEndBlockEventGenerator(new TableCellBlock(Collections.<Block>emptyList())));
         // TODO: BLOCK_MAP.put("caption", HTML_CAPTION_OPEN);
 
-        BLOCK_MAP.put("ul", new BeginEndBlockEventGenerator(new BulletedListBlock(Collections.<Block>emptyList())));
-        BLOCK_MAP.put("ol", new BeginEndBlockEventGenerator(new NumberedListBlock(Collections.<Block>emptyList())));
-        BLOCK_MAP.put("li", new BeginEndBlockEventGenerator(new ListItemBlock(Collections.<Block>emptyList())));
-
-        BLOCK_MAP.put("dl", new BeginEndBlockEventGenerator(new DefinitionListBlock(Collections.<Block>emptyList())));
+        BLOCK_MAP.put(Configuration.HTML_UL_OPEN.getName(),
+            new BeginEndBlockEventGenerator(new BulletedListBlock(Collections.<Block>emptyList())));
+        BLOCK_MAP.put(Configuration.HTML_OL_OPEN.getName(),
+            new BeginEndBlockEventGenerator(new NumberedListBlock(Collections.<Block>emptyList())));
+        BLOCK_MAP.put(Configuration.HTML_LI_OPEN.getName(),
+            new BeginEndBlockEventGenerator(new ListItemBlock(Collections.<Block>emptyList())));
+        BLOCK_MAP.put(new WPList().getName(),
+            new WPListBlockEventGenerator(new ListItemBlock(Collections.<Block>emptyList())));
 
         // TODO: BLOCK_MAP.put("font", HTML_FONT_OPEN);
         // TODO: BLOCK_MAP.put("center", HTML_CENTER_OPEN);
-        BLOCK_MAP.put("div", new BeginEndBlockEventGenerator(new GroupBlock()));
-        BLOCK_MAP.put("span",
+        BLOCK_MAP.put(Configuration.HTML_DIV_OPEN.getName(), new BeginEndBlockEventGenerator(new GroupBlock()));
+        BLOCK_MAP.put(Configuration.HTML_SPAN_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.NONE)));
 
         // TODO: BLOCK_MAP.put("abbr", HTML_ABBR_OPEN);
@@ -163,6 +188,11 @@ public class EventConverter implements ITextConverter
     public void init(Listener listener)
     {
         this.listener = listener;
+    }
+
+    Listener getListener()
+    {
+        return this.listener;
     }
 
     @Override
@@ -199,7 +229,7 @@ public class EventConverter implements ITextConverter
         }
     }
 
-    private void traverse(TagStack tagStack, IWikiModel model) throws FilterException
+    void traverse(TagStack tagStack, IWikiModel model) throws FilterException
     {
         if (tagStack != null) {
             traverse(tagStack.getNodeList(), model);
@@ -210,122 +240,6 @@ public class EventConverter implements ITextConverter
     @Override
     public void imageNodeToText(TagNode imageTagNode, ImageFormat imageFormat, Appendable resultBuffer,
         IWikiModel model) throws IOException
-    {
-
-    }
-
-    private void onWPList(WPList tag, IWikiModel model) throws FilterException
-    {
-        traverse(tag.getNestedElements(), model);
-    }
-
-    private BeginEndBlockEventGenerator createListBlockEvent(InternalList list)
-    {
-        switch (list.getChar()) {
-            case WPList.UL_CHAR:
-                return new BeginEndBlockEventGenerator(new BulletedListBlock(Collections.<Block>emptyList()));
-            case WPList.OL_CHAR:
-                return new BeginEndBlockEventGenerator(new NumberedListBlock(Collections.<Block>emptyList()));
-            default:
-                return new BeginEndBlockEventGenerator(new DefinitionListBlock(Collections.<Block>emptyList()));
-        }
-    }
-
-    private BeginEndBlockEventGenerator createListElementBlockEvent(WPListElement item)
-    {
-        return new BeginEndBlockEventGenerator(new ListItemBlock(Collections.<Block>emptyList()));
-    }
-
-    private void onInternalList(InternalList list, IWikiModel model) throws FilterException
-    {
-        BeginEndBlockEventGenerator blockEvent = createListBlockEvent(list);
-
-        blockEvent.begin(this.listener);
-
-        traverse(list, model);
-
-        blockEvent.end(this.listener);
-    }
-
-    private void traverse(InternalList list, IWikiModel model) throws FilterException
-    {
-        for (Object element : list) {
-            if (element instanceof InternalList) {
-                onInternalList((InternalList) element, model);
-            } else {
-                onWPListElement((WPListElement) element, model);
-            }
-        }
-    }
-
-    private void onWPListElement(WPListElement listeElement, IWikiModel model) throws FilterException
-    {
-        this.listener.beginListItem();
-
-        traverse(listeElement.getTagStack(), model);
-
-        this.listener.endListItem();
-    }
-
-    private void onWPTable(WPTable table, IWikiModel model) throws FilterException
-    {
-        this.listener.beginTable(table.getAttributes());
-
-        for (int i = 0; i < table.getRowsSize(); ++i) {
-            onWPRow(table.get(i), model);
-        }
-
-        this.listener.endTable(table.getAttributes());
-    }
-
-    private void onWPRow(WPRow row, IWikiModel model) throws FilterException
-    {
-        Map<String, String> attributes = getWPRowAttributes(row);
-
-        this.listener.beginTableRow(attributes);
-
-        for (int i = 0; i < row.getNumColumns(); ++i) {
-            onWPCell(row.get(i), model);
-        }
-
-        this.listener.endTableRow(attributes);
-    }
-
-    private void onWPCell(WPCell cell, IWikiModel model) throws FilterException
-    {
-        Map<String, String> attributes = cell.getNodeAttributes();
-
-        switch (cell.getType()) {
-            case WPCell.CAPTION:
-                // TODO: add support for table caption in Rendering API
-                break;
-
-            case WPCell.TH:
-                this.listener.beginTableHeadCell(attributes);
-                traverse(cell.getTagStack(), model);
-                this.listener.endTableHeadCell(attributes);
-                break;
-
-            default:
-                this.listener.beginTableCell(attributes);
-                traverse(cell.getTagStack(), model);
-                this.listener.endTableCell(attributes);
-                break;
-        }
-    }
-
-    // FIXME: getrid of this hack when
-    // https://bitbucket.org/axelclk/info.bliki.wiki/pull-requests/3/allow-accessing-wprow-attributes is applied
-    private Map<String, String> getWPRowAttributes(WPRow row)
-    {
-        try {
-            return (Map<String, String>) FieldUtils.readDeclaredField(row, "fAttributes", true);
-        } catch (Exception e) {
-            return Listener.EMPTY_PARAMETERS;
-        }
-    }
-
-    private void onWPBoldItalicTag(WPBoldItalicTag tag, IWikiModel model)
     {
 
     }
@@ -349,25 +263,24 @@ public class EventConverter implements ITextConverter
 
     private void onTagToken(TagToken token, IWikiModel model) throws FilterException
     {
-        if (token instanceof WPList) {
-            onWPList((WPList) token, model);
-        } else if (token instanceof WPTable) {
-            onWPTable((WPTable) token, model);
-        } else {
-            EventGenerator blockEvent = createBlockEvent(token);
+        EventGenerator blockEvent = createBlockEvent(token);
 
-            if (blockEvent != null) {
-                blockEvent.traverse(this.listener, model);
-            } else {
-                if (token instanceof TagNode) {
-                    traverse(((TagNode) token).getChildren(), model);
-                }
+        if (blockEvent != null) {
+            blockEvent.traverse(model);
+        } else {
+            if (token instanceof TagNode) {
+                traverse(((TagNode) token).getChildren(), model);
             }
         }
     }
 
     public EventGenerator createBlockEvent(TagToken token)
     {
+        // TODO: add support for toc
+        if (token instanceof TableOfContentTag) {
+            return null;
+        }
+
         EventGenerator event = BLOCK_MAP.get(token.getName());
 
         if (event != null) {

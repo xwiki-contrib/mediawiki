@@ -1,16 +1,22 @@
 .#-----------------------------------------------------
 .input|mediawiki/1.6|ignore
 .#-----------------------------------------------------
-This is <nowiki>''NOT BOLD''</nowiki>
+Text before
+----
+Text after
 .#-----------------------------------------------------
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
 beginParagraph
-onWord [This]
+onWord [Text]
 onSpace
-onWord [is]
+onWord [before]
+endParagraph
+onHorizontalLine
+beginParagraph
+onWord [Text]
 onSpace
-onVerbatim [''NOT BOLD''] [true]
+onWord [after]
 endParagraph
 endDocument
