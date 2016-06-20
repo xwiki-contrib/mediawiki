@@ -19,21 +19,20 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
+import java.util.Map;
+
 import org.xwiki.filter.FilterException;
 
 import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.TagNode;
 import info.bliki.wiki.model.IWikiModel;
 
-public class VerbatimEventGenerator extends AbstractEventGenerator<TagNode>
+public class BlockquoteEventGenerator extends AbstractEventGenerator
 {
-    private boolean inline;
+    private Map<String, String> parameters;
 
-    private String content;
-
-    public VerbatimEventGenerator(boolean inline)
+    public BlockquoteEventGenerator()
     {
-        this.inline = inline;
     }
 
     @Override
@@ -41,12 +40,18 @@ public class VerbatimEventGenerator extends AbstractEventGenerator<TagNode>
     {
         super.init(token, converter);
 
-        this.content = this.token.getBodyString();
+        if (token instanceof TagNode) {
+            this.parameters = ((TagNode) token).getAttributes();
+        }
     }
 
     @Override
     public void traverse(IWikiModel model) throws FilterException
     {
-        getListener().onVerbatim(this.content, this.inline, this.token.getAttributes());
+        getListener().beginQuotation(this.parameters);
+
+        // TODO: convert children into quitation lines
+
+        getListener().endQuotation(this.parameters);
     }
 }

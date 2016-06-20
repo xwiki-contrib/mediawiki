@@ -1,1 +1,1 @@
-[mailto:john@doe.com]
+mailto:john@doe.com

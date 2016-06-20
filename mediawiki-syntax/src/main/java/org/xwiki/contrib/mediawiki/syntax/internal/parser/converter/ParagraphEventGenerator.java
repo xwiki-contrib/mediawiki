@@ -19,18 +19,14 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
-import java.util.Map;
-
 import org.xwiki.filter.FilterException;
 
 import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.TagNode;
 import info.bliki.wiki.model.IWikiModel;
 
-public class ParagraphEventGenerator extends AbstractEventGenerator
+public class ParagraphEventGenerator extends AbstractEventGenerator<TagNode>
 {
-    private Map<String, String> parameters;
-
     public ParagraphEventGenerator()
     {
     }
@@ -39,22 +35,18 @@ public class ParagraphEventGenerator extends AbstractEventGenerator
     public void init(BaseToken token, EventConverter converter)
     {
         super.init(token, converter);
-
-        if (token instanceof TagNode) {
-            this.parameters = ((TagNode) token).getAttributes();
-        }
     }
 
     @Override
     public void begin()
     {
-        getListener().beginParagraph(this.parameters);
+        getListener().beginParagraph(this.token.getAttributes());
     }
 
     @Override
     public void end()
     {
-        getListener().endParagraph(this.parameters);
+        getListener().endParagraph(this.token.getAttributes());
     }
 
     @Override
@@ -62,10 +54,8 @@ public class ParagraphEventGenerator extends AbstractEventGenerator
     {
         // FIXME: hack to workaround
         // https://bitbucket.org/axelclk/info.bliki.wiki/issues/32/standalone-generate-an-empty-ptag-followed
-        if (this.token instanceof TagNode) {
-            if (!((TagNode) this.token).getChildren().isEmpty()) {
-                super.traverse(model);
-            }
+        if (!((TagNode) this.token).getChildren().isEmpty()) {
+            super.traverse(model);
         }
     }
 }

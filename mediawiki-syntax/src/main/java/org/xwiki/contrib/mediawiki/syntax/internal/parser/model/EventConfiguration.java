@@ -17,36 +17,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
+package org.xwiki.contrib.mediawiki.syntax.internal.parser.model;
 
-import org.xwiki.filter.FilterException;
+import info.bliki.wiki.model.Configuration;
 
-import info.bliki.htmlcleaner.BaseToken;
-import info.bliki.htmlcleaner.TagNode;
-import info.bliki.wiki.model.IWikiModel;
-
-public class VerbatimEventGenerator extends AbstractEventGenerator<TagNode>
+/**
+ * Custom {@link Configuration}.
+ * 
+ * @version $Id$
+ */
+public class EventConfiguration extends Configuration
 {
-    private boolean inline;
-
-    private String content;
-
-    public VerbatimEventGenerator(boolean inline)
+    /**
+     * Default constructor.
+     */
+    public EventConfiguration()
     {
-        this.inline = inline;
+        addMacroTag("gallery");
     }
 
-    @Override
-    public void init(BaseToken token, EventConverter converter)
+    private void addMacroTag(String id)
     {
-        super.init(token, converter);
-
-        this.content = this.token.getBodyString();
-    }
-
-    @Override
-    public void traverse(IWikiModel model) throws FilterException
-    {
-        getListener().onVerbatim(this.content, this.inline, this.token.getAttributes());
+        addTokenTag(id, new MacroTag(id));
     }
 }

@@ -24,7 +24,7 @@ import org.xwiki.rendering.block.AbstractBlock;
 import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.TagNode;
 
-public abstract class AbstractBlockEventGenerator extends AbstractEventGenerator
+public abstract class AbstractBlockEventGenerator<T extends BaseToken> extends AbstractEventGenerator<T>
 {
     protected AbstractBlock block;
 

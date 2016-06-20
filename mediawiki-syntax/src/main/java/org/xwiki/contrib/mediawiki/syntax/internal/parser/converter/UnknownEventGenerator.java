@@ -27,7 +27,7 @@ import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.TagNode;
 import info.bliki.htmlcleaner.TagToken;
 
-public class UnknownEventGenerator extends AbstractEventGenerator
+public class UnknownEventGenerator extends AbstractEventGenerator<TagToken>
 {
     private String id;
 
@@ -44,9 +44,7 @@ public class UnknownEventGenerator extends AbstractEventGenerator
     {
         super.init(token, converter);
 
-        TagToken tagToken = (TagToken) token;
-
-        this.id = tagToken.getName();
+        this.id = this.token.getName();
 
         if (token instanceof TagNode) {
             this.parameters = new FilterEventParameters();

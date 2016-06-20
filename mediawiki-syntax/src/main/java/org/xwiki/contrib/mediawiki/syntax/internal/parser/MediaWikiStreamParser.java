@@ -30,6 +30,7 @@ import javax.inject.Singleton;
 import org.apache.commons.io.IOUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.converter.EventConverter;
+import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.EventWikiModel;
 import org.xwiki.rendering.listener.Listener;
 import org.xwiki.rendering.listener.MetaData;
 import org.xwiki.rendering.parser.ParseException;
@@ -67,6 +68,9 @@ public class MediaWikiStreamParser implements StreamParser
     @Inject
     private Provider<EventConverter> converterProvider;
 
+    @Inject
+    private Provider<EventWikiModel> modelProvider;
+
     @Override
     public Syntax getSyntax()
     {
@@ -80,7 +84,7 @@ public class MediaWikiStreamParser implements StreamParser
         EventConverter converter = this.converterProvider.get();
         converter.init(listener);
 
-        EventWikiModel wikiModel = new EventWikiModel();
+        EventWikiModel wikiModel = this.modelProvider.get();
 
         MetaData metaData = new MetaData();
         metaData.addMetaData(MetaData.SYNTAX, getSyntax());
@@ -93,7 +97,7 @@ public class MediaWikiStreamParser implements StreamParser
 
             // Parse
             wikiModel.render(converter, sourceString, null, false, false);
-            //System.out.println(WikiModel.toHtml(sourceString));
+            System.out.println(WikiModel.toHtml(sourceString));
         } catch (IOException e) {
             throw new ParseException("Failed to parse source", e);
         }

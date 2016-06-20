@@ -17,36 +17,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
+package org.xwiki.contrib.mediawiki.syntax.internal.parser.model;
 
-import org.xwiki.filter.FilterException;
-
-import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.TagNode;
-import info.bliki.wiki.model.IWikiModel;
+import info.bliki.wiki.tags.util.INoBodyParsingTag;
 
-public class VerbatimEventGenerator extends AbstractEventGenerator<TagNode>
+/**
+ * Make sure gallery macro content is not parsed by standard parser.
+ * 
+ * @version $Id$
+ */
+// TODO: a more complete version should probably be contributed upstream
+public class MacroTag extends TagNode implements INoBodyParsingTag
 {
-    private boolean inline;
-
-    private String content;
-
-    public VerbatimEventGenerator(boolean inline)
+    /**
+     * @param id the id of the macro
+     */
+    public MacroTag(String id)
     {
-        this.inline = inline;
-    }
-
-    @Override
-    public void init(BaseToken token, EventConverter converter)
-    {
-        super.init(token, converter);
-
-        this.content = this.token.getBodyString();
-    }
-
-    @Override
-    public void traverse(IWikiModel model) throws FilterException
-    {
-        getListener().onVerbatim(this.content, this.inline, this.token.getAttributes());
+        super(id);
     }
 }

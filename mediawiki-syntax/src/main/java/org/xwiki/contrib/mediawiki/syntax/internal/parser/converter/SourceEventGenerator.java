@@ -28,7 +28,7 @@ import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.wiki.model.IWikiModel;
 import info.bliki.wiki.tags.SourceTag;
 
-public class SourceEventGenerator extends AbstractEventGenerator
+public class SourceEventGenerator extends AbstractEventGenerator<SourceTag>
 {
     private boolean inline;
 
@@ -45,11 +45,9 @@ public class SourceEventGenerator extends AbstractEventGenerator
     {
         super.init(token, converter);
 
-        SourceTag source = (SourceTag) token;
+        this.content = this.token.getBodyString();
 
-        this.content = source.getBodyString();
-
-        Map<String, String> attributes = source.getAttributes();
+        Map<String, String> attributes = this.token.getAttributes();
 
         this.parameters = new LinkedHashMap<>();
         String language = attributes.get("lang");

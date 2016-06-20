@@ -19,34 +19,19 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
+import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.ImageTag;
 import org.xwiki.filter.FilterException;
 
-import info.bliki.htmlcleaner.BaseToken;
-import info.bliki.htmlcleaner.TagNode;
 import info.bliki.wiki.model.IWikiModel;
 
-public class VerbatimEventGenerator extends AbstractEventGenerator<TagNode>
+public class ImageEventGenerator extends AbstractEventGenerator<ImageTag>
 {
-    private boolean inline;
-
-    private String content;
-
-    public VerbatimEventGenerator(boolean inline)
+    public ImageEventGenerator()
     {
-        this.inline = inline;
     }
 
-    @Override
-    public void init(BaseToken token, EventConverter converter)
-    {
-        super.init(token, converter);
-
-        this.content = this.token.getBodyString();
-    }
-
-    @Override
     public void traverse(IWikiModel model) throws FilterException
     {
-        getListener().onVerbatim(this.content, this.inline, this.token.getAttributes());
+        getListener().onImage(this.token.getReference(), this.token.isFreestanding(), this.token.getAttributes());
     }
 }

@@ -1,0 +1,18 @@
+.#-----------------------------------------------------
+.input|mediawiki/1.6
+.#-----------------------------------------------------
+<gallery>
+File:file_name.ext|caption|alt=alt language
+File:file_name.ext|caption|alt=alt language
+</gallery>
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+onMacroStandalone [gallery] [] [
+File:file_name.ext|caption|alt=alt language
+File:file_name.ext|caption|alt=alt language
+]
+endParagraph
+endDocument

@@ -19,17 +19,14 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
-import java.util.Map;
-
 import org.xwiki.rendering.listener.Format;
+import org.xwiki.rendering.listener.Listener;
 
 import info.bliki.htmlcleaner.BaseToken;
-import info.bliki.htmlcleaner.TagNode;
+import info.bliki.wiki.tags.WPBoldItalicTag;
 
-public class BoldItalicEventGenerator extends AbstractEventGenerator
+public class BoldItalicEventGenerator extends AbstractEventGenerator<WPBoldItalicTag>
 {
-    private Map<String, String> parameters;
-
     public BoldItalicEventGenerator()
     {
     }
@@ -38,23 +35,19 @@ public class BoldItalicEventGenerator extends AbstractEventGenerator
     public void init(BaseToken token, EventConverter converter)
     {
         super.init(token, converter);
-
-        if (token instanceof TagNode) {
-            this.parameters = ((TagNode) token).getAttributes();
-        }
     }
 
     @Override
     public void begin()
     {
-        getListener().beginFormat(Format.BOLD, this.parameters);
-        getListener().beginFormat(Format.ITALIC, this.parameters);
+        getListener().beginFormat(Format.BOLD, this.token.getAttributes());
+        getListener().beginFormat(Format.ITALIC, Listener.EMPTY_PARAMETERS);
     }
 
     @Override
     public void end()
     {
-        getListener().endFormat(Format.ITALIC, this.parameters);
-        getListener().endFormat(Format.BOLD, this.parameters);
+        getListener().endFormat(Format.ITALIC, Listener.EMPTY_PARAMETERS);
+        getListener().endFormat(Format.BOLD, this.token.getAttributes());
     }
 }

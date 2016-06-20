@@ -19,6 +19,8 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
+import java.util.Map;
+
 import org.xwiki.filter.FilterException;
 import org.xwiki.rendering.listener.Listener;
 
@@ -26,9 +28,9 @@ import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.TagNode;
 import info.bliki.wiki.model.IWikiModel;
 
-public abstract class AbstractEventGenerator implements EventGenerator
+public abstract class AbstractEventGenerator<T extends BaseToken> implements EventGenerator
 {
-    protected BaseToken token;
+    protected T token;
 
     protected EventConverter converter;
 
@@ -39,7 +41,7 @@ public abstract class AbstractEventGenerator implements EventGenerator
     @Override
     public void init(BaseToken token, EventConverter converter)
     {
-        this.token = token;
+        this.token = (T) token;
         this.converter = converter;
     }
 
@@ -74,5 +76,16 @@ public abstract class AbstractEventGenerator implements EventGenerator
         }
 
         end();
+    }
+
+    public String getAttributeKey(Map<String, String> attributes, String targetKey)
+    {
+        for (String key : attributes.keySet()) {
+            if (key.equalsIgnoreCase(targetKey)) {
+                return key;
+            }
+        }
+
+        return null;
     }
 }

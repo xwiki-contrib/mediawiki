@@ -1,16 +1,13 @@
 .#-----------------------------------------------------
-.input|mediawiki/1.6|ignore
+.input|mediawiki/1.6
 .#-----------------------------------------------------
-This is <nowiki>''NOT BOLD''</nowiki>
+[[:Image:attach.ext]]
 .#-----------------------------------------------------
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
 beginParagraph
-onWord [This]
-onSpace
-onWord [is]
-onSpace
-onVerbatim [''NOT BOLD''] [true]
+beginLink [Typed = [true] Type = [attach] Reference = [attach.ext]] [false]
+endLink [Typed = [true] Type = [attach] Reference = [attach.ext]] [false]
 endParagraph
 endDocument

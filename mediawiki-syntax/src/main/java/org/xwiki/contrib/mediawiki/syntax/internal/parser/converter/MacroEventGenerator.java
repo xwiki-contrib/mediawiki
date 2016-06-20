@@ -27,7 +27,7 @@ import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.TagNode;
 import info.bliki.wiki.model.IWikiModel;
 
-public class MacroEventGenerator extends AbstractEventGenerator
+public class MacroEventGenerator extends AbstractEventGenerator<TagNode>
 {
     private String id;
 

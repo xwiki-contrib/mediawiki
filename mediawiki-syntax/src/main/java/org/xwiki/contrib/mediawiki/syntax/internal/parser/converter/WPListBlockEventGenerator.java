@@ -34,7 +34,7 @@ import info.bliki.wiki.filter.WPList.InternalList;
 import info.bliki.wiki.filter.WPListElement;
 import info.bliki.wiki.model.IWikiModel;
 
-public class WPListBlockEventGenerator extends BeginEndBlockEventGenerator
+public class WPListBlockEventGenerator extends BeginEndBlockEventGenerator<WPList>
 {
     public WPListBlockEventGenerator(AbstractBlock block)
     {
@@ -44,9 +44,7 @@ public class WPListBlockEventGenerator extends BeginEndBlockEventGenerator
     @Override
     public void traverse(IWikiModel model) throws FilterException
     {
-        WPList list = (WPList) this.token;
-
-        for (Object element : list.getNestedElements()) {
+        for (Object element : this.token.getNestedElements()) {
             if (element instanceof InternalList) {
                 traverse((InternalList) element, model);
             } else if (element instanceof WPListElement) {

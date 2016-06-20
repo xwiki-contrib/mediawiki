@@ -22,9 +22,10 @@ package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 import org.xwiki.filter.FilterException;
 import org.xwiki.rendering.block.AbstractBlock;
 
+import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.wiki.model.IWikiModel;
 
-public class OnBlockEventGenerator extends AbstractBlockEventGenerator
+public class OnBlockEventGenerator<T extends BaseToken> extends AbstractBlockEventGenerator<T>
 {
     public OnBlockEventGenerator(AbstractBlock block)
     {

@@ -30,7 +30,7 @@ import info.bliki.wiki.filter.WPRow;
 import info.bliki.wiki.filter.WPTable;
 import info.bliki.wiki.model.IWikiModel;
 
-public class WPTableBlockEventGenerator extends AbstractEventGenerator
+public class WPTableBlockEventGenerator extends AbstractEventGenerator<WPTable>
 {
     public WPTableBlockEventGenerator()
     {
@@ -39,15 +39,13 @@ public class WPTableBlockEventGenerator extends AbstractEventGenerator
     @Override
     public void traverse(IWikiModel model) throws FilterException
     {
-        WPTable table = (WPTable) this.token;
+        getListener().beginTable(this.token.getAttributes());
 
-        getListener().beginTable(table.getAttributes());
-
-        for (int i = 0; i < table.getRowsSize(); ++i) {
-            traverse(table.get(i), model);
+        for (int i = 0; i < this.token.getRowsSize(); ++i) {
+            traverse(this.token.get(i), model);
         }
 
-        getListener().endTable(table.getAttributes());
+        getListener().endTable(this.token.getAttributes());
     }
 
     private void traverse(WPRow row, IWikiModel model) throws FilterException

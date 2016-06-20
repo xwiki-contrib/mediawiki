@@ -21,7 +21,9 @@ package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
 import org.xwiki.rendering.block.AbstractBlock;
 
-public class BeginEndBlockEventGenerator extends AbstractBlockEventGenerator
+import info.bliki.htmlcleaner.BaseToken;
+
+public class BeginEndBlockEventGenerator<T extends BaseToken> extends AbstractBlockEventGenerator<T>
 {
     public BeginEndBlockEventGenerator(AbstractBlock block)
     {

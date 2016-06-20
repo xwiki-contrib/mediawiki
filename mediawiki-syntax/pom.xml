@@ -73,6 +73,7 @@
           <excludes>
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/AbstractBlockEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/AbstractEventGenerator.java,
+              org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/AEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/BeginEndBlockEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/BoldItalicEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/EventConverter.java,

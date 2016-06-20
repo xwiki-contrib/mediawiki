@@ -33,6 +33,8 @@ import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
+import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.ImageTag;
+import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.LinkTag;
 import org.xwiki.filter.FilterException;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.BulletedListBlock;
@@ -64,6 +66,7 @@ import info.bliki.wiki.filter.WPTable;
 import info.bliki.wiki.model.Configuration;
 import info.bliki.wiki.model.IWikiModel;
 import info.bliki.wiki.model.ImageFormat;
+import info.bliki.wiki.tags.ATag;
 import info.bliki.wiki.tags.BrTag;
 import info.bliki.wiki.tags.HrTag;
 import info.bliki.wiki.tags.NowikiTag;
@@ -96,7 +99,8 @@ public class EventConverter implements ITextConverter
         BLOCK_MAP.put(new SourceTag().getName(), new SourceEventGenerator());
         BLOCK_MAP.put(Configuration.HTML_CODE_OPEN.getName(), new SourceEventGenerator());
 
-        // TODO: BLOCK_MAP.put("a", HTML_A_OPEN);
+        BLOCK_MAP.put(new ATag().getName(), new AEventGenerator());
+
         BLOCK_MAP.put(Configuration.HTML_H1_OPEN.getName(),
             new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL1)));
         BLOCK_MAP.put(Configuration.HTML_H2_OPEN.getName(),
@@ -126,19 +130,21 @@ public class EventConverter implements ITextConverter
 
         BLOCK_MAP.put(Configuration.HTML_PARAGRAPH_OPEN.getName(), new ParagraphEventGenerator());
 
-        // TODO: BLOCK_MAP.put("blockquote", HTML_BLOCKQUOTE_OPEN);
+        BLOCK_MAP.put(Configuration.HTML_BLOCKQUOTE_OPEN.getName(), new BlockquoteEventGenerator());
 
         // TODO: BLOCK_MAP.put("var", HTML_VAR_OPEN);
-        // TODO: BLOCK_MAP.put("s", HTML_S_OPEN);
         // TODO: BLOCK_MAP.put("small", HTML_SMALL_OPEN);
         // TODO: BLOCK_MAP.put("big", HTML_BIG_OPEN);
-        // TODO: BLOCK_MAP.put("del", HTML_DEL_OPEN);
 
         BLOCK_MAP.put(Configuration.HTML_SUB_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.SUBSCRIPT)));
         BLOCK_MAP.put(Configuration.HTML_SUP_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.SUPERSCRIPT)));
         BLOCK_MAP.put(Configuration.HTML_STRIKE_OPEN.getName(),
+            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.STRIKEDOUT)));
+        BLOCK_MAP.put(Configuration.HTML_S_OPEN.getName(),
+            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.STRIKEDOUT)));
+        BLOCK_MAP.put(Configuration.HTML_DEL_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.STRIKEDOUT)));
 
         BLOCK_MAP.put(new WPTable(null).getName(), new WPTableBlockEventGenerator());
@@ -170,6 +176,9 @@ public class EventConverter implements ITextConverter
 
         // TODO: BLOCK_MAP.put("abbr", HTML_ABBR_OPEN);
         // TODO: BLOCK_MAP.put("cite", HTML_CITE_OPEN);
+
+        BLOCK_MAP.put(new LinkTag(null, false).getName(), new LinkEventGenerator());
+        BLOCK_MAP.put(new ImageTag(null, false).getName(), new ImageEventGenerator());
     }
 
     @Inject

@@ -17,36 +17,47 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
+package org.xwiki.contrib.mediawiki.syntax.internal.parser.model;
 
-import org.xwiki.filter.FilterException;
+import org.xwiki.rendering.listener.reference.ResourceReference;
 
-import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.TagNode;
-import info.bliki.wiki.model.IWikiModel;
 
-public class VerbatimEventGenerator extends AbstractEventGenerator<TagNode>
+/**
+ * Bypass various useless automatic stuff (like title and other generated parameters).
+ * 
+ * @version $Id$
+ */
+public class ImageTag extends TagNode
 {
-    private boolean inline;
+    private ResourceReference reference;
 
-    private String content;
+    private boolean freestanding;
 
-    public VerbatimEventGenerator(boolean inline)
+    /**
+     * Default constructor.
+     */
+    public ImageTag(ResourceReference reference, boolean freestanding)
     {
-        this.inline = inline;
+        super("xwiki.image");
+
+        this.reference = reference;
+        this.freestanding = freestanding;
+    }
+
+    public ResourceReference getReference()
+    {
+        return this.reference;
+    }
+
+    public boolean isFreestanding()
+    {
+        return this.freestanding;
     }
 
     @Override
-    public void init(BaseToken token, EventConverter converter)
+    public boolean isReduceTokenStack()
     {
-        super.init(token, converter);
-
-        this.content = this.token.getBodyString();
-    }
-
-    @Override
-    public void traverse(IWikiModel model) throws FilterException
-    {
-        getListener().onVerbatim(this.content, this.inline, this.token.getAttributes());
+        return false;
     }
 }

@@ -17,22 +17,47 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.mediawiki.syntax.internal.parser;
+package org.xwiki.contrib.mediawiki.syntax.internal.parser.model;
 
-import info.bliki.wiki.model.WikiModel;
+import org.xwiki.rendering.listener.reference.ResourceReference;
+
+import info.bliki.htmlcleaner.TagNode;
 
 /**
- * Custom WikiModel.
+ * Bypass various useless automatic stuff (like label creation from the reference).
  * 
  * @version $Id$
  */
-public class EventWikiModel extends WikiModel
+public class LinkTag extends TagNode
 {
+    private ResourceReference reference;
+
+    private boolean freestanding;
+
     /**
      * Default constructor.
      */
-    public EventWikiModel()
+    public LinkTag(ResourceReference reference, boolean freestanding)
     {
-        super("${image}", "${title}");
+        super("xwiki.link");
+
+        this.reference = reference;
+        this.freestanding = freestanding;
+    }
+
+    public ResourceReference getReference()
+    {
+        return this.reference;
+    }
+
+    public boolean isFreestanding()
+    {
+        return this.freestanding;
+    }
+
+    @Override
+    public boolean isReduceTokenStack()
+    {
+        return false;
     }
 }

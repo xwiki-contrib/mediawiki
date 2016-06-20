@@ -1,22 +1,24 @@
 .#-----------------------------------------------------
-.input|mediawiki/1.6|ignore
+.input|mediawiki/1.6
 .#-----------------------------------------------------
-Text before
-----
-Text after
+This is '''''bold & italic'''''
 .#-----------------------------------------------------
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
 beginParagraph
-onWord [Text]
+onWord [This]
 onSpace
-onWord [before]
-endParagraph
-onHorizontalLine
-beginParagraph
-onWord [Text]
+onWord [is]
 onSpace
-onWord [after]
+beginFormat [BOLD]
+beginFormat [ITALIC]
+onWord [bold]
+onSpace
+onSpecialSymbol [&]
+onSpace
+onWord [italic]
+endFormat [ITALIC]
+endFormat [BOLD]
 endParagraph
 endDocument
