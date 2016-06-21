@@ -130,8 +130,6 @@ public class EventConverter implements ITextConverter
 
         GENERATOR_MAP.put(Configuration.HTML_PARAGRAPH_OPEN.getName(), new ParagraphEventGenerator());
 
-        GENERATOR_MAP.put(Configuration.HTML_BLOCKQUOTE_OPEN.getName(), new BlockquoteEventGenerator());
-
         // TODO: BLOCK_MAP.put("var", HTML_VAR_OPEN);
         // TODO: BLOCK_MAP.put("small", HTML_SMALL_OPEN);
         // TODO: BLOCK_MAP.put("big", HTML_BIG_OPEN);
@@ -228,13 +226,18 @@ public class EventConverter implements ITextConverter
                 }
 
                 for (Object child : nodes) {
-                    if (child instanceof BaseToken) {
-                        onBaseToken((BaseToken) child, model);
-                    }
+                    traverse(child, model);
                 }
             } finally {
                 model.decrementRecursionLevel();
             }
+        }
+    }
+
+    void traverse(Object node, IWikiModel model) throws FilterException
+    {
+        if (node instanceof BaseToken) {
+            traverse((BaseToken) node, model);
         }
     }
 
@@ -253,10 +256,10 @@ public class EventConverter implements ITextConverter
         // Don't care
     }
 
-    private void onBaseToken(BaseToken token, IWikiModel model) throws FilterException
+    void traverse(BaseToken token, IWikiModel model) throws FilterException
     {
         if (token instanceof TagToken) {
-            onTagToken((TagToken) token, model);
+            traverse((TagToken) token, model);
         } else if (token instanceof ContentToken) {
             try {
                 InlineFilterListener inlineListener = new InlineFilterListener();
@@ -270,7 +273,7 @@ public class EventConverter implements ITextConverter
         }
     }
 
-    private void onTagToken(TagToken token, IWikiModel model) throws FilterException
+    private void traverse(TagToken token, IWikiModel model) throws FilterException
     {
         EventGenerator blockEvent = createEventGenerator(token);
 

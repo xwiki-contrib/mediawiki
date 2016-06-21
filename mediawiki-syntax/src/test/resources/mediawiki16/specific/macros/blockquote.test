@@ -1,16 +1,18 @@
 .#-----------------------------------------------------
 .input|mediawiki/1.6
 .#-----------------------------------------------------
-<gallery>
-File:file_name.ext|caption|alt=alt language
-File:file_name.ext|caption|alt=alt language
-</gallery>
+<blockquote>
+p '''bold'''
+
+p '''bold'''
+</blockquote>
 .#-----------------------------------------------------
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
-onMacroStandalone [gallery] [] [
-File:file_name.ext|caption|alt=alt language
-File:file_name.ext|caption|alt=alt language
+onMacroStandalone [blockquote] [] [
+p '''bold'''
+
+p '''bold'''
 ]
 endDocument

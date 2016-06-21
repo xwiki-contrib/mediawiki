@@ -34,12 +34,14 @@ public class EventConfiguration extends Configuration
      */
     public EventConfiguration()
     {
-        addMacroTag("gallery");
+        addStandaloneMacroTag("gallery");
+        addStandaloneMacroTag("blockquote");
+
         addTokenTag(Configuration.HTML_CODE_OPEN.getName(), new SourceTag());
     }
 
-    private void addMacroTag(String id)
+    private void addStandaloneMacroTag(String id)
     {
-        addTokenTag(id, new MacroTag(id));
+        addTokenTag(id, new StandaloneMacroTag(id));
     }
 }

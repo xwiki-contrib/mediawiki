@@ -17,41 +17,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
+package org.xwiki.contrib.mediawiki.syntax.internal.parser.model;
 
-import java.util.Map;
+import info.bliki.wiki.model.Configuration;
+import info.bliki.wiki.tags.HTMLBlockTag;
+import info.bliki.wiki.tags.util.INoBodyParsingTag;
 
-import org.xwiki.filter.FilterException;
-
-import info.bliki.htmlcleaner.BaseToken;
-import info.bliki.htmlcleaner.TagNode;
-import info.bliki.wiki.model.IWikiModel;
-
-public class BlockquoteEventGenerator extends AbstractEventGenerator
+/**
+ * Make sure gallery macro content is not parsed by standard parser.
+ * 
+ * @version $Id$
+ */
+// TODO: a more complete version should probably be contributed upstream
+public class StandaloneMacroTag extends HTMLBlockTag implements INoBodyParsingTag
 {
-    private Map<String, String> parameters;
-
-    public BlockquoteEventGenerator()
+    /**
+     * @param id the id of the macro
+     */
+    public StandaloneMacroTag(String id)
     {
+        super(id, Configuration.SPECIAL_BLOCK_TAGS);
     }
 
     @Override
-    public void init(BaseToken token, EventConverter converter)
+    public Object clone()
     {
-        super.init(token, converter);
-
-        if (token instanceof TagNode) {
-            this.parameters = ((TagNode) token).getAttributes();
-        }
-    }
-
-    @Override
-    public void traverse(IWikiModel model) throws FilterException
-    {
-        getListener().beginQuotation(this.parameters);
-
-        // TODO: convert children into quitation lines
-
-        getListener().endQuotation(this.parameters);
+        return new StandaloneMacroTag(getName());
     }
 }
