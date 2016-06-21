@@ -34,6 +34,9 @@
     <xwiki.jacoco.instructionRatio>0.0</xwiki.jacoco.instructionRatio>
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>Override of MediaWiki Syntax 1.0</xwiki.extension.name>
+
+    <!-- Replace old mediawiki syntax parser -->
+    <xwiki.extension.features>org.xwiki.rendering:xwiki-rendering-syntax-mediawiki/8.2</xwiki.extension.features>
   </properties>
   <dependencies>
     <dependency>
