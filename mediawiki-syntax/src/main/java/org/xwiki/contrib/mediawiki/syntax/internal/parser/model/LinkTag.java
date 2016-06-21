@@ -35,7 +35,8 @@ public class LinkTag extends TagNode
     private boolean freestanding;
 
     /**
-     * Default constructor.
+     * @param reference the reference of the link
+     * @param freestanding true is the link is freestanding
      */
     public LinkTag(ResourceReference reference, boolean freestanding)
     {
@@ -45,11 +46,17 @@ public class LinkTag extends TagNode
         this.freestanding = freestanding;
     }
 
+    /**
+     * @return the reference of the link
+     */
     public ResourceReference getReference()
     {
         return this.reference;
     }
 
+    /**
+     * @return true is the link is freestanding
+     */
     public boolean isFreestanding()
     {
         return this.freestanding;

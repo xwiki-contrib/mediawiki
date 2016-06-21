@@ -23,34 +23,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.xwiki.contrib</groupId>
-    <artifactId>parent-rendering</artifactId>
-    <version>7.4-5</version>
+    <groupId>org.xwiki.contrib.mediawiki</groupId>
+    <artifactId>mediawiki</artifactId>
+    <version>1.0-SNAPSHOT</version>
   </parent>
-  <groupId>org.xwiki.contrib.mediawiki</groupId>
-  <artifactId>mediawiki</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <name>MediaWiki - Parent POM</name>
-  <description>Parent POM for MediaWiki modules</description>
-  <packaging>pom</packaging>
-  <scm>
-    <connection>scm:git:git://github.com/xwiki-contrib/mediawiki.git</connection>
-    <developerConnection>scm:git:git@github.com:xwiki-contrib/mediawiki.git</developerConnection>
-    <url>https://github.com/xwiki-contrib/mediawiki</url>
-    <tag>HEAD</tag>
-  </scm>
-  <issueManagement>
-    <system>jira</system>
-    <url>http://jira.xwiki.org/browse/MEDIAWIKI</url>
-  </issueManagement>
-  <developers>
-    <developer>
-      <id>tmortagne</id>
-      <name>Thomas Mortagne</name>
-    </developer>
-  </developers>
-  <modules>
-    <module>mediawiki-syntax</module>
-    <module>mediawiki-syntax10override</module>
-  </modules>
+  <artifactId>mediawiki-syntax10override</artifactId>
+  <name>MediaWiki - Syntax 1.0 Override</name>
+  <description>MediaWiki Syntax 1.0 parser override</description>
+  <properties>
+    <xwiki.jacoco.instructionRatio>0.0</xwiki.jacoco.instructionRatio>
+    <!-- Name to display by the Extension Manager -->
+    <xwiki.extension.name>Override of MediaWiki Syntax 1.0</xwiki.extension.name>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.xwiki.contrib.mediawiki</groupId>
+      <artifactId>mediawiki-syntax</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
 </project>

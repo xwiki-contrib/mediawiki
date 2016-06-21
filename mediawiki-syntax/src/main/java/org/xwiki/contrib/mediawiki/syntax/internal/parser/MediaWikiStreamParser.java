@@ -38,8 +38,6 @@ import org.xwiki.rendering.parser.StreamParser;
 import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.syntax.SyntaxType;
 
-import info.bliki.wiki.model.WikiModel;
-
 /**
  * MediaWiki streamed parser based on the <a href="https://bitbucket.org/axelclk/info.bliki.wiki">Bliki engine</a>.
  *
@@ -97,7 +95,6 @@ public class MediaWikiStreamParser implements StreamParser
 
             // Parse
             wikiModel.render(converter, sourceString, null, false, false);
-            System.out.println(WikiModel.toHtml(sourceString));
         } catch (IOException e) {
             throw new ParseException("Failed to parse source", e);
         }

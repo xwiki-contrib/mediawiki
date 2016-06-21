@@ -1,0 +1,3 @@
+org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWiki10OverrideParser
+org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWiki10OverrideStreamParser
+

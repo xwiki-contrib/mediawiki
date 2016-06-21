@@ -29,7 +29,7 @@ import org.xwiki.rendering.test.integration.RenderingTestSuite;
  * @version $Id: 75488eb22c370f55a3e6bd9b38ec599be157b515 $
  */
 @RunWith(RenderingTestSuite.class)
-@RenderingTestSuite.Scope(value = "mediawiki16.specific"/*, pattern = "link3.1.test"*/)
+@RenderingTestSuite.Scope(value = "mediawiki16.specific"/*, pattern = "misc.test"*/)
 public class MediaWikiSpecificTest
 {
 }

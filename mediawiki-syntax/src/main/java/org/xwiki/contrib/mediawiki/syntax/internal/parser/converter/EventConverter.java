@@ -81,104 +81,104 @@ import info.bliki.wiki.tags.util.TagStack;
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
 public class EventConverter implements ITextConverter
 {
-    private static final Map<String, EventGenerator> BLOCK_MAP = new HashMap<>();
+    private static final Map<String, EventGenerator> GENERATOR_MAP = new HashMap<>();
 
     static {
-        BLOCK_MAP.put(new BrTag().getName(), new OnBlockEventGenerator(new NewLineBlock()));
-        BLOCK_MAP.put(new HrTag().getName(), new OnBlockEventGenerator(new HorizontalLineBlock()));
+        GENERATOR_MAP.put(new BrTag().getName(), new OnBlockEventGenerator(new NewLineBlock()));
+        GENERATOR_MAP.put(new HrTag().getName(), new OnBlockEventGenerator(new HorizontalLineBlock()));
 
-        BLOCK_MAP.put(new NowikiTag().getName(), new VerbatimEventGenerator(true));
-        BLOCK_MAP.put(new PreTag().getName(), new VerbatimEventGenerator(false));
+        GENERATOR_MAP.put(new NowikiTag().getName(), new VerbatimEventGenerator(true));
+        GENERATOR_MAP.put(new PreTag().getName(), new VerbatimEventGenerator(false));
         // TODO: BLOCK_MAP.put("math", new MathTag());
         // TODO: BLOCK_MAP.put("embed", new EmbedTag());
         // TODO: BLOCK_MAP.put("ref", new RefTag());
         // TODO: BLOCK_MAP.put("references", new ReferencesTag());
 
         // see https://www.mediawiki.org/wiki/Extension:SyntaxHighlight
-        BLOCK_MAP.put("syntaxhighlight", new SourceEventGenerator());
-        BLOCK_MAP.put(new SourceTag().getName(), new SourceEventGenerator());
-        BLOCK_MAP.put(Configuration.HTML_CODE_OPEN.getName(), new SourceEventGenerator());
+        GENERATOR_MAP.put("syntaxhighlight", new SourceEventGenerator());
+        GENERATOR_MAP.put(new SourceTag().getName(), new SourceEventGenerator());
+        GENERATOR_MAP.put(Configuration.HTML_CODE_OPEN.getName(), new SourceEventGenerator());
 
-        BLOCK_MAP.put(new ATag().getName(), new AEventGenerator());
+        GENERATOR_MAP.put(new ATag().getName(), new AEventGenerator());
 
-        BLOCK_MAP.put(Configuration.HTML_H1_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_H1_OPEN.getName(),
             new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL1)));
-        BLOCK_MAP.put(Configuration.HTML_H2_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_H2_OPEN.getName(),
             new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL2)));
-        BLOCK_MAP.put(Configuration.HTML_H3_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_H3_OPEN.getName(),
             new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL3)));
-        BLOCK_MAP.put(Configuration.HTML_H4_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_H4_OPEN.getName(),
             new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL4)));
-        BLOCK_MAP.put(Configuration.HTML_H5_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_H5_OPEN.getName(),
             new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL5)));
-        BLOCK_MAP.put(Configuration.HTML_H6_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_H6_OPEN.getName(),
             new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL6)));
 
-        BLOCK_MAP.put(Configuration.HTML_EM_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_EM_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.BOLD)));
-        BLOCK_MAP.put(Configuration.HTML_ITALIC_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_ITALIC_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.ITALIC)));
-        BLOCK_MAP.put(Configuration.HTML_BOLD_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_BOLD_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.BOLD)));
-        BLOCK_MAP.put(new WPBoldItalicTag().getName(), new BoldItalicEventGenerator());
-        BLOCK_MAP.put(Configuration.HTML_STRONG_OPEN.getName(),
+        GENERATOR_MAP.put(new WPBoldItalicTag().getName(), new BoldItalicEventGenerator());
+        GENERATOR_MAP.put(Configuration.HTML_STRONG_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.BOLD)));
-        BLOCK_MAP.put(Configuration.HTML_UNDERLINE_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_UNDERLINE_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.UNDERLINED)));
-        BLOCK_MAP.put(Configuration.HTML_TT_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_TT_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.MONOSPACE)));
 
-        BLOCK_MAP.put(Configuration.HTML_PARAGRAPH_OPEN.getName(), new ParagraphEventGenerator());
+        GENERATOR_MAP.put(Configuration.HTML_PARAGRAPH_OPEN.getName(), new ParagraphEventGenerator());
 
-        BLOCK_MAP.put(Configuration.HTML_BLOCKQUOTE_OPEN.getName(), new BlockquoteEventGenerator());
+        GENERATOR_MAP.put(Configuration.HTML_BLOCKQUOTE_OPEN.getName(), new BlockquoteEventGenerator());
 
         // TODO: BLOCK_MAP.put("var", HTML_VAR_OPEN);
         // TODO: BLOCK_MAP.put("small", HTML_SMALL_OPEN);
         // TODO: BLOCK_MAP.put("big", HTML_BIG_OPEN);
 
-        BLOCK_MAP.put(Configuration.HTML_SUB_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_SUB_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.SUBSCRIPT)));
-        BLOCK_MAP.put(Configuration.HTML_SUP_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_SUP_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.SUPERSCRIPT)));
-        BLOCK_MAP.put(Configuration.HTML_STRIKE_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_STRIKE_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.STRIKEDOUT)));
-        BLOCK_MAP.put(Configuration.HTML_S_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_S_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.STRIKEDOUT)));
-        BLOCK_MAP.put(Configuration.HTML_DEL_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_DEL_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.STRIKEDOUT)));
 
-        BLOCK_MAP.put(new WPTable(null).getName(), new WPTableBlockEventGenerator());
+        GENERATOR_MAP.put(new WPTable(null).getName(), new WPTableBlockEventGenerator());
 
-        BLOCK_MAP.put(Configuration.HTML_TABLE_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_TABLE_OPEN.getName(),
             new BeginEndBlockEventGenerator(new TableBlock(Collections.<Block>emptyList())));
-        BLOCK_MAP.put(Configuration.HTML_TH_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_TH_OPEN.getName(),
             new BeginEndBlockEventGenerator(new TableHeadCellBlock(Collections.<Block>emptyList())));
-        BLOCK_MAP.put(Configuration.HTML_TR_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_TR_OPEN.getName(),
             new BeginEndBlockEventGenerator(new TableRowBlock(Collections.<Block>emptyList())));
-        BLOCK_MAP.put(Configuration.HTML_TD_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_TD_OPEN.getName(),
             new BeginEndBlockEventGenerator(new TableCellBlock(Collections.<Block>emptyList())));
         // TODO: BLOCK_MAP.put("caption", HTML_CAPTION_OPEN);
 
-        BLOCK_MAP.put(Configuration.HTML_UL_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_UL_OPEN.getName(),
             new BeginEndBlockEventGenerator(new BulletedListBlock(Collections.<Block>emptyList())));
-        BLOCK_MAP.put(Configuration.HTML_OL_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_OL_OPEN.getName(),
             new BeginEndBlockEventGenerator(new NumberedListBlock(Collections.<Block>emptyList())));
-        BLOCK_MAP.put(Configuration.HTML_LI_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_LI_OPEN.getName(),
             new BeginEndBlockEventGenerator(new ListItemBlock(Collections.<Block>emptyList())));
-        BLOCK_MAP.put(new WPList().getName(),
+        GENERATOR_MAP.put(new WPList().getName(),
             new WPListBlockEventGenerator(new ListItemBlock(Collections.<Block>emptyList())));
 
         // TODO: BLOCK_MAP.put("font", HTML_FONT_OPEN);
         // TODO: BLOCK_MAP.put("center", HTML_CENTER_OPEN);
-        BLOCK_MAP.put(Configuration.HTML_DIV_OPEN.getName(), new BeginEndBlockEventGenerator(new GroupBlock()));
-        BLOCK_MAP.put(Configuration.HTML_SPAN_OPEN.getName(),
+        GENERATOR_MAP.put(Configuration.HTML_DIV_OPEN.getName(), new BeginEndBlockEventGenerator(new GroupBlock()));
+        GENERATOR_MAP.put(Configuration.HTML_SPAN_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.NONE)));
 
         // TODO: BLOCK_MAP.put("abbr", HTML_ABBR_OPEN);
         // TODO: BLOCK_MAP.put("cite", HTML_CITE_OPEN);
 
-        BLOCK_MAP.put(new LinkTag(null, false).getName(), new LinkEventGenerator());
-        BLOCK_MAP.put(new ImageTag(null, false).getName(), new ImageEventGenerator());
+        GENERATOR_MAP.put(new LinkTag(null, false).getName(), new LinkEventGenerator());
+        GENERATOR_MAP.put(new ImageTag(null, false).getName(), new ImageEventGenerator());
     }
 
     @Inject
@@ -272,7 +272,7 @@ public class EventConverter implements ITextConverter
 
     private void onTagToken(TagToken token, IWikiModel model) throws FilterException
     {
-        EventGenerator blockEvent = createBlockEvent(token);
+        EventGenerator blockEvent = createEventGenerator(token);
 
         if (blockEvent != null) {
             blockEvent.traverse(model);
@@ -283,14 +283,14 @@ public class EventConverter implements ITextConverter
         }
     }
 
-    public EventGenerator createBlockEvent(TagToken token)
+    public EventGenerator createEventGenerator(TagToken token)
     {
         // TODO: add support for toc
         if (token instanceof TableOfContentTag) {
             return null;
         }
 
-        EventGenerator event = BLOCK_MAP.get(token.getName());
+        EventGenerator event = GENERATOR_MAP.get(token.getName());
 
         if (event != null) {
             try {

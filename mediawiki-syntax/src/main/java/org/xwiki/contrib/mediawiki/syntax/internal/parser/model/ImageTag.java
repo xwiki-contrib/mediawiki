@@ -35,7 +35,8 @@ public class ImageTag extends TagNode
     private boolean freestanding;
 
     /**
-     * Default constructor.
+     * @param reference the reference of the image
+     * @param freestanding true is the image is freestanding
      */
     public ImageTag(ResourceReference reference, boolean freestanding)
     {
@@ -45,11 +46,17 @@ public class ImageTag extends TagNode
         this.freestanding = freestanding;
     }
 
+    /**
+     * @return the reference of the image
+     */
     public ResourceReference getReference()
     {
         return this.reference;
     }
 
+    /**
+     * @return true is the image is freestanding
+     */
     public boolean isFreestanding()
     {
         return this.freestanding;

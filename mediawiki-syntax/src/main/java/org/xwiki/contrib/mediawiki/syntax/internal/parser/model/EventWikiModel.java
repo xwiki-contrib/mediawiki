@@ -82,18 +82,24 @@ public class EventWikiModel extends WikiModel
         boolean parseRecursive)
     {
         // Create reference
-        ResourceReference reference;
+        ResourceReference reference = null;
+
         if (StringUtils.isNotEmpty(hashSection)) {
             reference = new ResourceReference('#' + hashSection, ResourceType.PATH);
         } else {
             int index = topic.indexOf(':', 1);
-            String namespace = topic.substring(0, index);
-            if (this.fNamespace.isNamespace(namespace, NamespaceCode.FILE_NAMESPACE_KEY)
-                || namespace.equalsIgnoreCase("media")) {
-                reference = new AttachmentResourceReference(topic.substring(namespace.length() + 1));
-            } else {
-                reference = this.linkReferenceParser.parse(topic);
+            if (index > 0) {
+                String namespace = topic.substring(0, index);
+                if (this.fNamespace.isNamespace(namespace, NamespaceCode.FILE_NAMESPACE_KEY)
+                    || namespace.equalsIgnoreCase("media")) {
+                    reference = new AttachmentResourceReference(topic.substring(namespace.length() + 1));
+                }
             }
+        }
+
+        // Fallback on standard link reference parser
+        if (reference == null) {
+            reference = this.linkReferenceParser.parse(topic);
         }
 
         // Set anchor
@@ -145,7 +151,7 @@ public class EventWikiModel extends WikiModel
     @Override
     public void appendExternalLink(String uriSchemeName, String link, String linkName, boolean withoutSquareBrackets)
     {
-        // TODO: support empty uri scheme
+        // TODO: support uri with empty scheme (fallback on current request scheme)
 
         ResourceReference reference = new ResourceReference(link, ResourceType.URL);
 
