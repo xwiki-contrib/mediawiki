@@ -250,7 +250,7 @@ public class EventConverter implements ITextConverter
     public void imageNodeToText(TagNode imageTagNode, ImageFormat imageFormat, Appendable resultBuffer,
         IWikiModel model) throws IOException
     {
-
+        // Don't care
     }
 
     private void onBaseToken(BaseToken token, IWikiModel model) throws FilterException
@@ -285,25 +285,25 @@ public class EventConverter implements ITextConverter
 
     public EventGenerator createEventGenerator(TagToken token)
     {
-        // TODO: add support for toc
+        EventGenerator event;
         if (token instanceof TableOfContentTag) {
-            return null;
-        }
-
-        EventGenerator event = GENERATOR_MAP.get(token.getName());
-
-        if (event != null) {
-            try {
-                event = event.clone();
-            } catch (CloneNotSupportedException e) {
-                this.logger.error("Failed to clone block event [{}]", event);
-
-                return null;
-            }
-        } else if (token instanceof INoBodyParsingTag) {
-            event = new MacroEventGenerator();
+            event = new TableOfContentEventGenerator();
         } else {
-            event = new UnknownEventGenerator();
+            event = GENERATOR_MAP.get(token.getName());
+
+            if (event != null) {
+                try {
+                    event = event.clone();
+                } catch (CloneNotSupportedException e) {
+                    this.logger.error("Failed to clone block event [{}]", event);
+
+                    return null;
+                }
+            } else if (token instanceof INoBodyParsingTag) {
+                event = new MacroEventGenerator();
+            } else {
+                event = new UnknownEventGenerator();
+            }
         }
 
         // Initialize the block event

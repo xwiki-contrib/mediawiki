@@ -17,29 +17,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.mediawiki.syntax.internal.parser.model;
+package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
-import info.bliki.wiki.model.Configuration;
-import info.bliki.wiki.tags.SourceTag;
+import org.xwiki.filter.FilterException;
+import org.xwiki.rendering.listener.Listener;
 
-/**
- * Custom {@link Configuration}.
- * 
- * @version $Id$
- */
-public class EventConfiguration extends Configuration
+import info.bliki.htmlcleaner.BaseToken;
+import info.bliki.wiki.model.IWikiModel;
+import info.bliki.wiki.tags.TableOfContentTag;
+
+public class TableOfContentEventGenerator extends AbstractEventGenerator<TableOfContentTag>
 {
-    /**
-     * Default constructor.
-     */
-    public EventConfiguration()
+    public TableOfContentEventGenerator()
     {
-        addMacroTag("gallery");
-        addTokenTag(Configuration.HTML_CODE_OPEN.getName(), new SourceTag());
     }
 
-    private void addMacroTag(String id)
+    @Override
+    public void init(BaseToken token, EventConverter converter)
     {
-        addTokenTag(id, new MacroTag(id));
+        super.init(token, converter);
+    }
+
+    @Override
+    public void traverse(IWikiModel model) throws FilterException
+    {
+        if (this.token.isShowToC()) {
+            getListener().onMacro("toc", Listener.EMPTY_PARAMETERS, null, false);
+        }
     }
 }

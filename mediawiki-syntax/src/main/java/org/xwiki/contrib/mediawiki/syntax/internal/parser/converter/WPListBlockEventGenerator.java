@@ -47,8 +47,6 @@ public class WPListBlockEventGenerator extends BeginEndBlockEventGenerator<WPLis
         for (Object element : this.token.getNestedElements()) {
             if (element instanceof InternalList) {
                 traverse((InternalList) element, model);
-            } else if (element instanceof WPListElement) {
-                this.converter.traverse(((WPListElement) element).getTagStack(), model);
             }
         }
     }
