@@ -58,6 +58,5 @@ public class MediaWiki10OverrideStreamParser implements StreamParser
     public void parse(Reader source, Listener listener) throws ParseException
     {
         this.parser.parse(source, listener);
-
     }
 }

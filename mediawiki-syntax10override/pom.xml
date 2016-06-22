@@ -31,7 +31,7 @@
   <name>MediaWiki - Syntax 1.0 Override</name>
   <description>MediaWiki Syntax 1.0 parser override</description>
   <properties>
-    <xwiki.jacoco.instructionRatio>0.0</xwiki.jacoco.instructionRatio>
+    <xwiki.jacoco.instructionRatio>0.38</xwiki.jacoco.instructionRatio>
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>Override of MediaWiki Syntax 1.0</xwiki.extension.name>
 
@@ -43,6 +43,20 @@
       <groupId>org.xwiki.contrib.mediawiki</groupId>
       <artifactId>mediawiki-syntax</artifactId>
       <version>${project.version}</version>
+    </dependency>
+
+    <!-- Test Dependencies -->
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-test</artifactId>
+      <version>${rendering.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-syntax-event</artifactId>
+      <version>${rendering.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

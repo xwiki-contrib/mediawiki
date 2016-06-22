@@ -17,19 +17,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.rendering.mediawiki16.internal;
+package org.xwiki.contrib.mediawiki.syntax.internal;
 
 import org.junit.runner.RunWith;
-import org.xwiki.rendering.test.integration.RenderingTestSuite;
+import org.xwiki.rendering.test.cts.CompatibilityTestSuite;
+import org.xwiki.rendering.test.cts.Syntax;
 
 /**
- * Run all specific tests found in {@code *.test} files located in the classpath. These {@code *.test} files must follow
- * the conventions described in {@link org.xwiki.rendering.test.integration.TestDataParser}.
+ * Run all CTS tests for the Mediawiki syntax.
  *
- * @version $Id: 75488eb22c370f55a3e6bd9b38ec599be157b515 $
+ * @version $Id: abf215a85904c40e156ea90fd124d38d93ebe09e $
  */
-@RunWith(RenderingTestSuite.class)
-@RenderingTestSuite.Scope(value = "mediawiki16.specific"/*, pattern = "misc.test"*/)
-public class MediaWikiSpecificTest
+@RunWith(CompatibilityTestSuite.class)
+@Syntax("mediawiki/1.6")
+public class MediaWikiCompatibilityTest
 {
 }
