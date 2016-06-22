@@ -21,6 +21,7 @@ package org.xwiki.contrib.mediawiki.syntax.internal.parser;
 
 import java.io.Reader;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -45,6 +46,7 @@ public class MediaWiki10OverrideStreamParser implements StreamParser
      */
     public static final String MEDIAWIKI_1_0_STRING = "mediawiki/1.0";
 
+    @Inject
     @Named(MediaWikiStreamParser.MEDIAWIKI_1_6_STRING)
     private StreamParser parser;
 
