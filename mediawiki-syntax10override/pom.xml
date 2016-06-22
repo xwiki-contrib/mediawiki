@@ -43,6 +43,12 @@
       <groupId>org.xwiki.contrib.mediawiki</groupId>
       <artifactId>mediawiki-syntax</artifactId>
       <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>logback-classic</artifactId>
+          <groupId>ch.qos.logback</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- Test Dependencies -->
