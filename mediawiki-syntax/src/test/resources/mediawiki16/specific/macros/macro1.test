@@ -1,0 +1,14 @@
+.#-----------------------------------------------------
+.input|mediawiki/1.6
+.#-----------------------------------------------------
+<macro:testsimplemacro param1="value1" param2="value2">
+some '''unparsed''' content
+</macro:testsimplemacro>
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+onMacroStandalone [testsimplemacro] [param1=value1|param2=value2] [
+some '''unparsed''' content
+]
+endDocument

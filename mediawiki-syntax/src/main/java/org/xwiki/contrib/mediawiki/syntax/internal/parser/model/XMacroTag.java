@@ -19,29 +19,44 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.model;
 
-import info.bliki.wiki.model.Configuration;
-import info.bliki.wiki.tags.SourceTag;
+import java.util.Map;
+
+import info.bliki.wiki.tags.util.INoBodyParsingTag;
 
 /**
- * Custom {@link Configuration}.
+ * A macro.
  * 
  * @version $Id$
  */
-public class EventConfiguration extends Configuration
+public interface XMacroTag extends INoBodyParsingTag
 {
     /**
-     * Default constructor.
+     * The name of the macros tags in the stack.
      */
-    public EventConfiguration()
-    {
-        addStandaloneMacroTag("gallery");
-        addStandaloneMacroTag("blockquote");
+    String TAGNAME = "xmacro";
 
-        addTokenTag(Configuration.HTML_CODE_OPEN.getName(), new SourceTag());
-    }
+    /**
+     * Prefix of the tag name inside mediawiki content.
+     */
+    String TAGPREFIX = "macro:";
 
-    private void addStandaloneMacroTag(String id)
-    {
-        addTokenTag(id, new StandaloneMacroTag(id));
-    }
+    /**
+     * @return the id of the macro
+     */
+    String getMacroId();
+
+    /**
+     * @return the parameters of the macro
+     */
+    Map<String, String> getMacroParameters();
+
+    /**
+     * @return the content of the macro
+     */
+    String getMacroContent();
+
+    /**
+     * @return true of the macro is inline
+     */
+    boolean isInline();
 }

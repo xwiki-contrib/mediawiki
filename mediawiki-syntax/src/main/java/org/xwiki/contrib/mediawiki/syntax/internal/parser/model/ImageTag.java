@@ -22,6 +22,7 @@ package org.xwiki.contrib.mediawiki.syntax.internal.parser.model;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 
 import info.bliki.htmlcleaner.TagNode;
+import info.bliki.wiki.model.ImageFormat;
 
 /**
  * Bypass various useless automatic stuff (like title and other generated parameters).
@@ -30,20 +31,31 @@ import info.bliki.htmlcleaner.TagNode;
  */
 public class ImageTag extends TagNode
 {
+    /**
+     * The name ofthe tag in the stack.
+     */
+    public static final String NAME = "xwiki.image";
+
     private ResourceReference reference;
 
     private boolean freestanding;
 
+    private ImageFormat imageFormat;
+
     /**
      * @param reference the reference of the image
      * @param freestanding true is the image is freestanding
+     * @param imageFormat the image caption and options
      */
-    public ImageTag(ResourceReference reference, boolean freestanding)
+    public ImageTag(ResourceReference reference, boolean freestanding, ImageFormat imageFormat)
     {
-        super("xwiki.image");
+        super(NAME);
 
         this.reference = reference;
         this.freestanding = freestanding;
+        this.imageFormat = imageFormat;
+
+        addAttribute("alt", this.imageFormat.getCaption(), false);
     }
 
     /**
@@ -60,6 +72,14 @@ public class ImageTag extends TagNode
     public boolean isFreestanding()
     {
         return this.freestanding;
+    }
+
+    /**
+     * @return the image caption and options
+     */
+    public ImageFormat getImageFormat()
+    {
+        return this.imageFormat;
     }
 
     @Override

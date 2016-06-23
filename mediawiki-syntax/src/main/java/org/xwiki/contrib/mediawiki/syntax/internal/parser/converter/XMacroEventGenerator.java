@@ -17,31 +17,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.mediawiki.syntax.internal.parser.model;
+package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
-import info.bliki.wiki.model.Configuration;
-import info.bliki.wiki.tags.HTMLBlockTag;
-import info.bliki.wiki.tags.util.INoBodyParsingTag;
+import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.XMacroTag;
+import org.xwiki.filter.FilterException;
 
-/**
- * Make sure gallery macro content is not parsed by standard parser.
- * 
- * @version $Id$
- */
-// TODO: a more complete version should probably be contributed upstream
-public class StandaloneMacroTag extends HTMLBlockTag implements INoBodyParsingTag
+import info.bliki.wiki.model.IWikiModel;
+import info.bliki.wiki.tags.HTMLTag;
+
+public class XMacroEventGenerator extends AbstractEventGenerator<HTMLTag>
 {
-    /**
-     * @param id the id of the macro
-     */
-    public StandaloneMacroTag(String id)
+    public XMacroEventGenerator()
     {
-        super(id, Configuration.SPECIAL_BLOCK_TAGS);
+    }
+
+    private XMacroTag getMacroTag()
+    {
+        return (XMacroTag) this.token;
     }
 
     @Override
-    public Object clone()
+    public void traverse(IWikiModel model) throws FilterException
     {
-        return new StandaloneMacroTag(getName());
+        getListener().onMacro(getMacroTag().getMacroId(), getMacroTag().getMacroParameters(),
+            getMacroTag().getMacroContent(), getMacroTag().isInline());
     }
 }

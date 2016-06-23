@@ -31,7 +31,7 @@
   <name>MediaWiki - Syntax</name>
   <description>MediaWiki Syntax parser</description>
   <properties>
-    <xwiki.jacoco.instructionRatio>0.88</xwiki.jacoco.instructionRatio>
+    <xwiki.jacoco.instructionRatio>0.82</xwiki.jacoco.instructionRatio>
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>MediaWiki Syntax</xwiki.extension.name>
   </properties>
@@ -87,7 +87,8 @@
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/UnknownEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/VerbatimEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/WPListBlockEventGenerator.java,
-              org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/WPTableBlockEventGenerator.java
+              org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/WPTableBlockEventGenerator.java,
+              org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/XMacroEventGenerator.java
           </excludes>
         </configuration>
       </plugin>

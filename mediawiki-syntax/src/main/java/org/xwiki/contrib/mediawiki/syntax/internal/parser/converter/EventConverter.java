@@ -35,6 +35,7 @@ import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.ImageTag;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.LinkTag;
+import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.XMacroTag;
 import org.xwiki.filter.FilterException;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.BulletedListBlock;
@@ -176,7 +177,9 @@ public class EventConverter implements ITextConverter
         // TODO: BLOCK_MAP.put("cite", HTML_CITE_OPEN);
 
         GENERATOR_MAP.put(new LinkTag(null, false).getName(), new LinkEventGenerator());
-        GENERATOR_MAP.put(new ImageTag(null, false).getName(), new ImageEventGenerator());
+        GENERATOR_MAP.put(ImageTag.NAME, new ImageEventGenerator());
+
+        GENERATOR_MAP.put(XMacroTag.TAGNAME, new XMacroEventGenerator());
     }
 
     @Inject
