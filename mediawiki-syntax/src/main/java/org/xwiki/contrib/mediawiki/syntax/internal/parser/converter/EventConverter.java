@@ -279,13 +279,13 @@ public class EventConverter implements ITextConverter
                 // White spaces are not meaningful in mediawiki
                 content = content.replaceAll("[\t ]+", " ");
 
-                // Converter to pure XML
+                // FIXME: workaround a weird handling of entities in the Bliki parser
+                // See https://bitbucket.org/axelclk/info.bliki.wiki/issues/33/weird-handling-of-html-entities
                 content = Utils.escapeXml(content, true, true, true, true, true, true, false);
+                content = StringEscapeUtils.unescapeXml(content);
 
                 // Convert non-breaking space to white space
                 content = content.replace((char) 160, ' ');
-
-                content = StringEscapeUtils.unescapeXml(content);
 
                 this.plainParser.parse(new StringReader(content), inlineListener);
             } catch (ParseException e) {
