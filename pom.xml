@@ -29,7 +29,7 @@
   </parent>
   <groupId>org.xwiki.contrib.mediawiki</groupId>
   <artifactId>mediawiki</artifactId>
-  <version>1.3</version>
+  <version>1.4-SNAPSHOT</version>
   <name>MediaWiki - Parent POM</name>
   <description>Parent POM for MediaWiki modules</description>
   <packaging>pom</packaging>
@@ -37,7 +37,7 @@
     <connection>scm:git:git://github.com/xwiki-contrib/mediawiki.git</connection>
     <developerConnection>scm:git:git@github.com:xwiki-contrib/mediawiki.git</developerConnection>
     <url>https://github.com/xwiki-contrib/mediawiki/tree/master</url>
-    <tag>mediawiki-1.3</tag>
+    <tag>HEAD</tag>
   </scm>
   <issueManagement>
     <system>jira</system>
