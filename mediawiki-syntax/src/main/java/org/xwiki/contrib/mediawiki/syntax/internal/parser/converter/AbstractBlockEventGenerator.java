@@ -19,6 +19,8 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
+import java.util.Map;
+
 import org.xwiki.rendering.block.AbstractBlock;
 
 import info.bliki.htmlcleaner.BaseToken;
@@ -39,7 +41,9 @@ public abstract class AbstractBlockEventGenerator<T extends BaseToken> extends A
         super.init(token, converter);
 
         if (token instanceof TagNode) {
-            this.block.setParameters(((TagNode) token).getAttributes());
+            for (Map.Entry<String, String> entry : ((TagNode) token).getAttributes().entrySet()) {
+                this.block.setParameter(entry.getKey(), entry.getValue());
+            }
         }
     }
 

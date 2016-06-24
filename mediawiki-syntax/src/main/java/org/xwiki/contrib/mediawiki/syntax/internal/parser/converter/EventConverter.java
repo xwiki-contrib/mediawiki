@@ -128,12 +128,16 @@ public class EventConverter implements ITextConverter
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.UNDERLINED)));
         GENERATOR_MAP.put(Configuration.HTML_TT_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.MONOSPACE)));
+        GENERATOR_MAP.put(Configuration.HTML_VAR_OPEN.getName(),
+            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.ITALIC)));
+        GENERATOR_MAP.put(Configuration.HTML_SMALL_OPEN.getName(),
+            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.NONE,
+                Collections.singletonMap("style", "font-size:small"))));
+        GENERATOR_MAP.put(Configuration.HTML_BIG_OPEN.getName(),
+            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.NONE,
+                Collections.singletonMap("style", "font-size:small"))));
 
         GENERATOR_MAP.put(Configuration.HTML_PARAGRAPH_OPEN.getName(), new ParagraphEventGenerator());
-
-        // TODO: BLOCK_MAP.put("var", HTML_VAR_OPEN);
-        // TODO: BLOCK_MAP.put("small", HTML_SMALL_OPEN);
-        // TODO: BLOCK_MAP.put("big", HTML_BIG_OPEN);
 
         GENERATOR_MAP.put(Configuration.HTML_SUB_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.SUBSCRIPT)));
