@@ -29,6 +29,8 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.htmlcleaner.Utils;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
@@ -272,7 +274,20 @@ public class EventConverter implements ITextConverter
                 InlineFilterListener inlineListener = new InlineFilterListener();
                 inlineListener.setWrappedListener(this.listener);
 
-                this.plainParser.parse(new StringReader(((ContentToken) token).getContent()), inlineListener);
+                String content = ((ContentToken) token).getContent();
+
+                // White spaces are not meaningful in mediawiki
+                content = content.replaceAll("[\t ]+", " ");
+
+                // Converter to pure XML
+                content = Utils.escapeXml(content, true, true, true, true, true, true, false);
+
+                // Convert non-breaking space to white space
+                content = content.replace((char) 160, ' ');
+
+                content = StringEscapeUtils.unescapeXml(content);
+
+                this.plainParser.parse(new StringReader(content), inlineListener);
             } catch (ParseException e) {
                 // TODO: log something ?
             }
