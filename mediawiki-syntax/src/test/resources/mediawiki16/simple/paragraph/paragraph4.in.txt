@@ -1,1 +1,1 @@
-verify    spaces are honored
+verify &nbsp;&nbsp; spaces are honored

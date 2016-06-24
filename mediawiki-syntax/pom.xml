@@ -88,7 +88,8 @@
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/VerbatimEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/WPListBlockEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/WPTableBlockEventGenerator.java,
-              org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/XMacroEventGenerator.java
+              org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/XMacroEventGenerator.java,
+              org/xwiki/contrib/mediawiki/syntax/internal/parser/model/EventWikiModel.java
           </excludes>
         </configuration>
       </plugin>

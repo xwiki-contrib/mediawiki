@@ -30,7 +30,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.htmlcleaner.Utils;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
@@ -63,6 +62,7 @@ import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.ContentToken;
 import info.bliki.htmlcleaner.TagNode;
 import info.bliki.htmlcleaner.TagToken;
+import info.bliki.htmlcleaner.Utils;
 import info.bliki.wiki.filter.ITextConverter;
 import info.bliki.wiki.filter.WPList;
 import info.bliki.wiki.filter.WPTable;
@@ -281,7 +281,7 @@ public class EventConverter implements ITextConverter
 
                 // FIXME: workaround a weird handling of entities in the Bliki parser
                 // See https://bitbucket.org/axelclk/info.bliki.wiki/issues/33/weird-handling-of-html-entities
-                content = Utils.escapeXml(content, true, true, true, true, true, true, false);
+                content = Utils.escapeXml(content, true, true, true);
                 content = StringEscapeUtils.unescapeXml(content);
 
                 // Convert non-breaking space to white space

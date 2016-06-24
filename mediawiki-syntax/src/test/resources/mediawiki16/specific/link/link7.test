@@ -7,7 +7,7 @@
 .#-----------------------------------------------------
 beginDocument
 beginParagraph
-beginLink [Typed = [true] Type = [path] Reference = [#See also]] [false]
-endLink [Typed = [true] Type = [path] Reference = [#See also]] [false]
+beginLink [Typed = [true] Type = [path] Reference = [#See_also]] [false]
+endLink [Typed = [true] Type = [path] Reference = [#See_also]] [false]
 endParagraph
 endDocument

@@ -191,8 +191,18 @@ public class EventWikiModel extends WikiModel
         // Create reference
         ResourceReference reference = null;
 
-        if (StringUtils.isNotEmpty(hashSection)) {
-            reference = new ResourceReference('#' + hashSection, ResourceType.PATH);
+        String anchor;
+        if (StringUtils.isEmpty(hashSection)) {
+            anchor = null;
+        } else {
+            // MediaWiki automatically replace white space in hash section by underscore
+            anchor = encodeTitleDotUrl(hashSection, false);
+        }
+
+        if (StringUtils.isEmpty(topic)) {
+            if (anchor != null) {
+                reference = new ResourceReference('#' + anchor, ResourceType.PATH);
+            }
         } else {
             int index = topic.indexOf(':', 1);
             if (index > 0) {
@@ -207,12 +217,14 @@ public class EventWikiModel extends WikiModel
         // Fallback on standard link reference parser
         if (reference == null) {
             reference = this.linkReferenceParser.parse(topic);
-        }
 
-        // Set anchor
-        if (StringUtils.isNotEmpty(hashSection)) {
-            if (reference instanceof DocumentResourceReference) {
-                ((DocumentResourceReference) reference).setAnchor(hashSection);
+            // Set anchor
+            if (anchor != null) {
+                if (reference instanceof DocumentResourceReference) {
+                    ((DocumentResourceReference) reference).setAnchor(anchor);
+                } else {
+                    reference = this.linkReferenceParser.parse(topic + '#' + anchor);
+                }
             }
         }
 
