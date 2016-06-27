@@ -74,6 +74,8 @@ import info.bliki.wiki.tags.BrTag;
 import info.bliki.wiki.tags.HrTag;
 import info.bliki.wiki.tags.NowikiTag;
 import info.bliki.wiki.tags.PreTag;
+import info.bliki.wiki.tags.RefTag;
+import info.bliki.wiki.tags.ReferencesTag;
 import info.bliki.wiki.tags.SourceTag;
 import info.bliki.wiki.tags.TableOfContentTag;
 import info.bliki.wiki.tags.WPBoldItalicTag;
@@ -94,8 +96,9 @@ public class EventConverter implements ITextConverter
         GENERATOR_MAP.put(new PreTag().getName(), new VerbatimEventGenerator(false));
         // TODO: BLOCK_MAP.put("math", new MathTag());
         // TODO: BLOCK_MAP.put("embed", new EmbedTag());
-        // TODO: BLOCK_MAP.put("ref", new RefTag());
-        // TODO: BLOCK_MAP.put("references", new ReferencesTag());
+
+        GENERATOR_MAP.put(new RefTag().getName(), new MacroEventGenerator("footnote", true));
+        GENERATOR_MAP.put(new ReferencesTag().getName(), new MacroEventGenerator("putFootnotes", false));
 
         // see https://www.mediawiki.org/wiki/Extension:SyntaxHighlight
         GENERATOR_MAP.put("syntaxhighlight", new SourceEventGenerator());

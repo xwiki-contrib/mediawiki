@@ -25,6 +25,7 @@ import org.xwiki.filter.FilterException;
 
 import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.TagNode;
+import info.bliki.wiki.model.Configuration;
 import info.bliki.wiki.model.IWikiModel;
 
 public class MacroEventGenerator extends AbstractEventGenerator<TagNode>
@@ -33,10 +34,39 @@ public class MacroEventGenerator extends AbstractEventGenerator<TagNode>
 
     private String content;
 
-    private Map<String, String> parameters;
+    private Boolean inline;
 
     public MacroEventGenerator()
     {
+    }
+
+    public MacroEventGenerator(String id, boolean inline)
+    {
+        this.id = id;
+        this.inline = inline;
+    }
+
+    public Map<String, String> getParameters()
+    {
+        return this.token.getAttributes();
+    }
+
+    public String getContent()
+    {
+        if (this.content == null) {
+            this.content = this.token.getBodyString();
+        }
+
+        return this.content;
+    }
+
+    public boolean isInline()
+    {
+        if (this.inline == null) {
+            this.inline = this.token.getParents() != Configuration.SPECIAL_BLOCK_TAGS;
+        }
+
+        return this.inline == Boolean.TRUE;
     }
 
     @Override
@@ -46,15 +76,14 @@ public class MacroEventGenerator extends AbstractEventGenerator<TagNode>
 
         TagNode node = (TagNode) token;
 
-        this.id = node.getName();
-        this.content = node.getBodyString();
-        this.parameters = node.getAttributes();
+        if (this.id == null) {
+            this.id = node.getName();
+        }
     }
 
     @Override
     public void traverse(IWikiModel model) throws FilterException
     {
-        // TODO: find if the macro is inline or not
-        getListener().onMacro(this.id, this.parameters, this.content, false);
+        getListener().onMacro(this.id, getParameters(), getContent(), isInline());
     }
 }
