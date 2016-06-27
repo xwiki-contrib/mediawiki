@@ -42,7 +42,6 @@ import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.BulletedListBlock;
 import org.xwiki.rendering.block.FormatBlock;
 import org.xwiki.rendering.block.GroupBlock;
-import org.xwiki.rendering.block.HeaderBlock;
 import org.xwiki.rendering.block.HorizontalLineBlock;
 import org.xwiki.rendering.block.ListItemBlock;
 import org.xwiki.rendering.block.NewLineBlock;
@@ -107,18 +106,12 @@ public class EventConverter implements ITextConverter
 
         GENERATOR_MAP.put(new ATag().getName(), new AEventGenerator());
 
-        GENERATOR_MAP.put(Configuration.HTML_H1_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL1)));
-        GENERATOR_MAP.put(Configuration.HTML_H2_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL2)));
-        GENERATOR_MAP.put(Configuration.HTML_H3_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL3)));
-        GENERATOR_MAP.put(Configuration.HTML_H4_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL4)));
-        GENERATOR_MAP.put(Configuration.HTML_H5_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL5)));
-        GENERATOR_MAP.put(Configuration.HTML_H6_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL6)));
+        GENERATOR_MAP.put(Configuration.HTML_H1_OPEN.getName(), new HeaderEventGenerator(HeaderLevel.LEVEL1));
+        GENERATOR_MAP.put(Configuration.HTML_H2_OPEN.getName(), new HeaderEventGenerator(HeaderLevel.LEVEL2));
+        GENERATOR_MAP.put(Configuration.HTML_H3_OPEN.getName(), new HeaderEventGenerator(HeaderLevel.LEVEL3));
+        GENERATOR_MAP.put(Configuration.HTML_H4_OPEN.getName(), new HeaderEventGenerator(HeaderLevel.LEVEL4));
+        GENERATOR_MAP.put(Configuration.HTML_H5_OPEN.getName(), new HeaderEventGenerator(HeaderLevel.LEVEL5));
+        GENERATOR_MAP.put(Configuration.HTML_H6_OPEN.getName(), new HeaderEventGenerator(HeaderLevel.LEVEL6));
 
         GENERATOR_MAP.put(Configuration.HTML_EM_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.BOLD)));
