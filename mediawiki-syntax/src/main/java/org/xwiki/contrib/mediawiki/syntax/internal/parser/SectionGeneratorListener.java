@@ -31,7 +31,7 @@ import org.xwiki.rendering.listener.WrappingListener;
  * 
  * @version $Id$
  */
-// TODO: put it in rendering
+// TODO: replace with org.xwiki.rendering.listener.SectionGeneratorListener when available
 public class SectionGeneratorListener extends WrappingListener
 {
     private int sectionDepth = -1;
