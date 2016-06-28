@@ -78,16 +78,18 @@ public class MediaWikiStreamParser implements StreamParser
     @Override
     public void parse(Reader source, Listener listener) throws ParseException
     {
+        SectionGeneratorListener wrappingLisrener = new SectionGeneratorListener(listener);
+
         // Create custom converter
         EventConverter converter = this.converterProvider.get();
-        converter.init(listener);
+        converter.init(wrappingLisrener);
 
         EventWikiModel wikiModel = this.modelProvider.get();
 
         MetaData metaData = new MetaData();
         metaData.addMetaData(MetaData.SYNTAX, getSyntax());
 
-        listener.beginDocument(metaData);
+        wrappingLisrener.beginDocument(metaData);
 
         try {
             // Get content
@@ -99,6 +101,6 @@ public class MediaWikiStreamParser implements StreamParser
             throw new ParseException("Failed to parse source", e);
         }
 
-        listener.endDocument(metaData);
+        wrappingLisrener.endDocument(metaData);
     }
 }

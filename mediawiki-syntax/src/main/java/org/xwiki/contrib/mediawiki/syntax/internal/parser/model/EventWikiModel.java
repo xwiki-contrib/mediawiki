@@ -19,6 +19,10 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.model;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -33,10 +37,14 @@ import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.parser.ResourceReferenceParser;
 
 import info.bliki.htmlcleaner.ContentToken;
+import info.bliki.htmlcleaner.TagToken;
 import info.bliki.wiki.filter.WikipediaPreTagParser;
+import info.bliki.wiki.model.Configuration;
 import info.bliki.wiki.model.ImageFormat;
 import info.bliki.wiki.model.WikiModel;
 import info.bliki.wiki.namespaces.INamespace.NamespaceCode;
+import info.bliki.wiki.tags.PTag;
+import info.bliki.wiki.tags.SourceTag;
 
 /**
  * Custom WikiModel.
@@ -49,6 +57,92 @@ public class EventWikiModel extends WikiModel
 {
     private boolean nopipe;
 
+    class Tokens implements Map<String, TagToken>
+    {
+        @Override
+        public int size()
+        {
+            return EventWikiModel.super.getTokenMap().size();
+        }
+
+        @Override
+        public boolean isEmpty()
+        {
+            return EventWikiModel.super.getTokenMap().isEmpty();
+        }
+
+        @Override
+        public boolean containsKey(Object key)
+        {
+            return EventWikiModel.super.getTokenMap().containsKey(key);
+        }
+
+        @Override
+        public boolean containsValue(Object value)
+        {
+            return EventWikiModel.super.getTokenMap().containsValue(value);
+        }
+
+        @Override
+        public TagToken get(Object key)
+        {
+            TagToken token = EventWikiModel.super.getTokenMap().get(key);
+
+            if (token == null) {
+                String keyString = (String) key;
+                if (keyString.startsWith(XMacroTag.TAGPREFIX)) {
+                    String macroId = ((String) key).substring(XMacroTag.TAGPREFIX.length());
+                    token = isInline() ? new XInlineMacroTag(macroId) : new XStandaloneMacroTag(macroId);
+                }
+            }
+
+            return token;
+        }
+
+        @Override
+        public TagToken put(String key, TagToken value)
+        {
+            return EventWikiModel.super.getTokenMap().put(key, value);
+        }
+
+        @Override
+        public TagToken remove(Object key)
+        {
+            return EventWikiModel.super.getTokenMap().remove(key);
+        }
+
+        @Override
+        public void putAll(Map<? extends String, ? extends TagToken> m)
+        {
+            EventWikiModel.super.getTokenMap().putAll(m);
+        }
+
+        @Override
+        public void clear()
+        {
+            EventWikiModel.super.getTokenMap().clear();
+        }
+
+        @Override
+        public Set<String> keySet()
+        {
+            return EventWikiModel.super.getTokenMap().keySet();
+        }
+
+        @Override
+        public Collection<TagToken> values()
+        {
+            return EventWikiModel.super.getTokenMap().values();
+        }
+
+        @Override
+        public Set<java.util.Map.Entry<String, TagToken>> entrySet()
+        {
+            return EventWikiModel.super.getTokenMap().entrySet();
+        }
+
+    }
+
     @Inject
     @Named("default/link")
     private ResourceReferenceParser linkReferenceParser;
@@ -60,12 +154,25 @@ public class EventWikiModel extends WikiModel
     @Named("default/image")
     private ResourceReferenceParser imageReferenceParser;
 
+    private Tokens tokens = new Tokens();
+
     /**
      * Default constructor.
      */
     public EventWikiModel()
     {
-        super(new EventConfiguration(), "${image}", "${title}");
+        super("${image}", "${title}");
+
+        addStandaloneMacroTag("gallery");
+        addStandaloneMacroTag("blockquote");
+
+        addTokenTag(Configuration.HTML_CODE_OPEN.getName(), new SourceTag());
+    }
+
+    private void addStandaloneMacroTag(String name)
+    {
+        addTokenTag(name, new XStandaloneMacroTag(name));
+
     }
 
     @Override
@@ -84,8 +191,18 @@ public class EventWikiModel extends WikiModel
         // Create reference
         ResourceReference reference = null;
 
-        if (StringUtils.isNotEmpty(hashSection)) {
-            reference = new ResourceReference('#' + hashSection, ResourceType.PATH);
+        String anchor;
+        if (StringUtils.isEmpty(hashSection)) {
+            anchor = null;
+        } else {
+            // MediaWiki automatically replace white space in hash section by underscore
+            anchor = encodeTitleDotUrl(hashSection, false);
+        }
+
+        if (StringUtils.isEmpty(topic)) {
+            if (anchor != null) {
+                reference = new ResourceReference('#' + anchor, ResourceType.PATH);
+            }
         } else {
             int index = topic.indexOf(':', 1);
             if (index > 0) {
@@ -100,12 +217,14 @@ public class EventWikiModel extends WikiModel
         // Fallback on standard link reference parser
         if (reference == null) {
             reference = this.linkReferenceParser.parse(topic);
-        }
 
-        // Set anchor
-        if (StringUtils.isNotEmpty(hashSection)) {
-            if (reference instanceof DocumentResourceReference) {
-                ((DocumentResourceReference) reference).setAnchor(hashSection);
+            // Set anchor
+            if (anchor != null) {
+                if (reference instanceof DocumentResourceReference) {
+                    ((DocumentResourceReference) reference).setAnchor(anchor);
+                } else {
+                    reference = this.linkReferenceParser.parse(topic + '#' + anchor);
+                }
             }
         }
 
@@ -129,7 +248,7 @@ public class EventWikiModel extends WikiModel
     {
         ResourceReference reference = this.imageReferenceParser.parse(srcImageLink);
 
-        ImageTag imageTag = new ImageTag(reference, false);
+        ImageTag imageTag = new ImageTag(reference, false, imageFormat);
 
         append(imageTag);
     }
@@ -162,5 +281,30 @@ public class EventWikiModel extends WikiModel
         }
 
         append(linkTag);
+    }
+
+    private boolean isInline()
+    {
+        TagToken token = peekNode();
+
+        if (token != null) {
+            if (!Configuration.SPECIAL_BLOCK_TAGS.contains('|' + token.getName() + '|')) {
+                if (token instanceof PTag) {
+                    // Bliki always produce a opening P tag no matter what and only close it later of the following tag
+                    // is a standalone tag
+                    return ((PTag) token).getChildren().size() > 0;
+                } else {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public Map<String, TagToken> getTokenMap()
+    {
+        return this.tokens;
     }
 }

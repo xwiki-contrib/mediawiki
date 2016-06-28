@@ -21,39 +21,18 @@ package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
 import java.util.Map;
 
-import org.xwiki.rendering.block.AbstractBlock;
+import org.xwiki.rendering.listener.Listener;
 
-import info.bliki.htmlcleaner.BaseToken;
-import info.bliki.htmlcleaner.TagNode;
-
-public abstract class AbstractBlockEventGenerator<T extends BaseToken> extends AbstractEventGenerator<T>
+public class FootnoteMacroEventGenerator extends MacroEventGenerator
 {
-    protected AbstractBlock block;
-
-    public AbstractBlockEventGenerator(AbstractBlock block)
+    public FootnoteMacroEventGenerator()
     {
-        this.block = block;
+        super("footnote", true);
     }
 
     @Override
-    public void init(BaseToken token, EventConverter converter)
+    public Map<String, String> getParameters()
     {
-        super.init(token, converter);
-
-        if (token instanceof TagNode) {
-            for (Map.Entry<String, String> entry : ((TagNode) token).getAttributes().entrySet()) {
-                this.block.setParameter(entry.getKey(), entry.getValue());
-            }
-        }
-    }
-
-    @Override
-    public AbstractBlockEventGenerator clone() throws CloneNotSupportedException
-    {
-        AbstractBlockEventGenerator blockEvent = (AbstractBlockEventGenerator) super.clone();
-
-        blockEvent.block = (AbstractBlock) this.block.clone();
-
-        return blockEvent;
+        return Listener.EMPTY_PARAMETERS;
     }
 }

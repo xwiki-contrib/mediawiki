@@ -29,18 +29,19 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.ImageTag;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.LinkTag;
+import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.XMacroTag;
 import org.xwiki.filter.FilterException;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.BulletedListBlock;
 import org.xwiki.rendering.block.FormatBlock;
 import org.xwiki.rendering.block.GroupBlock;
-import org.xwiki.rendering.block.HeaderBlock;
 import org.xwiki.rendering.block.HorizontalLineBlock;
 import org.xwiki.rendering.block.ListItemBlock;
 import org.xwiki.rendering.block.NewLineBlock;
@@ -60,6 +61,7 @@ import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.ContentToken;
 import info.bliki.htmlcleaner.TagNode;
 import info.bliki.htmlcleaner.TagToken;
+import info.bliki.htmlcleaner.Utils;
 import info.bliki.wiki.filter.ITextConverter;
 import info.bliki.wiki.filter.WPList;
 import info.bliki.wiki.filter.WPTable;
@@ -71,6 +73,8 @@ import info.bliki.wiki.tags.BrTag;
 import info.bliki.wiki.tags.HrTag;
 import info.bliki.wiki.tags.NowikiTag;
 import info.bliki.wiki.tags.PreTag;
+import info.bliki.wiki.tags.RefTag;
+import info.bliki.wiki.tags.ReferencesTag;
 import info.bliki.wiki.tags.SourceTag;
 import info.bliki.wiki.tags.TableOfContentTag;
 import info.bliki.wiki.tags.WPBoldItalicTag;
@@ -91,8 +95,9 @@ public class EventConverter implements ITextConverter
         GENERATOR_MAP.put(new PreTag().getName(), new VerbatimEventGenerator(false));
         // TODO: BLOCK_MAP.put("math", new MathTag());
         // TODO: BLOCK_MAP.put("embed", new EmbedTag());
-        // TODO: BLOCK_MAP.put("ref", new RefTag());
-        // TODO: BLOCK_MAP.put("references", new ReferencesTag());
+
+        GENERATOR_MAP.put(new RefTag().getName(), new MacroEventGenerator("footnote", true));
+        GENERATOR_MAP.put(new ReferencesTag().getName(), new MacroEventGenerator("putFootnotes", false));
 
         // see https://www.mediawiki.org/wiki/Extension:SyntaxHighlight
         GENERATOR_MAP.put("syntaxhighlight", new SourceEventGenerator());
@@ -101,18 +106,12 @@ public class EventConverter implements ITextConverter
 
         GENERATOR_MAP.put(new ATag().getName(), new AEventGenerator());
 
-        GENERATOR_MAP.put(Configuration.HTML_H1_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL1)));
-        GENERATOR_MAP.put(Configuration.HTML_H2_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL2)));
-        GENERATOR_MAP.put(Configuration.HTML_H3_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL3)));
-        GENERATOR_MAP.put(Configuration.HTML_H4_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL4)));
-        GENERATOR_MAP.put(Configuration.HTML_H5_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL5)));
-        GENERATOR_MAP.put(Configuration.HTML_H6_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new HeaderBlock(Collections.<Block>emptyList(), HeaderLevel.LEVEL6)));
+        GENERATOR_MAP.put(Configuration.HTML_H1_OPEN.getName(), new HeaderEventGenerator(HeaderLevel.LEVEL1));
+        GENERATOR_MAP.put(Configuration.HTML_H2_OPEN.getName(), new HeaderEventGenerator(HeaderLevel.LEVEL2));
+        GENERATOR_MAP.put(Configuration.HTML_H3_OPEN.getName(), new HeaderEventGenerator(HeaderLevel.LEVEL3));
+        GENERATOR_MAP.put(Configuration.HTML_H4_OPEN.getName(), new HeaderEventGenerator(HeaderLevel.LEVEL4));
+        GENERATOR_MAP.put(Configuration.HTML_H5_OPEN.getName(), new HeaderEventGenerator(HeaderLevel.LEVEL5));
+        GENERATOR_MAP.put(Configuration.HTML_H6_OPEN.getName(), new HeaderEventGenerator(HeaderLevel.LEVEL6));
 
         GENERATOR_MAP.put(Configuration.HTML_EM_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.BOLD)));
@@ -127,12 +126,16 @@ public class EventConverter implements ITextConverter
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.UNDERLINED)));
         GENERATOR_MAP.put(Configuration.HTML_TT_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.MONOSPACE)));
+        GENERATOR_MAP.put(Configuration.HTML_VAR_OPEN.getName(),
+            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.ITALIC)));
+        GENERATOR_MAP.put(Configuration.HTML_SMALL_OPEN.getName(),
+            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.NONE,
+                Collections.singletonMap("style", "font-size:small"))));
+        GENERATOR_MAP.put(Configuration.HTML_BIG_OPEN.getName(),
+            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.NONE,
+                Collections.singletonMap("style", "font-size:small"))));
 
         GENERATOR_MAP.put(Configuration.HTML_PARAGRAPH_OPEN.getName(), new ParagraphEventGenerator());
-
-        // TODO: BLOCK_MAP.put("var", HTML_VAR_OPEN);
-        // TODO: BLOCK_MAP.put("small", HTML_SMALL_OPEN);
-        // TODO: BLOCK_MAP.put("big", HTML_BIG_OPEN);
 
         GENERATOR_MAP.put(Configuration.HTML_SUB_OPEN.getName(),
             new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.SUBSCRIPT)));
@@ -176,7 +179,9 @@ public class EventConverter implements ITextConverter
         // TODO: BLOCK_MAP.put("cite", HTML_CITE_OPEN);
 
         GENERATOR_MAP.put(new LinkTag(null, false).getName(), new LinkEventGenerator());
-        GENERATOR_MAP.put(new ImageTag(null, false).getName(), new ImageEventGenerator());
+        GENERATOR_MAP.put(ImageTag.NAME, new ImageEventGenerator());
+
+        GENERATOR_MAP.put(XMacroTag.TAGNAME, new XMacroEventGenerator());
     }
 
     @Inject
@@ -265,7 +270,20 @@ public class EventConverter implements ITextConverter
                 InlineFilterListener inlineListener = new InlineFilterListener();
                 inlineListener.setWrappedListener(this.listener);
 
-                this.plainParser.parse(new StringReader(((ContentToken) token).getContent()), inlineListener);
+                String content = ((ContentToken) token).getContent();
+
+                // White spaces are not meaningful in mediawiki
+                content = content.replaceAll("[\t ]+", " ");
+
+                // FIXME: workaround a weird handling of entities in the Bliki parser
+                // See https://bitbucket.org/axelclk/info.bliki.wiki/issues/33/weird-handling-of-html-entities
+                content = Utils.escapeXml(content, true, true, true);
+                content = StringEscapeUtils.unescapeXml(content);
+
+                // Convert non-breaking space to white space
+                content = content.replace((char) 160, ' ');
+
+                this.plainParser.parse(new StringReader(content), inlineListener);
             } catch (ParseException e) {
                 // TODO: log something ?
             }

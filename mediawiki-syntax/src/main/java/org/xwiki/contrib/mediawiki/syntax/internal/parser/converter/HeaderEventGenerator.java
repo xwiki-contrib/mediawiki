@@ -19,31 +19,24 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
+import java.util.List;
 import java.util.Map;
 
 import org.xwiki.filter.FilterException;
+import org.xwiki.rendering.listener.HeaderLevel;
 
-import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.TagNode;
 import info.bliki.wiki.model.Configuration;
 import info.bliki.wiki.model.IWikiModel;
+import info.bliki.wiki.tags.HTMLBlockTag;
 
-public class MacroEventGenerator extends AbstractEventGenerator<TagNode>
+public class HeaderEventGenerator extends AbstractEventGenerator<HTMLBlockTag>
 {
-    private String id;
+    private HeaderLevel level;
 
-    private String content;
-
-    private Boolean inline;
-
-    public MacroEventGenerator()
+    public HeaderEventGenerator(HeaderLevel level)
     {
-    }
-
-    public MacroEventGenerator(String id, boolean inline)
-    {
-        this.id = id;
-        this.inline = inline;
+        this.level = level;
     }
 
     public Map<String, String> getParameters()
@@ -51,39 +44,28 @@ public class MacroEventGenerator extends AbstractEventGenerator<TagNode>
         return this.token.getAttributes();
     }
 
-    public String getContent()
-    {
-        if (this.content == null) {
-            this.content = this.token.getBodyString();
-        }
-
-        return this.content;
-    }
-
-    public boolean isInline()
-    {
-        if (this.inline == null) {
-            this.inline = this.token.getParents() != Configuration.SPECIAL_BLOCK_TAGS;
-        }
-
-        return this.inline == Boolean.TRUE;
-    }
-
-    @Override
-    public void init(BaseToken token, EventConverter converter)
-    {
-        super.init(token, converter);
-
-        TagNode node = (TagNode) token;
-
-        if (this.id == null) {
-            this.id = node.getName();
-        }
-    }
-
     @Override
     public void traverse(IWikiModel model) throws FilterException
     {
-        getListener().onMacro(this.id, getParameters(), getContent(), isInline());
+        List<Object> children = this.token.getChildren();
+
+        if (!children.isEmpty()) {
+            Object child = children.get(0);
+
+            String id = null;
+            if (child instanceof TagNode) {
+                TagNode childNode = (TagNode) child;
+                if (childNode.getName().equals(Configuration.HTML_SPAN_OPEN.getName())) {
+                    id = childNode.getAttributes().get("id");
+                    children = childNode.getChildren();
+                }
+            }
+
+            getListener().beginHeader(this.level, id, this.token.getAttributes());
+
+            this.converter.traverse(children, model);
+
+            getListener().endHeader(this.level, id, this.token.getAttributes());
+        }
     }
 }

@@ -25,13 +25,13 @@
   <parent>
     <groupId>org.xwiki.contrib.mediawiki</groupId>
     <artifactId>mediawiki</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.5-SNAPSHOT</version>
   </parent>
   <artifactId>mediawiki-syntax</artifactId>
   <name>MediaWiki - Syntax</name>
   <description>MediaWiki Syntax parser</description>
   <properties>
-    <xwiki.jacoco.instructionRatio>0.88</xwiki.jacoco.instructionRatio>
+    <xwiki.jacoco.instructionRatio>0.82</xwiki.jacoco.instructionRatio>
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>MediaWiki Syntax</xwiki.extension.name>
   </properties>
@@ -39,7 +39,7 @@
     <dependency>
       <groupId>info.bliki.wiki</groupId>
       <artifactId>bliki-core</artifactId>
-      <version>3.1.0</version>
+      <version>3.1.0-xwiki</version>
     </dependency>
     <dependency>
       <groupId>org.xwiki.rendering</groupId>
@@ -77,17 +77,22 @@
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/BoldItalicEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/EventConverter.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/EventGenerator.java,
+              org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/FootnoteMacroEventGenerator.java,
+              org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/HeaderEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/ImageEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/LinkEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/MacroEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/OnBlockEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/ParagraphEventGenerator.java,
+              org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/PutFootnotesMacroEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/SourceEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/TableOfContentEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/UnknownEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/VerbatimEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/WPListBlockEventGenerator.java,
-              org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/WPTableBlockEventGenerator.java
+              org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/WPTableBlockEventGenerator.java,
+              org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/XMacroEventGenerator.java,
+              org/xwiki/contrib/mediawiki/syntax/internal/parser/model/EventWikiModel.java
           </excludes>
         </configuration>
       </plugin>

@@ -1,13 +1,14 @@
 .#-----------------------------------------------------
 .input|mediawiki/1.6
 .#-----------------------------------------------------
-[[#See also]]
+<macro:testsimplemacro param1="value1" param2="value2">
+some '''unparsed''' content
+</macro:testsimplemacro>
 .#-----------------------------------------------------
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
-beginParagraph
-beginLink [Typed = [true] Type = [path] Reference = [#See also]] [false]
-endLink [Typed = [true] Type = [path] Reference = [#See also]] [false]
-endParagraph
+onMacroStandalone [testsimplemacro] [param1=value1|param2=value2] [
+some '''unparsed''' content
+]
 endDocument
