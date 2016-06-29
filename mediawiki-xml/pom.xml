@@ -85,6 +85,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -93,6 +94,7 @@
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
           <excludes>
+              org/xwiki/filter/mediawiki/xml/internal/input/MediaWikiInputFilterStream.java
           </excludes>
         </configuration>
       </plugin>

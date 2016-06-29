@@ -23,6 +23,8 @@ import org.xwiki.filter.input.InputSource;
 import org.xwiki.filter.type.FilterStreamType;
 import org.xwiki.filter.type.SystemType;
 import org.xwiki.filter.xml.input.XMLInputProperties;
+import org.xwiki.model.EntityType;
+import org.xwiki.model.reference.EntityReference;
 import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyName;
 
@@ -31,7 +33,7 @@ import org.xwiki.properties.annotation.PropertyName;
  * 
  * @version $Id: 408d9389abed98e4ab2fa6f528557e5d2c032b24 $
  */
-public class MediaWikiXMLInputProperties extends XMLInputProperties
+public class MediaWikiInputProperties extends XMLInputProperties
 {
     /**
      * The MediaWiki XML format.
@@ -48,6 +50,21 @@ public class MediaWikiXMLInputProperties extends XMLInputProperties
      * @see #getAttachments()
      */
     private InputSource attachments;
+
+    /**
+     * @see #getParent()
+     */
+    private EntityReference parent;
+
+    /**
+     * @see #getFilesSpace()
+     */
+    private EntityReference filesSpace = new EntityReference("Files", EntityType.SPACE);
+
+    /**
+     * @see #getFileAttachmed()
+     */
+    private boolean fileAttached;
 
     /**
      * @see #isConvertToXWiki()
@@ -70,6 +87,60 @@ public class MediaWikiXMLInputProperties extends XMLInputProperties
     public void setAttachments(InputSource attachments)
     {
         this.attachments = attachments;
+    }
+
+    /**
+     * @return the reference of the parent of all pages
+     */
+    @PropertyName("Parent")
+    @PropertyDescription("The reference of the parent of all pages")
+    public EntityReference getParent()
+    {
+        return this.parent;
+    }
+
+    /**
+     * @param parent the reference of the parent of all pages
+     */
+    public void setParent(EntityReference parent)
+    {
+        this.parent = parent;
+    }
+
+    /**
+     * @return the space where to store the files
+     */
+    @PropertyName("Files space")
+    @PropertyDescription("The space where to store the files")
+    public EntityReference getFilesSpace()
+    {
+        return this.filesSpace;
+    }
+
+    /**
+     * @param filesSpace the space where to store the files
+     */
+    public void setFilesSpace(EntityReference filesSpace)
+    {
+        this.filesSpace = filesSpace;
+    }
+
+    /**
+     * @return true if the files should be attached to each page linking it
+     */
+    @PropertyName("Attach files")
+    @PropertyDescription("True if the files should be attached to each page linking it")
+    public boolean isFileAttached()
+    {
+        return this.fileAttached;
+    }
+
+    /**
+     * @param fileAttached true if the files should be attached to each page linking it
+     */
+    public void setFileAttached(boolean fileAttached)
+    {
+        this.fileAttached = fileAttached;
     }
 
     /**
