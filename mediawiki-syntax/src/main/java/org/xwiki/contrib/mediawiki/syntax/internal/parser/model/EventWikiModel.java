@@ -30,6 +30,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
+import org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiContext;
+import org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiContext.ReferenceType;
 import org.xwiki.rendering.listener.reference.AttachmentResourceReference;
 import org.xwiki.rendering.listener.reference.DocumentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
@@ -43,6 +45,7 @@ import info.bliki.wiki.model.Configuration;
 import info.bliki.wiki.model.ImageFormat;
 import info.bliki.wiki.model.WikiModel;
 import info.bliki.wiki.namespaces.INamespace.NamespaceCode;
+import info.bliki.wiki.tags.HTMLBlockTag;
 import info.bliki.wiki.tags.PTag;
 import info.bliki.wiki.tags.SourceTag;
 
@@ -55,8 +58,6 @@ import info.bliki.wiki.tags.SourceTag;
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
 public class EventWikiModel extends WikiModel
 {
-    private boolean nopipe;
-
     class Tokens implements Map<String, TagToken>
     {
         @Override
@@ -147,6 +148,11 @@ public class EventWikiModel extends WikiModel
     @Named("default/link")
     private ResourceReferenceParser linkReferenceParser;
 
+    @Inject
+    private MediaWikiContext context;
+
+    private boolean nopipe;
+
     /**
      * @see #getImageReferenceParser()
      */
@@ -167,6 +173,11 @@ public class EventWikiModel extends WikiModel
         addStandaloneMacroTag("blockquote");
 
         addTokenTag(Configuration.HTML_CODE_OPEN.getName(), new SourceTag());
+
+        // TODO: remove when
+        // https://bitbucket.org/axelclk/info.bliki.wiki/pull-requests/7/is-supposed-to-be-a-block-element is released
+        addTokenTag(Configuration.HTML_CENTER_OPEN.getName(),
+            new HTMLBlockTag("center", Configuration.SPECIAL_BLOCK_TAGS));
     }
 
     private void addStandaloneMacroTag(String name)
@@ -199,11 +210,13 @@ public class EventWikiModel extends WikiModel
             anchor = encodeTitleDotUrl(hashSection, false);
         }
 
-        if (StringUtils.isEmpty(topic)) {
+        if (this.context.getReferenceType() == ReferenceType.NONE || StringUtils.isEmpty(topic)) {
             if (anchor != null) {
-                reference = new ResourceReference('#' + anchor, ResourceType.PATH);
+                reference = new ResourceReference(topic + '#' + anchor, ResourceType.PATH);
+            } else {
+                reference = new ResourceReference(topic, ResourceType.PATH);
             }
-        } else {
+        } else if (this.context.getReferenceType() != ReferenceType.NONE) {
             int index = topic.indexOf(':', 1);
             if (index > 0) {
                 String namespace = topic.substring(0, index);
@@ -216,7 +229,11 @@ public class EventWikiModel extends WikiModel
 
         // Fallback on standard link reference parser
         if (reference == null) {
-            reference = this.linkReferenceParser.parse(topic);
+            if (this.context.getReferenceType() == ReferenceType.XWIKI) {
+                reference = this.linkReferenceParser.parse(topic);
+            } else {
+                reference = new DocumentResourceReference(topic);
+            }
 
             // Set anchor
             if (anchor != null) {
@@ -246,7 +263,12 @@ public class EventWikiModel extends WikiModel
     @Override
     public void appendInternalImageLink(String hrefImageLink, String srcImageLink, ImageFormat imageFormat)
     {
-        ResourceReference reference = this.imageReferenceParser.parse(srcImageLink);
+        ResourceReference reference;
+        if (this.context.getReferenceType() == ReferenceType.XWIKI) {
+            reference = this.imageReferenceParser.parse(srcImageLink);
+        } else {
+            reference = new AttachmentResourceReference(srcImageLink);
+        }
 
         ImageTag imageTag = new ImageTag(reference, false, imageFormat);
 

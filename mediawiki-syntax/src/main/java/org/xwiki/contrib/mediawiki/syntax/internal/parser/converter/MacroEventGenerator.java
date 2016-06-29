@@ -19,8 +19,7 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
-import java.util.Map;
-
+import org.apache.commons.lang3.StringUtils;
 import org.xwiki.filter.FilterException;
 
 import info.bliki.htmlcleaner.BaseToken;
@@ -40,20 +39,28 @@ public class MacroEventGenerator extends AbstractEventGenerator<TagNode>
     {
     }
 
+    public MacroEventGenerator(String id)
+    {
+        this.id = id;
+    }
+
     public MacroEventGenerator(String id, boolean inline)
     {
         this.id = id;
         this.inline = inline;
     }
 
-    public Map<String, String> getParameters()
-    {
-        return this.token.getAttributes();
-    }
-
     public String getContent()
     {
         if (this.content == null) {
+            if (!isInline()) {
+                // Remove leading and trailing newline
+                this.content = StringUtils.removeStart(content, "\r");
+                this.content = StringUtils.removeStart(content, "\n");
+                this.content = StringUtils.removeEnd(content, "\n");
+                this.content = StringUtils.removeEnd(content, "\r");
+            }
+
             this.content = this.token.getBodyString();
         }
 

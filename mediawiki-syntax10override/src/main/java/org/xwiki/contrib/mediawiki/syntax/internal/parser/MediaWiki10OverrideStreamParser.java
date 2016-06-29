@@ -47,7 +47,7 @@ public class MediaWiki10OverrideStreamParser implements StreamParser
     public static final String MEDIAWIKI_1_0_STRING = "mediawiki/1.0";
 
     @Inject
-    @Named(MediaWikiStreamParser.MEDIAWIKI_1_6_STRING)
+    @Named(MediaWikiStreamParser.SYNTAX_STRING)
     private StreamParser parser;
 
     @Override

@@ -70,7 +70,9 @@ import info.bliki.wiki.model.IWikiModel;
 import info.bliki.wiki.model.ImageFormat;
 import info.bliki.wiki.tags.ATag;
 import info.bliki.wiki.tags.BrTag;
+import info.bliki.wiki.tags.HTMLTag;
 import info.bliki.wiki.tags.HrTag;
+import info.bliki.wiki.tags.MathTag;
 import info.bliki.wiki.tags.NowikiTag;
 import info.bliki.wiki.tags.PreTag;
 import info.bliki.wiki.tags.RefTag;
@@ -88,13 +90,12 @@ public class EventConverter implements ITextConverter
     private static final Map<String, EventGenerator> GENERATOR_MAP = new HashMap<>();
 
     static {
-        GENERATOR_MAP.put(new BrTag().getName(), new OnBlockEventGenerator(new NewLineBlock()));
-        GENERATOR_MAP.put(new HrTag().getName(), new OnBlockEventGenerator(new HorizontalLineBlock()));
+        GENERATOR_MAP.put(new BrTag().getName(), new OnBlockEventGenerator<BrTag>(new NewLineBlock()));
+        GENERATOR_MAP.put(new HrTag().getName(), new OnBlockEventGenerator<HrTag>(new HorizontalLineBlock()));
 
         GENERATOR_MAP.put(new NowikiTag().getName(), new VerbatimEventGenerator(true));
         GENERATOR_MAP.put(new PreTag().getName(), new VerbatimEventGenerator(false));
-        // TODO: BLOCK_MAP.put("math", new MathTag());
-        // TODO: BLOCK_MAP.put("embed", new EmbedTag());
+        GENERATOR_MAP.put(new MathTag().getName(), new FormulaMacroEventGenerator());
 
         GENERATOR_MAP.put(new RefTag().getName(), new MacroEventGenerator("footnote", true));
         GENERATOR_MAP.put(new ReferencesTag().getName(), new MacroEventGenerator("putFootnotes", false));
@@ -114,69 +115,73 @@ public class EventConverter implements ITextConverter
         GENERATOR_MAP.put(Configuration.HTML_H6_OPEN.getName(), new HeaderEventGenerator(HeaderLevel.LEVEL6));
 
         GENERATOR_MAP.put(Configuration.HTML_EM_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.BOLD)));
+            new BeginEndBlockEventGenerator<HTMLTag>(new FormatBlock(Collections.<Block>emptyList(), Format.BOLD)));
         GENERATOR_MAP.put(Configuration.HTML_ITALIC_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.ITALIC)));
+            new BeginEndBlockEventGenerator<HTMLTag>(new FormatBlock(Collections.<Block>emptyList(), Format.ITALIC)));
         GENERATOR_MAP.put(Configuration.HTML_BOLD_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.BOLD)));
+            new BeginEndBlockEventGenerator<HTMLTag>(new FormatBlock(Collections.<Block>emptyList(), Format.BOLD)));
         GENERATOR_MAP.put(new WPBoldItalicTag().getName(), new BoldItalicEventGenerator());
         GENERATOR_MAP.put(Configuration.HTML_STRONG_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.BOLD)));
-        GENERATOR_MAP.put(Configuration.HTML_UNDERLINE_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.UNDERLINED)));
-        GENERATOR_MAP.put(Configuration.HTML_TT_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.MONOSPACE)));
+            new BeginEndBlockEventGenerator<HTMLTag>(new FormatBlock(Collections.<Block>emptyList(), Format.BOLD)));
+        GENERATOR_MAP.put(Configuration.HTML_UNDERLINE_OPEN.getName(), new BeginEndBlockEventGenerator<HTMLTag>(
+            new FormatBlock(Collections.<Block>emptyList(), Format.UNDERLINED)));
+        GENERATOR_MAP.put(Configuration.HTML_TT_OPEN.getName(), new BeginEndBlockEventGenerator<HTMLTag>(
+            new FormatBlock(Collections.<Block>emptyList(), Format.MONOSPACE)));
         GENERATOR_MAP.put(Configuration.HTML_VAR_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.ITALIC)));
+            new BeginEndBlockEventGenerator<HTMLTag>(new FormatBlock(Collections.<Block>emptyList(), Format.ITALIC)));
         GENERATOR_MAP.put(Configuration.HTML_SMALL_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.NONE,
+            new BeginEndBlockEventGenerator<HTMLTag>(new FormatBlock(Collections.<Block>emptyList(), Format.NONE,
                 Collections.singletonMap("style", "font-size:small"))));
         GENERATOR_MAP.put(Configuration.HTML_BIG_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.NONE,
+            new BeginEndBlockEventGenerator<HTMLTag>(new FormatBlock(Collections.<Block>emptyList(), Format.NONE,
                 Collections.singletonMap("style", "font-size:small"))));
+        GENERATOR_MAP.put(Configuration.HTML_CITE_OPEN.getName(),
+            new BeginEndBlockEventGenerator<HTMLTag>(new FormatBlock(Collections.<Block>emptyList(), Format.ITALIC)));
+        GENERATOR_MAP.put(Configuration.HTML_ABBR_OPEN.getName(),
+            new BeginEndBlockEventGenerator<HTMLTag>(new FormatBlock(Collections.<Block>emptyList(), Format.ITALIC)));
+        GENERATOR_MAP.put(Configuration.HTML_FONT_OPEN.getName(), new FontEventGenerator());
+        GENERATOR_MAP.put(Configuration.HTML_SPAN_OPEN.getName(),
+            new BeginEndBlockEventGenerator<HTMLTag>(new FormatBlock(Collections.<Block>emptyList(), Format.NONE)));
 
         GENERATOR_MAP.put(Configuration.HTML_PARAGRAPH_OPEN.getName(), new ParagraphEventGenerator());
 
-        GENERATOR_MAP.put(Configuration.HTML_SUB_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.SUBSCRIPT)));
-        GENERATOR_MAP.put(Configuration.HTML_SUP_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.SUPERSCRIPT)));
-        GENERATOR_MAP.put(Configuration.HTML_STRIKE_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.STRIKEDOUT)));
-        GENERATOR_MAP.put(Configuration.HTML_S_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.STRIKEDOUT)));
-        GENERATOR_MAP.put(Configuration.HTML_DEL_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.STRIKEDOUT)));
+        GENERATOR_MAP.put(Configuration.HTML_SUB_OPEN.getName(), new BeginEndBlockEventGenerator<HTMLTag>(
+            new FormatBlock(Collections.<Block>emptyList(), Format.SUBSCRIPT)));
+        GENERATOR_MAP.put(Configuration.HTML_SUP_OPEN.getName(), new BeginEndBlockEventGenerator<HTMLTag>(
+            new FormatBlock(Collections.<Block>emptyList(), Format.SUPERSCRIPT)));
+        GENERATOR_MAP.put(Configuration.HTML_STRIKE_OPEN.getName(), new BeginEndBlockEventGenerator<HTMLTag>(
+            new FormatBlock(Collections.<Block>emptyList(), Format.STRIKEDOUT)));
+        GENERATOR_MAP.put(Configuration.HTML_S_OPEN.getName(), new BeginEndBlockEventGenerator<HTMLTag>(
+            new FormatBlock(Collections.<Block>emptyList(), Format.STRIKEDOUT)));
+        GENERATOR_MAP.put(Configuration.HTML_DEL_OPEN.getName(), new BeginEndBlockEventGenerator<HTMLTag>(
+            new FormatBlock(Collections.<Block>emptyList(), Format.STRIKEDOUT)));
 
         GENERATOR_MAP.put(new WPTable(null).getName(), new WPTableBlockEventGenerator());
 
         GENERATOR_MAP.put(Configuration.HTML_TABLE_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new TableBlock(Collections.<Block>emptyList())));
+            new BeginEndBlockEventGenerator<HTMLTag>(new TableBlock(Collections.<Block>emptyList())));
         GENERATOR_MAP.put(Configuration.HTML_TH_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new TableHeadCellBlock(Collections.<Block>emptyList())));
+            new BeginEndBlockEventGenerator<HTMLTag>(new TableHeadCellBlock(Collections.<Block>emptyList())));
         GENERATOR_MAP.put(Configuration.HTML_TR_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new TableRowBlock(Collections.<Block>emptyList())));
+            new BeginEndBlockEventGenerator<HTMLTag>(new TableRowBlock(Collections.<Block>emptyList())));
         GENERATOR_MAP.put(Configuration.HTML_TD_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new TableCellBlock(Collections.<Block>emptyList())));
+            new BeginEndBlockEventGenerator<HTMLTag>(new TableCellBlock(Collections.<Block>emptyList())));
         // TODO: BLOCK_MAP.put("caption", HTML_CAPTION_OPEN);
 
         GENERATOR_MAP.put(Configuration.HTML_UL_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new BulletedListBlock(Collections.<Block>emptyList())));
+            new BeginEndBlockEventGenerator<HTMLTag>(new BulletedListBlock(Collections.<Block>emptyList())));
         GENERATOR_MAP.put(Configuration.HTML_OL_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new NumberedListBlock(Collections.<Block>emptyList())));
+            new BeginEndBlockEventGenerator<HTMLTag>(new NumberedListBlock(Collections.<Block>emptyList())));
         GENERATOR_MAP.put(Configuration.HTML_LI_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new ListItemBlock(Collections.<Block>emptyList())));
+            new BeginEndBlockEventGenerator<HTMLTag>(new ListItemBlock(Collections.<Block>emptyList())));
         GENERATOR_MAP.put(new WPList().getName(),
             new WPListBlockEventGenerator(new ListItemBlock(Collections.<Block>emptyList())));
 
-        // TODO: BLOCK_MAP.put("font", HTML_FONT_OPEN);
-        // TODO: BLOCK_MAP.put("center", HTML_CENTER_OPEN);
-        GENERATOR_MAP.put(Configuration.HTML_DIV_OPEN.getName(), new BeginEndBlockEventGenerator(new GroupBlock()));
-        GENERATOR_MAP.put(Configuration.HTML_SPAN_OPEN.getName(),
-            new BeginEndBlockEventGenerator(new FormatBlock(Collections.<Block>emptyList(), Format.NONE)));
-
-        // TODO: BLOCK_MAP.put("abbr", HTML_ABBR_OPEN);
-        // TODO: BLOCK_MAP.put("cite", HTML_CITE_OPEN);
+        GENERATOR_MAP.put(Configuration.HTML_CENTER_OPEN.getName(),
+            new BeginEndBlockEventGenerator<HTMLTag>(new GroupBlock(Collections.<Block>emptyList(),
+                Collections.singletonMap("style", "margin-right: auto; margin-left: auto;text-align: center"))));
+        GENERATOR_MAP.put(Configuration.HTML_DIV_OPEN.getName(),
+            new BeginEndBlockEventGenerator<HTMLTag>(new GroupBlock()));
 
         GENERATOR_MAP.put(new LinkTag(null, false).getName(), new LinkEventGenerator());
         GENERATOR_MAP.put(ImageTag.NAME, new ImageEventGenerator());

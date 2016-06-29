@@ -44,24 +44,24 @@ import org.xwiki.rendering.syntax.SyntaxType;
  * @version $Id: fcd59f6c7ae81ffec64f5df3ca333eca4eaf18b3 $
  */
 @Component
-@Named(MediaWikiStreamParser.MEDIAWIKI_1_6_STRING)
+@Named(MediaWikiStreamParser.SYNTAX_STRING)
 @Singleton
 public class MediaWikiStreamParser implements StreamParser
 {
     /**
      * The syntax type.
      */
-    public static final SyntaxType MEDIAWIKI = new SyntaxType("mediawiki", "MediaWiki");
+    public static final SyntaxType SYNTAX_TYPE = new SyntaxType("mediawiki", "MediaWiki");
 
     /**
      * The syntax with version.
      */
-    public static final Syntax MEDIAWIKI_1_6 = new Syntax(MEDIAWIKI, "1.6");
+    public static final Syntax SYNTAX = new Syntax(SYNTAX_TYPE, "1.6");
 
     /**
      * The String version of the syntax.
      */
-    public static final String MEDIAWIKI_1_6_STRING = "mediawiki/1.6";
+    public static final String SYNTAX_STRING = "mediawiki/1.6";
 
     @Inject
     private Provider<EventConverter> converterProvider;
@@ -72,7 +72,7 @@ public class MediaWikiStreamParser implements StreamParser
     @Override
     public Syntax getSyntax()
     {
-        return MEDIAWIKI_1_6;
+        return SYNTAX;
     }
 
     @Override

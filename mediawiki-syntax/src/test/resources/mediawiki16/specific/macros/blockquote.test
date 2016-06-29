@@ -10,9 +10,7 @@ p '''bold'''
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
-onMacroStandalone [blockquote] [] [
-p '''bold'''
+onMacroStandalone [blockquote] [] [p '''bold'''
 
-p '''bold'''
-]
+p '''bold''']
 endDocument

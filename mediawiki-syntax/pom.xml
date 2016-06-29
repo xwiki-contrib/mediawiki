@@ -77,7 +77,9 @@
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/BoldItalicEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/EventConverter.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/EventGenerator.java,
+              org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/FontEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/FootnoteMacroEventGenerator.java,
+              org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/FormulaMacroEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/HeaderEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/ImageEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/LinkEventGenerator.java,
@@ -92,7 +94,8 @@
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/WPListBlockEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/WPTableBlockEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/XMacroEventGenerator.java,
-              org/xwiki/contrib/mediawiki/syntax/internal/parser/model/EventWikiModel.java
+              org/xwiki/contrib/mediawiki/syntax/internal/parser/model/EventWikiModel.java,
+              org/xwiki/contrib/mediawiki/syntax/internal/parser/model/XStandaloneMacroTag.java
           </excludes>
         </configuration>
       </plugin>
