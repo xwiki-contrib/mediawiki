@@ -17,43 +17,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.mediawiki.syntax.internal.parser;
+package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
-import java.io.Reader;
+import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
+import org.xwiki.rendering.listener.Listener;
 
-import org.xwiki.component.annotation.Component;
-import org.xwiki.rendering.block.XDOM;
-import org.xwiki.rendering.parser.ParseException;
-import org.xwiki.rendering.parser.Parser;
-import org.xwiki.rendering.syntax.Syntax;
-
-/**
- * Override of the 1.0 MediaWiki syntax parser using the 1.6 one.
- *
- * @version $Id: 82fb920b4209cb0616bebf0e226334e618a28144 $
- */
-@Component
-@Named(MediaWiki10OverrideStreamParser.MEDIAWIKI_1_0_STRING)
-@Singleton
-public class MediaWiki10OverrideParser implements Parser
+public class FormulaMacroEventGenerator extends MacroEventGenerator
 {
-    @Inject
-    @Named(MediaWikiStreamParser.SYNTAX_STRING)
-    private Parser parser;
-
-    @Override
-    public Syntax getSyntax()
+    public FormulaMacroEventGenerator()
     {
-        return Syntax.MEDIAWIKI_1_0;
+        super("formula");
     }
 
     @Override
-    public XDOM parse(Reader source) throws ParseException
+    public Map<String, String> getParameters()
     {
-        return this.parser.parse(source);
+        return Listener.EMPTY_PARAMETERS;
     }
 }

@@ -56,6 +56,15 @@ public abstract class AbstractEventGenerator<T extends BaseToken> implements Eve
         return this.converter.getListener();
     }
 
+    public Map<String, String> getParameters()
+    {
+        if (this.token instanceof TagNode) {
+            return ((TagNode) this.token).getAttributes();
+        }
+
+        return Listener.EMPTY_PARAMETERS;
+    }
+
     protected void begin() throws FilterException
     {
         // To overwrite

@@ -21,6 +21,8 @@ package org.xwiki.contrib.mediawiki.syntax.internal.parser.model;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import info.bliki.wiki.model.Configuration;
 import info.bliki.wiki.tags.HTMLBlockTag;
 
@@ -94,6 +96,14 @@ public class XStandaloneMacroTag extends HTMLBlockTag implements XMacroTag
     @Override
     public String getMacroContent()
     {
-        return this.nocontent ? null : getBodyString();
+        String content = this.nocontent ? null : getBodyString();
+
+        // Remove leading and trailing newline
+        content = StringUtils.removeStart(content, "\r");
+        content = StringUtils.removeStart(content, "\n");
+        content = StringUtils.removeEnd(content, "\n");
+        content = StringUtils.removeEnd(content, "\r");
+
+        return content;
     }
 }

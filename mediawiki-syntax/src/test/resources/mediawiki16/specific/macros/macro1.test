@@ -8,7 +8,5 @@ some '''unparsed''' content
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
-onMacroStandalone [testsimplemacro] [param1=value1|param2=value2] [
-some '''unparsed''' content
-]
+onMacroStandalone [testsimplemacro] [param1=value1|param2=value2] [some '''unparsed''' content]
 endDocument

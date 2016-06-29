@@ -1,14 +1,19 @@
 .#-----------------------------------------------------
 .input|mediawiki/1.6
 .#-----------------------------------------------------
-<gallery>
-File:file_name.ext|caption|alt=alt language
-File:file_name.ext|caption|alt=alt language
-</gallery>
+<center>
+some content
+</center>
 .#-----------------------------------------------------
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
-onMacroStandalone [gallery] [] [File:file_name.ext|caption|alt=alt language
-File:file_name.ext|caption|alt=alt language]
+beginGroup [[style]=[margin-right: auto; margin-left: auto;text-align: center]]
+beginParagraph
+onWord [some]
+onSpace
+onWord [content]
+onNewLine
+endParagraph
+endGroup [[style]=[margin-right: auto; margin-left: auto;text-align: center]]
 endDocument
