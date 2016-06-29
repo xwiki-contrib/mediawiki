@@ -1,4 +1,5 @@
-org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiContext
+org.xwiki.contrib.mediawiki.syntax.internal.input.MediaWikiSyntaxInputFilterStream
+org.xwiki.contrib.mediawiki.syntax.internal.input.MediaWikiSyntaxInputFilterStreamFactory
 org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiParser
 org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiStreamParser
 org.xwiki.contrib.mediawiki.syntax.internal.parser.converter.EventConverter

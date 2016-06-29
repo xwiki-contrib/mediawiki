@@ -30,8 +30,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
-import org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiContext;
-import org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiContext.ReferenceType;
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties.ReferenceType;
 import org.xwiki.rendering.listener.reference.AttachmentResourceReference;
 import org.xwiki.rendering.listener.reference.DocumentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
@@ -148,9 +148,6 @@ public class EventWikiModel extends WikiModel
     @Named("default/link")
     private ResourceReferenceParser linkReferenceParser;
 
-    @Inject
-    private MediaWikiContext context;
-
     private boolean nopipe;
 
     /**
@@ -160,7 +157,9 @@ public class EventWikiModel extends WikiModel
     @Named("default/image")
     private ResourceReferenceParser imageReferenceParser;
 
-    private Tokens tokens = new Tokens();
+    private final Tokens tokens = new Tokens();
+
+    private MediaWikiSyntaxInputProperties properties;
 
     /**
      * Default constructor.
@@ -178,6 +177,11 @@ public class EventWikiModel extends WikiModel
         // https://bitbucket.org/axelclk/info.bliki.wiki/pull-requests/7/is-supposed-to-be-a-block-element is released
         addTokenTag(Configuration.HTML_CENTER_OPEN.getName(),
             new HTMLBlockTag("center", Configuration.SPECIAL_BLOCK_TAGS));
+    }
+
+    public void init(MediaWikiSyntaxInputProperties properties)
+    {
+        this.properties = properties;
     }
 
     private void addStandaloneMacroTag(String name)
@@ -210,13 +214,13 @@ public class EventWikiModel extends WikiModel
             anchor = encodeTitleDotUrl(hashSection, false);
         }
 
-        if (this.context.getReferenceType() == ReferenceType.NONE || StringUtils.isEmpty(topic)) {
+        if (this.properties.getReferenceType() == ReferenceType.NONE || StringUtils.isEmpty(topic)) {
             if (anchor != null) {
                 reference = new ResourceReference(topic + '#' + anchor, ResourceType.PATH);
             } else {
                 reference = new ResourceReference(topic, ResourceType.PATH);
             }
-        } else if (this.context.getReferenceType() != ReferenceType.NONE) {
+        } else if (this.properties.getReferenceType() != ReferenceType.NONE) {
             int index = topic.indexOf(':', 1);
             if (index > 0) {
                 String namespace = topic.substring(0, index);
@@ -229,7 +233,7 @@ public class EventWikiModel extends WikiModel
 
         // Fallback on standard link reference parser
         if (reference == null) {
-            if (this.context.getReferenceType() == ReferenceType.XWIKI) {
+            if (this.properties.getReferenceType() == ReferenceType.XWIKI) {
                 reference = this.linkReferenceParser.parse(topic);
             } else {
                 reference = new DocumentResourceReference(topic);
@@ -264,7 +268,7 @@ public class EventWikiModel extends WikiModel
     public void appendInternalImageLink(String hrefImageLink, String srcImageLink, ImageFormat imageFormat)
     {
         ResourceReference reference;
-        if (this.context.getReferenceType() == ReferenceType.XWIKI) {
+        if (this.properties.getReferenceType() == ReferenceType.XWIKI) {
             reference = this.imageReferenceParser.parse(srcImageLink);
         } else {
             reference = new AttachmentResourceReference(srcImageLink);

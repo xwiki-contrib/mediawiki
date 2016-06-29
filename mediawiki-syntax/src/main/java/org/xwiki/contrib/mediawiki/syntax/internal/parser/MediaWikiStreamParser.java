@@ -24,15 +24,16 @@ import java.io.Reader;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import org.apache.commons.io.IOUtils;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.contrib.mediawiki.syntax.internal.parser.converter.EventConverter;
-import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.EventWikiModel;
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
+import org.xwiki.filter.FilterException;
+import org.xwiki.filter.input.BeanInputFilterStreamFactory;
+import org.xwiki.filter.input.DefaultReaderInputSource;
+import org.xwiki.filter.input.InputFilterStream;
+import org.xwiki.filter.input.InputFilterStreamFactory;
 import org.xwiki.rendering.listener.Listener;
-import org.xwiki.rendering.listener.MetaData;
 import org.xwiki.rendering.parser.ParseException;
 import org.xwiki.rendering.parser.StreamParser;
 import org.xwiki.rendering.syntax.Syntax;
@@ -64,10 +65,8 @@ public class MediaWikiStreamParser implements StreamParser
     public static final String SYNTAX_STRING = "mediawiki/1.6";
 
     @Inject
-    private Provider<EventConverter> converterProvider;
-
-    @Inject
-    private Provider<EventWikiModel> modelProvider;
+    @Named(MediaWikiSyntaxInputProperties.FILTER_STREAM_TYPE_STRING)
+    private InputFilterStreamFactory filter;
 
     @Override
     public Syntax getSyntax()
@@ -78,29 +77,18 @@ public class MediaWikiStreamParser implements StreamParser
     @Override
     public void parse(Reader source, Listener listener) throws ParseException
     {
-        SectionGeneratorListener wrappingLisrener = new SectionGeneratorListener(listener);
+        MediaWikiSyntaxInputProperties properties = new MediaWikiSyntaxInputProperties();
+        properties.setSource(new DefaultReaderInputSource(source));
 
-        // Create custom converter
-        EventConverter converter = this.converterProvider.get();
-        converter.init(wrappingLisrener);
+        BeanInputFilterStreamFactory<MediaWikiSyntaxInputProperties> beanFilter =
+            (BeanInputFilterStreamFactory<MediaWikiSyntaxInputProperties>) this.filter;
 
-        EventWikiModel wikiModel = this.modelProvider.get();
-
-        MetaData metaData = new MetaData();
-        metaData.addMetaData(MetaData.SYNTAX, getSyntax());
-
-        wrappingLisrener.beginDocument(metaData);
-
-        try {
-            // Get content
-            String sourceString = IOUtils.toString(source);
-
-            // Parse
-            wikiModel.render(converter, sourceString, null, false, false);
+        try (InputFilterStream stream = beanFilter.createInputFilterStream(properties)) {
+            stream.read(listener);
         } catch (IOException e) {
-            throw new ParseException("Failed to parse source", e);
+            throw new ParseException("Failed to close source", e);
+        } catch (FilterException e) {
+            throw new ParseException("Failed to parse content", e);
         }
-
-        wrappingLisrener.endDocument(metaData);
     }
 }
