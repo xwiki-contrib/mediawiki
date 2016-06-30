@@ -45,7 +45,7 @@ public class MediaWikiSyntaxInputFilterStreamFactory
     {
         super(MediaWikiSyntaxInputProperties.FILTER_STREAM_TYPE);
 
-        setName("MediaWiki XML input stream");
-        setDescription("Generates wiki events from MediaWiki XML package.");
+        setName("MediaWiki Syntax input stream");
+        setDescription("Generates rendering events from MediaWiki Syntax content.");
     }
 }
