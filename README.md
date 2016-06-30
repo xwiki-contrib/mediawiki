@@ -1,8 +1,9 @@
 # MediaWiki
 
-Parser for MediaWiki syntax.
+Various tools to manipulate MediaWiki datas (wiki importer, syntax parser, etc.).
 
-Markup spec: https://www.mediawiki.org/wiki/Markup_spec
+* Markup syntax spec: https://www.mediawiki.org/wiki/Markup_spec
+* XML format "specs": https://www.mediawiki.org/xml/
 
 * Project Lead: [Thomas Mortagne](http://www.xwiki.org/xwiki/bin/view/XWiki/ThomasMortagne)
 * [Documentation & Downloads](http://extensions.xwiki.org/xwiki/bin/view/Extension/MediaWiki)

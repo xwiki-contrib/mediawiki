@@ -17,29 +17,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
+package org.xwiki.contrib.mediawiki.syntax.internal.parser.model;
 
-import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.XMacroTag;
-import org.xwiki.filter.FilterException;
-
-import info.bliki.wiki.model.IWikiModel;
-import info.bliki.wiki.tags.HTMLTag;
-
-public class XMacroEventGenerator extends AbstractEventGenerator<HTMLTag>
+/**
+ * Special gallery standalone macro.
+ * 
+ * @version $Id$
+ */
+public class GalleryXMacroTag extends XStandaloneMacroTag
 {
-    public XMacroEventGenerator()
+    /**
+     * Default constructor.
+     */
+    public GalleryXMacroTag()
     {
-    }
-
-    private XMacroTag getMacroTag()
-    {
-        return (XMacroTag) this.token;
+        super("gallery");
     }
 
     @Override
-    public void traverse(IWikiModel model) throws FilterException
+    public String getName()
     {
-        getListener().onMacro(getMacroTag().getMacroId(), getMacroTag().getMacroParameters(),
-            getMacroTag().getMacroContent(), getMacroTag().isInline());
+        return getMacroId();
+    }
+
+    @Override
+    public Object clone()
+    {
+        return new GalleryXMacroTag();
     }
 }

@@ -3,12 +3,14 @@
 .#-----------------------------------------------------
 <gallery>
 File:file_name.ext|caption|alt=alt language
-File:file_name.ext|caption|alt=alt language
+Image:file_name.ext|caption|alt=alt language
+file_name.ext|caption|alt=alt language
 </gallery>
 .#-----------------------------------------------------
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
-onMacroStandalone [gallery] [] [File:file_name.ext|caption|alt=alt language
-File:file_name.ext|caption|alt=alt language]
+onMacroStandalone [gallery] [] [[[File:file_name.ext|caption|alt=alt language]]
+[[Image:file_name.ext|caption|alt=alt language]]
+[[File:file_name.ext|caption|alt=alt language]]]
 endDocument

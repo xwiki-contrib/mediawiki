@@ -30,8 +30,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
-import org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiContext;
-import org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiContext.ReferenceType;
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties.ReferenceType;
 import org.xwiki.rendering.listener.reference.AttachmentResourceReference;
 import org.xwiki.rendering.listener.reference.DocumentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
@@ -148,9 +148,6 @@ public class EventWikiModel extends WikiModel
     @Named("default/link")
     private ResourceReferenceParser linkReferenceParser;
 
-    @Inject
-    private MediaWikiContext context;
-
     private boolean nopipe;
 
     /**
@@ -160,7 +157,9 @@ public class EventWikiModel extends WikiModel
     @Named("default/image")
     private ResourceReferenceParser imageReferenceParser;
 
-    private Tokens tokens = new Tokens();
+    private final Tokens tokens = new Tokens();
+
+    private MediaWikiSyntaxInputProperties properties;
 
     /**
      * Default constructor.
@@ -169,8 +168,9 @@ public class EventWikiModel extends WikiModel
     {
         super("${image}", "${title}");
 
-        addStandaloneMacroTag("gallery");
         addStandaloneMacroTag("blockquote");
+
+        addTokenTag(new GalleryXMacroTag());
 
         addTokenTag(Configuration.HTML_CODE_OPEN.getName(), new SourceTag());
 
@@ -180,10 +180,19 @@ public class EventWikiModel extends WikiModel
             new HTMLBlockTag("center", Configuration.SPECIAL_BLOCK_TAGS));
     }
 
+    private void addTokenTag(GalleryXMacroTag tag)
+    {
+        addTokenTag(tag.getName(), tag);
+    }
+
     private void addStandaloneMacroTag(String name)
     {
         addTokenTag(name, new XStandaloneMacroTag(name));
+    }
 
+    public void init(MediaWikiSyntaxInputProperties properties)
+    {
+        this.properties = properties;
     }
 
     @Override
@@ -193,6 +202,21 @@ public class EventWikiModel extends WikiModel
         this.nopipe = containsNoPipe;
 
         return super.appendRawNamespaceLinks(rawNamespaceTopic, viewableLinkDescription, containsNoPipe);
+    }
+
+    private String cleanReference(String reference)
+    {
+        String cleanReference = reference;
+
+        if (this.properties.getReferenceType() == ReferenceType.MEDIAWIKI) {
+            // MediaWiki automatically replace white space with underscore in pages or files
+            cleanReference.replace(' ', '_');
+
+            // MediaWiki automatically capitalize references to pages or files
+            cleanReference = StringUtils.capitalize(cleanReference);
+        }
+
+        return cleanReference;
     }
 
     @Override
@@ -210,29 +234,30 @@ public class EventWikiModel extends WikiModel
             anchor = encodeTitleDotUrl(hashSection, false);
         }
 
-        if (this.context.getReferenceType() == ReferenceType.NONE || StringUtils.isEmpty(topic)) {
+        if (this.properties.getReferenceType() == ReferenceType.NONE || StringUtils.isEmpty(topic)) {
             if (anchor != null) {
                 reference = new ResourceReference(topic + '#' + anchor, ResourceType.PATH);
             } else {
                 reference = new ResourceReference(topic, ResourceType.PATH);
             }
-        } else if (this.context.getReferenceType() != ReferenceType.NONE) {
+        } else if (this.properties.getReferenceType() != ReferenceType.NONE) {
             int index = topic.indexOf(':', 1);
             if (index > 0) {
                 String namespace = topic.substring(0, index);
                 if (this.fNamespace.isNamespace(namespace, NamespaceCode.FILE_NAMESPACE_KEY)
                     || namespace.equalsIgnoreCase("media")) {
-                    reference = new AttachmentResourceReference(topic.substring(namespace.length() + 1));
+                    reference =
+                        new AttachmentResourceReference(cleanReference(topic.substring(namespace.length() + 1)));
                 }
             }
         }
 
         // Fallback on standard link reference parser
         if (reference == null) {
-            if (this.context.getReferenceType() == ReferenceType.XWIKI) {
+            if (this.properties.getReferenceType() == ReferenceType.XWIKI) {
                 reference = this.linkReferenceParser.parse(topic);
             } else {
-                reference = new DocumentResourceReference(topic);
+                reference = new DocumentResourceReference(cleanReference(topic));
             }
 
             // Set anchor
@@ -264,10 +289,11 @@ public class EventWikiModel extends WikiModel
     public void appendInternalImageLink(String hrefImageLink, String srcImageLink, ImageFormat imageFormat)
     {
         ResourceReference reference;
-        if (this.context.getReferenceType() == ReferenceType.XWIKI) {
+        if (this.properties.getReferenceType() == ReferenceType.XWIKI) {
             reference = this.imageReferenceParser.parse(srcImageLink);
         } else {
-            reference = new AttachmentResourceReference(srcImageLink);
+            reference = new AttachmentResourceReference(cleanReference(srcImageLink));
+            reference.setTyped(false);
         }
 
         ImageTag imageTag = new ImageTag(reference, false, imageFormat);

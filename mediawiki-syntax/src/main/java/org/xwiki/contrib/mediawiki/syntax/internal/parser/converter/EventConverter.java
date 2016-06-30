@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
+import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.GalleryXMacroTag;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.ImageTag;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.LinkTag;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.XMacroTag;
@@ -96,6 +97,8 @@ public class EventConverter implements ITextConverter
         GENERATOR_MAP.put(new NowikiTag().getName(), new VerbatimEventGenerator(true));
         GENERATOR_MAP.put(new PreTag().getName(), new VerbatimEventGenerator(false));
         GENERATOR_MAP.put(new MathTag().getName(), new FormulaMacroEventGenerator());
+
+        GENERATOR_MAP.put(new GalleryXMacroTag().getName(), new GalleryEventGenerator());
 
         GENERATOR_MAP.put(new RefTag().getName(), new MacroEventGenerator("footnote", true));
         GENERATOR_MAP.put(new ReferencesTag().getName(), new MacroEventGenerator("putFootnotes", false));
@@ -186,7 +189,7 @@ public class EventConverter implements ITextConverter
         GENERATOR_MAP.put(new LinkTag(null, false).getName(), new LinkEventGenerator());
         GENERATOR_MAP.put(ImageTag.NAME, new ImageEventGenerator());
 
-        GENERATOR_MAP.put(XMacroTag.TAGNAME, new XMacroEventGenerator());
+        GENERATOR_MAP.put(XMacroTag.TAGNAME, new MacroEventGenerator());
     }
 
     @Inject

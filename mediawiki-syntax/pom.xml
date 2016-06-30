@@ -80,6 +80,7 @@
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/FontEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/FootnoteMacroEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/FormulaMacroEventGenerator.java,
+              org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/GalleryEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/HeaderEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/ImageEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/LinkEventGenerator.java,
