@@ -34,7 +34,7 @@
     <xwiki.jacoco.instructionRatio>0.58</xwiki.jacoco.instructionRatio>
 
     <!-- Name to display by the Extension Manager -->
-    <xwiki.extension.name>Filter MediaWiki XML module</xwiki.extension.name>
+    <xwiki.extension.name>MediaWiki XML</xwiki.extension.name>
   </properties>
   <dependencies>
     <dependency>
