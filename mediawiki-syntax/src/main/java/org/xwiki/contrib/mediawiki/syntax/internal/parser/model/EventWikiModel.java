@@ -168,8 +168,9 @@ public class EventWikiModel extends WikiModel
     {
         super("${image}", "${title}");
 
-        addStandaloneMacroTag("gallery");
         addStandaloneMacroTag("blockquote");
+
+        addTokenTag(new GalleryXMacroTag());
 
         addTokenTag(Configuration.HTML_CODE_OPEN.getName(), new SourceTag());
 
@@ -179,15 +180,19 @@ public class EventWikiModel extends WikiModel
             new HTMLBlockTag("center", Configuration.SPECIAL_BLOCK_TAGS));
     }
 
-    public void init(MediaWikiSyntaxInputProperties properties)
+    private void addTokenTag(GalleryXMacroTag tag)
     {
-        this.properties = properties;
+        addTokenTag(tag.getName(), tag);
     }
 
     private void addStandaloneMacroTag(String name)
     {
         addTokenTag(name, new XStandaloneMacroTag(name));
+    }
 
+    public void init(MediaWikiSyntaxInputProperties properties)
+    {
+        this.properties = properties;
     }
 
     @Override
