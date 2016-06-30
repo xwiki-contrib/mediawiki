@@ -204,6 +204,21 @@ public class EventWikiModel extends WikiModel
         return super.appendRawNamespaceLinks(rawNamespaceTopic, viewableLinkDescription, containsNoPipe);
     }
 
+    private String cleanReference(String reference)
+    {
+        String cleanReference = reference;
+
+        if (this.properties.getReferenceType() == ReferenceType.MEDIAWIKI) {
+            // MediaWiki automatically replace white space with underscore in pages or files
+            cleanReference.replace(' ', '_');
+
+            // MediaWiki automatically capitalize references to pages or files
+            cleanReference = StringUtils.capitalize(cleanReference);
+        }
+
+        return cleanReference;
+    }
+
     @Override
     public void appendInternalLink(String topic, String hashSection, String topicDescription, String cssClass,
         boolean parseRecursive)
@@ -231,7 +246,8 @@ public class EventWikiModel extends WikiModel
                 String namespace = topic.substring(0, index);
                 if (this.fNamespace.isNamespace(namespace, NamespaceCode.FILE_NAMESPACE_KEY)
                     || namespace.equalsIgnoreCase("media")) {
-                    reference = new AttachmentResourceReference(topic.substring(namespace.length() + 1));
+                    reference =
+                        new AttachmentResourceReference(cleanReference(topic.substring(namespace.length() + 1)));
                 }
             }
         }
@@ -241,7 +257,7 @@ public class EventWikiModel extends WikiModel
             if (this.properties.getReferenceType() == ReferenceType.XWIKI) {
                 reference = this.linkReferenceParser.parse(topic);
             } else {
-                reference = new DocumentResourceReference(topic);
+                reference = new DocumentResourceReference(cleanReference(topic));
             }
 
             // Set anchor
@@ -276,7 +292,8 @@ public class EventWikiModel extends WikiModel
         if (this.properties.getReferenceType() == ReferenceType.XWIKI) {
             reference = this.imageReferenceParser.parse(srcImageLink);
         } else {
-            reference = new AttachmentResourceReference(srcImageLink);
+            reference = new AttachmentResourceReference(cleanReference(srcImageLink));
+            reference.setTyped(false);
         }
 
         ImageTag imageTag = new ImageTag(reference, false, imageFormat);
