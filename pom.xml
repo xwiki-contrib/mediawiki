@@ -29,7 +29,7 @@
   </parent>
   <groupId>org.xwiki.contrib.mediawiki</groupId>
   <artifactId>mediawiki</artifactId>
-  <version>1.6-SNAPSHOT</version>
+  <version>1.5-SNAPSHOT</version>
   <name>MediaWiki - Parent POM</name>
   <description>Parent POM for MediaWiki modules</description>
   <packaging>pom</packaging>
