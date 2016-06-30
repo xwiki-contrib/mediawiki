@@ -47,9 +47,9 @@ public class MediaWikiInputProperties extends XMLInputProperties
     public static final String FILTER_STREAM_TYPE_STRING = "mediawiki+xml";
 
     /**
-     * @see #getAttachments()
+     * @see #getFiles()
      */
-    private InputSource attachments;
+    private InputSource files;
 
     /**
      * @see #getParent()
@@ -57,14 +57,19 @@ public class MediaWikiInputProperties extends XMLInputProperties
     private EntityReference parent;
 
     /**
-     * @see #getFilesSpace()
+     * @see #getFileSpace()
      */
-    private EntityReference filesSpace = new EntityReference("Files", EntityType.SPACE);
+    private EntityReference fileSpace = new EntityReference("File", EntityType.SPACE);
 
     /**
      * @see #getFileAttachmed()
      */
-    private boolean fileAttached;
+    private boolean fileAttached = true;
+
+    /**
+     * @see #isContentEvents()
+     */
+    private boolean contentEvents;
 
     /**
      * @see #isConvertToXWiki()
@@ -72,21 +77,21 @@ public class MediaWikiInputProperties extends XMLInputProperties
     private boolean convertToXWiki = true;
 
     /**
-     * @return the folder or package containing attachments
+     * @return the folder or package containing files
      */
-    @PropertyName("Attachments")
-    @PropertyDescription("The folder or package containing attachments")
-    public InputSource getAttachments()
+    @PropertyName("Files")
+    @PropertyDescription("The folder or package containing files")
+    public InputSource getFiles()
     {
-        return this.attachments;
+        return this.files;
     }
 
     /**
-     * @param attachments the folder or package containing attachments
+     * @param files the folder or package containing the files
      */
-    public void setAttachments(InputSource attachments)
+    public void setFiles(InputSource files)
     {
-        this.attachments = attachments;
+        this.files = files;
     }
 
     /**
@@ -112,17 +117,17 @@ public class MediaWikiInputProperties extends XMLInputProperties
      */
     @PropertyName("Files space")
     @PropertyDescription("The space where to store the files")
-    public EntityReference getFilesSpace()
+    public EntityReference getFileSpace()
     {
-        return this.filesSpace;
+        return this.fileSpace;
     }
 
     /**
-     * @param filesSpace the space where to store the files
+     * @param fileSpace the space where to store the files
      */
-    public void setFilesSpace(EntityReference filesSpace)
+    public void setFileSpace(EntityReference fileSpace)
     {
-        this.filesSpace = filesSpace;
+        this.fileSpace = fileSpace;
     }
 
     /**
@@ -141,6 +146,24 @@ public class MediaWikiInputProperties extends XMLInputProperties
     public void setFileAttached(boolean fileAttached)
     {
         this.fileAttached = fileAttached;
+    }
+
+    /**
+     * @return if true, the content will be parsed to produce rendering events
+     */
+    @PropertyName("Produce rendering events for the content")
+    @PropertyDescription("Parse the content to produce rendering events (if the output filter support them)")
+    public boolean isContentEvents()
+    {
+        return this.contentEvents;
+    }
+
+    /**
+     * @param contentEvents if true, the content will be parsed to produce rendering events
+     */
+    public void setContentEvents(boolean contentEvents)
+    {
+        this.contentEvents = contentEvents;
     }
 
     /**

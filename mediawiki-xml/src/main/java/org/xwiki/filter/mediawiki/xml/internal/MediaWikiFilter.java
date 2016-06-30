@@ -41,5 +41,4 @@ public interface MediaWikiFilter
     extends WikiFarmFilter, WikiFilter, WikiSpaceFilter, WikiDocumentFilter, WikiAttachmentFilter, WikiClassFilter,
     WikiClassPropertyFilter, WikiObjectFilter, WikiObjectPropertyFilter, GroupFilter, Listener, UnknownFilter
 {
-
 }

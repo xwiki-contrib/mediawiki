@@ -19,6 +19,11 @@
  */
 package org.xwiki.filter.xar;
 
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.junit.runner.RunWith;
 import org.xwiki.filter.test.integration.FilterTestSuite;
 import org.xwiki.test.annotation.AllComponents;
@@ -31,7 +36,14 @@ import org.xwiki.test.annotation.AllComponents;
  */
 @RunWith(FilterTestSuite.class)
 @AllComponents
-//@FilterTestSuite.Scope(value = "confluencexml", pattern = "4.3.2.test")
+@FilterTestSuite.Scope(value = "mediawikixml/attached/", pattern = "1.26.3.test")
 public class IntegrationTests
 {
+    public IntegrationTests() throws URISyntaxException
+    {
+        // FIXME: remove when http://jira.xwiki.org/browse/XCOMMONS-1011 is fixed
+        URL url = getClass().getResource("../../../../");
+        Path path = Paths.get(url.toURI());
+        System.setProperty("xwiki.test.folder", path.toAbsolutePath().toString());
+    }
 }

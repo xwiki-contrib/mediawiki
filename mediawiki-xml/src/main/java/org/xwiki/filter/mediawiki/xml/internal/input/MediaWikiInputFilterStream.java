@@ -19,13 +19,17 @@
  */
 package org.xwiki.filter.mediawiki.xml.internal.input;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.StringReader;
+import java.io.InputStream;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -37,20 +41,26 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
-import org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiContext;
-import org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiContext.ReferenceType;
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties.ReferenceType;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiStreamParser;
 import org.xwiki.filter.FilterEventParameters;
 import org.xwiki.filter.FilterException;
 import org.xwiki.filter.event.model.WikiDocumentFilter;
 import org.xwiki.filter.input.AbstractBeanInputFilterStream;
+import org.xwiki.filter.input.BeanInputFilterStream;
+import org.xwiki.filter.input.BeanInputFilterStreamFactory;
+import org.xwiki.filter.input.FileInputSource;
+import org.xwiki.filter.input.InputFilterStreamFactory;
+import org.xwiki.filter.input.InputSource;
 import org.xwiki.filter.input.InputStreamInputSource;
 import org.xwiki.filter.input.ReaderInputSource;
+import org.xwiki.filter.input.StringInputSource;
 import org.xwiki.filter.mediawiki.input.MediaWikiInputProperties;
 import org.xwiki.filter.mediawiki.xml.internal.MediaWikiFilter;
 import org.xwiki.filter.xml.input.SourceInputSource;
@@ -58,8 +68,10 @@ import org.xwiki.model.EntityType;
 import org.xwiki.model.ModelConfiguration;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.rendering.listener.Listener;
-import org.xwiki.rendering.parser.ParseException;
-import org.xwiki.rendering.parser.StreamParser;
+import org.xwiki.rendering.renderer.PrintRenderer;
+import org.xwiki.rendering.renderer.PrintRendererFactory;
+import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
+import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.xml.stax.StAXUtils;
 
 /**
@@ -112,27 +124,98 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
     private Logger logger;
 
     @Inject
-    @Named(MediaWikiStreamParser.SYNTAX_STRING)
-    private StreamParser confluenceWIKIParser;
+    @Named(MediaWikiSyntaxInputProperties.FILTER_STREAM_TYPE_STRING)
+    private InputFilterStreamFactory parserFactory;
 
     @Inject
     private ModelConfiguration modelConfiguration;
 
     @Inject
-    private MediaWikiContext context;
+    private Provider<MediaWikiContextConverterListener> listenerProvider;
 
     @Inject
-    private Provider<MediaWikiContextConverterListener> listenerProvider;
+    @Named("xwiki/2.1")
+    private PrintRendererFactory xwiki21Factory;
 
     private Map<String, String> namespaces = new HashMap<>();
 
-    private String currentPageNamespace;
+    String currentPageNamespace;
 
-    private String currentPageTitle;
+    String currentPageTitle;
 
-    private EntityReference previousParentReference;
+    EntityReference previousParentReference;
 
-    private EntityReference currentParentReference;
+    EntityReference currentParentReference;
+
+    Set<String> currentFiles;
+
+    MediaWikiInputProperties getProperties()
+    {
+        return this.properties;
+    }
+
+    EntityReference toEntityReference(String reference)
+    {
+        String pageName = reference;
+        String namespace;
+
+        // Separate namespace and page name
+        int index = pageName.indexOf(':');
+        if (index > 0) {
+            namespace = pageName.substring(0, index);
+            pageName = pageName.substring(index + 1);
+        } else {
+            namespace = null;
+        }
+
+        // MediaWiki replace the white spaces with an underscore in the URL
+        pageName = pageName.replace(' ', '_');
+
+        // Maybe convert MediaWiki home page name into XWiki home page name
+        if (this.properties.isConvertToXWiki() && pageName.equals(PAGE_NAME_MAIN)) {
+            pageName = this.modelConfiguration.getDefaultReferenceValue(EntityType.DOCUMENT);
+        }
+
+        // Find page parent reference
+        EntityReference parentReference;
+        if (namespace != null) {
+            if (namespace.equalsIgnoreCase(NAMESPACE_FILE)) {
+                return toFileEntityReference(pageName);
+            } else {
+                parentReference = new EntityReference(namespace, EntityType.SPACE, this.properties.getParent());
+            }
+        } else if (this.currentPageNamespace.equals(NAMESPACE_USER)) {
+            // TODO: add support for users
+            return null;
+        } else if (this.currentPageNamespace.equals(NAMESPACE_SPECIAL)) {
+            return null;
+        } else {
+            if (this.properties.getParent() == null) {
+                parentReference =
+                    new EntityReference(this.modelConfiguration.getDefaultReferenceValue(EntityType.SPACE),
+                        EntityType.SPACE, this.properties.getParent());
+            } else {
+                parentReference = this.properties.getParent();
+            }
+        }
+
+        return new EntityReference(pageName, EntityType.DOCUMENT, parentReference);
+    }
+
+    EntityReference toFileEntityReference(String pageName)
+    {
+        // Don't import File namespace page if files are attached to each page using it
+        if (this.properties.isFileAttached()) {
+            return null;
+        }
+
+        EntityReference parentReference = this.properties.getFileSpace();
+        if (parentReference != null && parentReference.extractFirstReference(EntityType.WIKI) == null) {
+            parentReference = new EntityReference(parentReference, this.properties.getParent());
+        }
+
+        return new EntityReference(pageName, EntityType.DOCUMENT, parentReference);
+    }
 
     @Override
     public void close() throws IOException
@@ -183,7 +266,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
     }
 
     private void read(XMLStreamReader xmlReader, Object filter, MediaWikiFilter proxyFilter)
-        throws XMLStreamException, FilterException
+        throws XMLStreamException, FilterException, IOException
     {
         xmlReader.nextTag();
 
@@ -191,7 +274,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
     }
 
     private void readMediaWiki(XMLStreamReader xmlReader, Object filter, MediaWikiFilter proxyFilter)
-        throws XMLStreamException, FilterException
+        throws XMLStreamException, FilterException, IOException
     {
         for (xmlReader.nextTag(); xmlReader.isStartElement(); xmlReader.nextTag()) {
             String elementName = xmlReader.getLocalName();
@@ -233,7 +316,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
     }
 
     private void readPage(XMLStreamReader xmlReader, Object filter, MediaWikiFilter proxyFilter)
-        throws XMLStreamException, FilterException
+        throws XMLStreamException, FilterException, IOException
     {
         boolean skip = false;
 
@@ -247,61 +330,23 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             } else if (elementName.equals(TAG_PAGE_NAMESPACE)) {
                 this.currentPageNamespace = this.namespaces.get(xmlReader.getElementText());
             } else if (elementName.equals(TAG_PAGE_REVISION)) {
-                // Find current page name
-                String pageName = this.currentPageTitle;
-                if (this.currentPageNamespace == null) {
-                    // In old versions of MediaWiki there was no explicit namespace field, it was just the title
-                    // prefix
-                    int index = pageName.indexOf(':');
-                    this.currentPageNamespace = pageName.substring(0, index);
-                    pageName = pageName.substring(index + 1);
-                } else {
-                    // Remove the namespace prefix from the page name
-                    pageName = StringUtils.removeStart(pageName, this.currentPageNamespace + ':');
-                }
-                // MediaWiki replace the white spaces with an underscore in the URL
-                pageName = pageName.replace(' ', '_');
-                // Maybe convert MediaWiki home page name into XWiki home page name
-                if (this.properties.isConvertToXWiki() && pageName.equals(PAGE_NAME_MAIN)) {
-                    pageName = this.modelConfiguration.getDefaultReferenceValue(EntityType.DOCUMENT);
-                }
+                // Find current page reference
+                EntityReference pageReference = toEntityReference(this.currentPageTitle);
 
-                // Find current page parent
-                if (StringUtils.isEmpty(this.currentPageNamespace)) {
-                    if (this.properties.isConvertToXWiki()) {
-                        this.currentParentReference =
-                            new EntityReference(this.modelConfiguration.getDefaultReferenceValue(EntityType.SPACE),
-                                EntityType.SPACE, this.properties.getParent());
-                    } else {
-                        this.currentParentReference = this.properties.getParent();
-                    }
-                } else if (this.properties.getFilesSpace() != null
-                    && this.currentPageNamespace.equals(NAMESPACE_FILE)) {
-                    this.currentParentReference = this.properties.getFilesSpace();
-                    if (this.currentParentReference.extractFirstReference(EntityType.WIKI) == null) {
-                        this.currentParentReference =
-                            new EntityReference(this.currentParentReference, this.properties.getParent());
-                    }
-                } else if (this.currentPageNamespace.equals(NAMESPACE_USER)) {
-                    // TODO: add support for users
-                    skip = true;
-                } else if (this.currentPageNamespace.equals(NAMESPACE_SPECIAL)) {
-                    skip = true;
-                } else {
-                    this.currentParentReference =
-                        new EntityReference(this.currentPageNamespace, EntityType.SPACE, this.properties.getParent());
-                }
+                if (pageReference != null) {
+                    this.currentParentReference = pageReference.getParent();
 
-                if (!skip) {
                     // Send parent events
                     sendSpaceEvents(proxyFilter);
 
                     // Send document event
-                    proxyFilter.beginWikiDocument(pageName, FilterEventParameters.EMPTY);
+                    proxyFilter.beginWikiDocument(pageReference.getName(), FilterEventParameters.EMPTY);
                     proxyFilter.beginWikiDocumentLocale(Locale.ROOT, FilterEventParameters.EMPTY);
 
                     readPageRevision(xmlReader, filter, proxyFilter);
                 } else {
+                    skip = true;
+
                     StAXUtils.skipElement(xmlReader);
                 }
             } else {
@@ -376,7 +421,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
     }
 
     private void readPageRevision(XMLStreamReader xmlReader, Object filter, MediaWikiFilter proxyFilter)
-        throws XMLStreamException, FilterException
+        throws XMLStreamException, FilterException, IOException
     {
         FilterEventParameters pageRevisionParameters = new FilterEventParameters();
 
@@ -389,6 +434,8 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
         boolean beginWikiDocumentRevisionSent = false;
 
+        this.currentFiles = Collections.emptySet();
+
         for (xmlReader.nextTag(); xmlReader.isStartElement(); xmlReader.nextTag()) {
             String elementName = xmlReader.getLocalName();
 
@@ -399,29 +446,32 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             } else if (elementName.equals(TAG_PAGE_REVISION_CONTENT)) {
                 String content = xmlReader.getElementText();
 
-                if (filter instanceof Listener) {
+                if (this.properties.isContentEvents() && filter instanceof Listener) {
                     // Begin document revision
                     proxyFilter.beginWikiDocumentRevision(version, pageRevisionParameters);
                     beginWikiDocumentRevisionSent = true;
 
-                    ReferenceType referenceType = this.context.getReferenceType();
-                    try {
-                        // Make sure to keep source references unchanged
-                        this.context.setReferenceType(ReferenceType.MEDIAWIKI);
+                    MediaWikiSyntaxInputProperties parserProperties = new MediaWikiSyntaxInputProperties();
+                    parserProperties.setSource(new StringInputSource(content));
+                    // Make sure to keep source references unchanged
+                    parserProperties.setReferenceType(ReferenceType.MEDIAWIKI);
 
-                        // Generate events
-                        MediaWikiContextConverterListener listener = this.listenerProvider.get();
-                        listener.initialize(listener, this.properties);
-                        this.confluenceWIKIParser.parse(new StringReader(content), listener);
-                    } catch (ParseException e) {
-                        throw new FilterException("Failed to parse MediaWiki syntax content", e);
-                    } finally {
-                        this.context.setReferenceType(referenceType);
+                    // Refactor references and find attachments
+                    MediaWikiContextConverterListener listener = this.listenerProvider.get();
+                    listener.initialize(proxyFilter, this, null);
+
+                    // Generate events
+                    try (BeanInputFilterStream<MediaWikiSyntaxInputProperties> stream =
+                        ((BeanInputFilterStreamFactory) this.parserFactory).createInputFilterStream(parserProperties)) {
+                        stream.read(listener);
                     }
+
+                    // Remember linked files
+                    this.currentFiles = listener.getFiles();
                 } else if (this.properties.isConvertToXWiki()) {
-                    // FIXME: Convert to latest XWiki syntax
-                    pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, content);
-                    pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_SYNTAX, MediaWikiStreamParser.SYNTAX);
+                    // Convert content to XWiki syntax
+                    pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, convertToXWiki21(content));
+                    pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_SYNTAX, Syntax.XWIKI_2_1);
                 } else {
                     // Keep MediaWiki syntax
                     pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, content);
@@ -448,23 +498,112 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             proxyFilter.beginWikiDocumentRevision(version, pageRevisionParameters);
         }
 
+        // It might be a page dedicated to a file
+        if (this.currentPageTitle.startsWith(NAMESPACE_FILE)) {
+            this.currentFiles.add(this.currentPageTitle.substring(NAMESPACE_FILE.length() + 1).replace(' ', '_'));
+        }
+
+        // Attach files if any
+        if (!this.currentFiles.isEmpty()) {
+            for (String fileName : this.currentFiles) {
+                sendAttachment(fileName, proxyFilter);
+            }
+        }
+
+        // Reset files
+        this.currentFiles = null;
+
         proxyFilter.endWikiDocumentRevision(version, pageRevisionParameters);
+    }
+
+    private String convertToXWiki21(String content)
+    {
+        DefaultWikiPrinter printer = new DefaultWikiPrinter();
+        PrintRenderer renderer = this.xwiki21Factory.createRenderer(printer);
+
+        MediaWikiSyntaxInputProperties parserProperties = new MediaWikiSyntaxInputProperties();
+        parserProperties.setSource(new StringInputSource(content));
+        // Make sure to keep source references unchanged
+        parserProperties.setReferenceType(ReferenceType.MEDIAWIKI);
+
+        // Refactor references and find attachments
+        MediaWikiContextConverterListener listener = this.listenerProvider.get();
+        listener.initialize(renderer, this, this.xwiki21Factory.getSyntax());
+
+        // Generate events
+        try (BeanInputFilterStream<MediaWikiSyntaxInputProperties> stream =
+            ((BeanInputFilterStreamFactory) this.parserFactory).createInputFilterStream(parserProperties)) {
+            stream.read(listener);
+        } catch (Exception e) {
+            // TODO log something ?
+        }
+
+        this.currentFiles = listener.getFiles();
+
+        return printer.toString();
+    }
+
+    private void sendAttachment(String fileName, MediaWikiFilter proxyFilter) throws FilterException, IOException
+    {
+        File file = getFile(fileName);
+
+        if (file != null) {
+            try (InputStream streamToClose = new FileInputStream(file)) {
+                proxyFilter.onWikiAttachment(fileName, streamToClose, file.length(), FilterEventParameters.EMPTY);
+            }
+        }
+    }
+
+    private File getFile(String fileName) throws FilterException
+    {
+        InputSource files = this.properties.getFiles();
+
+        if (files instanceof FileInputSource) {
+            File folder = ((FileInputSource) files).getFile();
+
+            String md5Hex = DigestUtils.md5Hex(fileName).substring(0, 2);
+            String folderName1 = md5Hex.substring(0, 1);
+            String folderName2 = md5Hex.substring(0, 2);
+
+            File folder1 = new File(folder, folderName1);
+            File folder2 = new File(folder1, folderName2);
+
+            File file = new File(folder2, fileName);
+
+            if (file.exists() && file.isFile()) {
+                return file;
+            }
+
+            this.logger.warn("Can't find file [{}]", file.getAbsolutePath());
+        } else {
+            throw new FilterException("Unsupported input source [" + files.getClass() + "] ([" + files + "])");
+        }
+
+        return null;
     }
 
     private String getPageContributor(XMLStreamReader xmlReader) throws XMLStreamException
     {
+        String userName = null;
+
         for (xmlReader.nextTag(); xmlReader.isStartElement(); xmlReader.nextTag()) {
             String elementName = xmlReader.getLocalName();
 
-            if (elementName.equals(TAG_PAGE_REVISION_CONTRIBUTOR_USERNAME)) {
-                return xmlReader.getElementText();
-            } else if (elementName.equals(TAG_PAGE_REVISION_CONTRIBUTOR_IP)) {
-                if (!this.properties.isConvertToXWiki()) {
-                    return xmlReader.getElementText();
-                }
+            switch (elementName) {
+                case TAG_PAGE_REVISION_CONTRIBUTOR_USERNAME:
+                    userName = xmlReader.getElementText();
+                    continue;
+
+                case TAG_PAGE_REVISION_CONTRIBUTOR_IP:
+                    if (!this.properties.isConvertToXWiki()) {
+                        userName = xmlReader.getElementText();
+                        continue;
+                    }
             }
+
+            StAXUtils.skipElement(xmlReader);
         }
 
-        return null;
+        return userName;
     }
 }
