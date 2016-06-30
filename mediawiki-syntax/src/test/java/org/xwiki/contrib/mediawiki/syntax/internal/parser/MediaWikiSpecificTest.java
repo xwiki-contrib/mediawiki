@@ -17,32 +17,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.mediawiki.syntax.internal.parser.model;
+package org.xwiki.contrib.mediawiki.syntax.internal.parser;
+
+import org.junit.runner.RunWith;
+import org.xwiki.rendering.test.integration.RenderingTestSuite;
 
 /**
- * Special gallery standalone macro.
- * 
- * @version $Id$
+ * Run all specific tests found in {@code *.test} files located in the classpath. These {@code *.test} files must follow
+ * the conventions described in {@link org.xwiki.rendering.test.integration.TestDataParser}.
+ *
+ * @version $Id: 75488eb22c370f55a3e6bd9b38ec599be157b515 $
  */
-public class GalleryXMacroTag extends XMacroTag
+@RunWith(RenderingTestSuite.class)
+@RenderingTestSuite.Scope(value = "mediawiki16.specific"/*, pattern = "misc.test"*/)
+public class MediaWikiSpecificTest
 {
-    /**
-     * Default constructor.
-     */
-    public GalleryXMacroTag()
-    {
-        super("gallery", false, null);
-    }
-
-    @Override
-    public String getName()
-    {
-        return getMacroId();
-    }
-
-    @Override
-    public Object clone()
-    {
-        return new GalleryXMacroTag();
-    }
 }

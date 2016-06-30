@@ -189,7 +189,7 @@ public class EventConverter implements ITextConverter
         GENERATOR_MAP.put(new LinkTag(null, false).getName(), new LinkEventGenerator());
         GENERATOR_MAP.put(ImageTag.NAME, new ImageEventGenerator());
 
-        GENERATOR_MAP.put(XMacroTag.TAGNAME, new MacroEventGenerator());
+        GENERATOR_MAP.put(XMacroTag.TAG_NAME, new MacroEventGenerator());
     }
 
     @Inject

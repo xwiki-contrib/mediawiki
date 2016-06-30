@@ -21,42 +21,111 @@ package org.xwiki.contrib.mediawiki.syntax.internal.parser.model;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
+import info.bliki.htmlcleaner.TagNode;
+import info.bliki.wiki.model.Configuration;
 import info.bliki.wiki.tags.util.INoBodyParsingTag;
 
 /**
- * A macro.
+ * A standalone macro.
  * 
  * @version $Id$
  */
-public interface XMacroTag extends INoBodyParsingTag
+public class XMacroTag extends TagNode implements INoBodyParsingTag
 {
-    /**
-     * The name of the macros tags in the stack.
-     */
-    String TAGNAME = "xmacro";
+    public static final String TAG_NAME = "xmacro";
+
+    public static final String TAGPREFIX = "macro:";
+
+    private EventWikiModel eventWikiModel;
+
+    private String macroId;
+
+    private Boolean inline;
+
+    private boolean nocontent;
+
+    public XMacroTag(EventWikiModel eventWikiModel)
+    {
+        this(null, eventWikiModel);
+    }
+
+    public XMacroTag(String macroId, EventWikiModel eventWikiModel)
+    {
+        this(macroId, null, eventWikiModel);
+    }
+
+    public XMacroTag(String macroId, Boolean inline, EventWikiModel eventWikiModel)
+    {
+        super(TAG_NAME);
+
+        this.macroId = macroId;
+        this.inline = inline;
+        this.eventWikiModel = eventWikiModel;
+    }
+
+    @Override
+    public String getParents()
+    {
+        if (this.inline == null) {
+            this.inline = this.eventWikiModel.isInline();
+        }
+
+        return this.inline ? null : Configuration.SPECIAL_BLOCK_TAGS;
+    }
+
+    @Override
+    public boolean addAttribute(String attName, String attValue, boolean checkXSS)
+    {
+        // FIXME: this "/" parameter is most probably a bug on bliki side, contribute something nicer to make the
+        // difference between empty content and no content
+        if (attName.equals("/")) {
+            this.nocontent = true;
+        } else {
+            getAttributes().put(attName, attValue);
+        }
+
+        return true;
+    }
 
     /**
-     * Prefix of the tag name inside mediawiki content.
+     * @return indicate of the macro is inline
      */
-    String TAGPREFIX = "macro:";
+    public boolean isInline()
+    {
+        return this.inline;
+    }
 
     /**
      * @return the id of the macro
      */
-    String getMacroId();
+    public String getMacroId()
+    {
+        return this.macroId;
+    }
 
     /**
      * @return the parameters of the macro
      */
-    Map<String, String> getMacroParameters();
+    public Map<String, String> getMacroParameters()
+    {
+        return getAttributes();
+    }
 
     /**
      * @return the content of the macro
      */
-    String getMacroContent();
+    public String getMacroContent()
+    {
+        String content = this.nocontent ? null : getBodyString();
 
-    /**
-     * @return true of the macro is inline
-     */
-    boolean isInline();
+        // Remove leading and trailing newline
+        content = StringUtils.removeStart(content, "\r");
+        content = StringUtils.removeStart(content, "\n");
+        content = StringUtils.removeEnd(content, "\n");
+        content = StringUtils.removeEnd(content, "\r");
+
+        return content;
+    }
 }

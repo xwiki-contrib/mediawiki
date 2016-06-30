@@ -38,6 +38,7 @@ import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.parser.ResourceReferenceParser;
 
+import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.ContentToken;
 import info.bliki.htmlcleaner.TagToken;
 import info.bliki.wiki.filter.WikipediaPreTagParser;
@@ -93,7 +94,7 @@ public class EventWikiModel extends WikiModel
                 String keyString = (String) key;
                 if (keyString.startsWith(XMacroTag.TAGPREFIX)) {
                     String macroId = ((String) key).substring(XMacroTag.TAGPREFIX.length());
-                    token = isInline() ? new XInlineMacroTag(macroId) : new XStandaloneMacroTag(macroId);
+                    token = new XMacroTag(macroId, EventWikiModel.this);
                 }
             }
 
@@ -187,7 +188,7 @@ public class EventWikiModel extends WikiModel
 
     private void addStandaloneMacroTag(String name)
     {
-        addTokenTag(name, new XStandaloneMacroTag(name));
+        addTokenTag(name, new XMacroTag(name, false, this));
     }
 
     public void init(MediaWikiSyntaxInputProperties properties)
@@ -210,7 +211,7 @@ public class EventWikiModel extends WikiModel
 
         if (this.properties.getReferenceType() == ReferenceType.MEDIAWIKI) {
             // MediaWiki automatically replace white space with underscore in pages or files
-            cleanReference.replace(' ', '_');
+            cleanReference = cleanReference.replace(' ', '_');
 
             // MediaWiki automatically capitalize references to pages or files
             cleanReference = StringUtils.capitalize(cleanReference);
@@ -316,6 +317,13 @@ public class EventWikiModel extends WikiModel
     }
 
     @Override
+    public void append(BaseToken contentNode)
+    {
+        // TODO Auto-generated method stub
+        super.append(contentNode);
+    }
+
+    @Override
     public void appendExternalLink(String uriSchemeName, String link, String linkName, boolean withoutSquareBrackets)
     {
         // TODO: support uri with empty scheme (fallback on current request scheme)
@@ -331,7 +339,7 @@ public class EventWikiModel extends WikiModel
         append(linkTag);
     }
 
-    private boolean isInline()
+    boolean isInline()
     {
         TagToken token = peekNode();
 

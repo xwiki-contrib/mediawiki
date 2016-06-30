@@ -7,6 +7,8 @@
 ==== Title level 4 ====
 ===== Title level 5 =====
 ====== Title level 6 ======
+===== Title level 5.2 =====
+= Title level 1.2 =
 .#-----------------------------------------------------
 .expect|event/1.0
 .#-----------------------------------------------------
@@ -65,10 +67,34 @@ onWord [level]
 onSpace
 onWord [6]
 endHeader [6, Title_level_6]
+onNewLine
+endSection
+endSection
+beginSection
+beginHeader [5, Title_level_5.2]
+onWord [Title]
+onSpace
+onWord [level]
+onSpace
+onWord [5]
+onSpecialSymbol [.]
+onWord [2]
+endHeader [5, Title_level_5.2]
+onNewLine
 endSection
 endSection
 endSection
 endSection
 endSection
+beginSection
+beginHeader [1, Title_level_1.2]
+onWord [Title]
+onSpace
+onWord [level]
+onSpace
+onWord [1]
+onSpecialSymbol [.]
+onWord [2]
+endHeader [1, Title_level_1.2]
 endSection
 endDocument

@@ -17,19 +17,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.mediawiki.syntax.internal;
+package org.xwiki.contrib.mediawiki.syntax.internal.input;
 
 import org.junit.runner.RunWith;
-import org.xwiki.rendering.test.integration.RenderingTestSuite;
+import org.xwiki.filter.test.integration.FilterTestSuite;
+import org.xwiki.test.annotation.AllComponents;
 
 /**
- * Run all specific tests found in {@code *.test} files located in the classpath. These {@code *.test} files must follow
- * the conventions described in {@link org.xwiki.rendering.test.integration.TestDataParser}.
- *
- * @version $Id: 75488eb22c370f55a3e6bd9b38ec599be157b515 $
+ * Run all tests found in the classpath. These {@code *.test} files must follow the conventions described in
+ * {@link org.xwiki.filter.test.integration.TestDataParser}.
+ * 
+ * @version $Id: 581bf6e732682b62158c05eb20237d6a13043d2d $
  */
-@RunWith(RenderingTestSuite.class)
-@RenderingTestSuite.Scope(value = "mediawiki16.specific"/*, pattern = "misc.test"*/)
-public class MediaWikiSpecificTest
+@RunWith(FilterTestSuite.class)
+@AllComponents
+@FilterTestSuite.Scope(value = "mediawiki16/filter/"/*, pattern = "misc.test"*/)
+public class IntegrationTests
 {
 }

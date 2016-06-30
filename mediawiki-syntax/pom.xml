@@ -31,7 +31,7 @@
   <name>MediaWiki - Syntax</name>
   <description>MediaWiki Syntax parser</description>
   <properties>
-    <xwiki.jacoco.instructionRatio>0.82</xwiki.jacoco.instructionRatio>
+    <xwiki.jacoco.instructionRatio>0.87</xwiki.jacoco.instructionRatio>
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>MediaWiki Syntax</xwiki.extension.name>
   </properties>
@@ -58,6 +58,18 @@
       <groupId>org.xwiki.rendering</groupId>
       <artifactId>xwiki-rendering-syntax-event</artifactId>
       <version>${rendering.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.commons</groupId>
+      <artifactId>xwiki-commons-filter-test</artifactId>
+      <version>${commons.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.commons</groupId>
+      <artifactId>xwiki-commons-filter-stream-xml</artifactId>
+      <version>${commons.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -96,7 +108,8 @@
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/WPTableBlockEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/converter/XMacroEventGenerator.java,
               org/xwiki/contrib/mediawiki/syntax/internal/parser/model/EventWikiModel.java,
-              org/xwiki/contrib/mediawiki/syntax/internal/parser/model/XStandaloneMacroTag.java
+              org/xwiki/contrib/mediawiki/syntax/internal/parser/model/XStandaloneMacroTag.java,
+              org/xwiki/contrib/mediawiki/syntax/internal/parser/model/XMacroTag.java,
           </excludes>
         </configuration>
       </plugin>

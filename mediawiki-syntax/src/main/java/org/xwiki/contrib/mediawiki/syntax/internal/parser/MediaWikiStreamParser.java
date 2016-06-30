@@ -28,6 +28,7 @@ import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties.ReferenceType;
 import org.xwiki.filter.FilterException;
 import org.xwiki.filter.input.BeanInputFilterStreamFactory;
 import org.xwiki.filter.input.DefaultReaderInputSource;
@@ -79,6 +80,7 @@ public class MediaWikiStreamParser implements StreamParser
     {
         MediaWikiSyntaxInputProperties properties = new MediaWikiSyntaxInputProperties();
         properties.setSource(new DefaultReaderInputSource(source));
+        properties.setReferenceType(ReferenceType.XWIKI);
 
         BeanInputFilterStreamFactory<MediaWikiSyntaxInputProperties> beanFilter =
             (BeanInputFilterStreamFactory<MediaWikiSyntaxInputProperties>) this.filter;
