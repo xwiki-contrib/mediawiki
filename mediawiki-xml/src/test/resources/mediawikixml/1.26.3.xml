@@ -124,19 +124,4 @@
       <text>content 5</text>
     </revision>
   </page>
-  <page>
-    <title>User:username/</title>
-    <id>6</id>
-    <revision>
-      <id>1</id>
-      <parentid>6</parentid>
-      <timestamp>2016-06-24T09:37:15Z</timestamp>
-      <contributor>
-        <ip>127.0.0.1</ip>
-      </contributor>
-      <model>wikitext</model>
-      <format>text/x-wiki</format>
-      <text>user content</text>
-    </revision>
-  </page>
 </mediawiki>

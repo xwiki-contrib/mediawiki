@@ -334,6 +334,8 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
     {
         boolean skip = false;
 
+        EntityReference pageReference = null;
+
         for (xmlReader.nextTag(); xmlReader.isStartElement(); xmlReader.nextTag()) {
             String elementName = xmlReader.getLocalName();
 
@@ -341,9 +343,9 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
                 StAXUtils.skipElement(xmlReader);
             } else if (elementName.equals(TAG_PAGE_TITLE)) {
                 this.currentPageTitle = xmlReader.getElementText();
-            } else if (elementName.equals(TAG_PAGE_REVISION)) {
+                
                 // Find current page reference
-                EntityReference pageReference = toEntityReference(this.currentPageTitle);
+                pageReference = toEntityReference(this.currentPageTitle);
 
                 if (pageReference != null) {
                     if (this.properties.isConvertToXWiki() && !this.properties.isFinalPages()) {
@@ -365,7 +367,9 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
                     // Send document event
                     proxyFilter.beginWikiDocument(pageReference.getName(), FilterEventParameters.EMPTY);
                     proxyFilter.beginWikiDocumentLocale(Locale.ROOT, FilterEventParameters.EMPTY);
-
+                }
+            } else if (elementName.equals(TAG_PAGE_REVISION)) {
+                if (pageReference != null) {
                     readPageRevision(xmlReader, filter, proxyFilter);
                 } else {
                     skip = true;
