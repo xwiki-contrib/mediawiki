@@ -25,7 +25,11 @@
             </entry>
             <entry>
               <string>content</string>
-              <string>[[Page1]]
+              <string>[[Page]]
+[[Page||anchor="some_anchor"]]
+[[Page_with_white_spaces]]
+[[Page_with_white_spaces]]
+[[Page_with_white_spaces]]
 [[Main.Space.Page]]
 [[Main.Space.Page]]</string>
             </entry>
@@ -44,7 +48,7 @@
       </wikiDocumentRevision>
     </wikiDocumentLocale>
   </wikiDocument>
-  <wikiSpace name="Page1">
+  <wikiSpace name="Page">
     <wikiDocument name="WebHome">
       <wikiDocumentLocale>
         <wikiDocumentRevision revision="1">
@@ -56,7 +60,7 @@
               </entry>
               <entry>
                 <string>title</string>
-                <string>Page1</string>
+                <string>Page</string>
               </entry>
               <entry>
                 <string>revision_date</string>
@@ -138,6 +142,48 @@ SkwAAAAASUVORK5CYII=</content>
       </wikiDocumentLocale>
     </wikiDocument>
   </wikiSpace>
+  <wikiSpace name="Page_with_white_spaces">
+    <wikiDocument name="WebHome">
+      <wikiDocumentLocale>
+        <wikiDocumentRevision revision="1">
+          <p>
+            <parameters>
+              <entry>
+                <string>revision_minor</string>
+                <boolean>false</boolean>
+              </entry>
+              <entry>
+                <string>title</string>
+                <string>Page with white spaces</string>
+              </entry>
+              <entry>
+                <string>revision_date</string>
+                <date>2016-06-24 09:37:15.0 UTC</date>
+              </entry>
+              <entry>
+                <string>revision_author</string>
+                <null></null>
+              </entry>
+              <entry>
+                <string>content</string>
+                <string>content 3</string>
+              </entry>
+              <entry>
+                <string>syntax</string>
+                <org.xwiki.rendering.syntax.Syntax>
+                  <type>
+                    <name>XWiki</name>
+                    <id>xwiki</id>
+                  </type>
+                  <version>2.1</version>
+                </org.xwiki.rendering.syntax.Syntax>
+              </entry>
+            </parameters>
+          </p>
+        </wikiDocumentRevision>
+      </wikiDocumentLocale>
+    </wikiDocument>
+  </wikiSpace>
   <wikiSpace name="Space">
     <wikiSpace name="Page">
       <wikiDocument name="WebHome">
@@ -163,7 +209,7 @@ SkwAAAAASUVORK5CYII=</content>
                 </entry>
                 <entry>
                   <string>content</string>
-                  <string>content 3</string>
+                  <string>content 4</string>
                 </entry>
                 <entry>
                   <string>syntax</string>
@@ -203,7 +249,7 @@ SkwAAAAASUVORK5CYII=</content>
                 </entry>
                 <entry>
                   <string>content</string>
-                  <string>content 4</string>
+                  <string>content 5</string>
                 </entry>
                 <entry>
                   <string>syntax</string>
