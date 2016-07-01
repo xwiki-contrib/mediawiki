@@ -287,6 +287,11 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
                 StAXUtils.skipElement(xmlReader);
             }
         }
+
+        this.currentParentReference = null;
+
+        // Send parent events
+        sendSpaceEvents(proxyFilter);
     }
 
     private void readSiteInfo(XMLStreamReader xmlReader) throws XMLStreamException
@@ -334,6 +339,17 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
                 EntityReference pageReference = toEntityReference(this.currentPageTitle);
 
                 if (pageReference != null) {
+                    if (this.properties.isConvertToXWiki() && !this.properties.isFinalPages()) {
+                        String defaultPageName = this.modelConfiguration.getDefaultReferenceValue(EntityType.DOCUMENT);
+                        if (!pageReference.getName().equals(defaultPageName)) {
+                            pageReference = new EntityReference(pageReference.getName(), EntityType.SPACE,
+                                pageReference.getParent());
+                            pageReference = new EntityReference(
+                                this.modelConfiguration.getDefaultReferenceValue(EntityType.DOCUMENT),
+                                EntityType.DOCUMENT, pageReference);
+                        }
+                    }
+
                     this.currentParentReference = pageReference.getParent();
 
                     // Send parent events
@@ -366,13 +382,16 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         }
 
         // Open spaces that need to be open
-        sendBeginParents(proxyFilter);
+        if (this.currentParentReference != null) {
+            sendBeginParents(proxyFilter);
+        }
     }
 
     private void sendEndParents(MediaWikiFilter proxyFilter) throws FilterException
     {
         List<EntityReference> previousParents = this.previousParentReference.getReversedReferenceChain();
-        List<EntityReference> currentParents = this.currentParentReference.getReversedReferenceChain();
+        List<EntityReference> currentParents = this.currentParentReference != null
+            ? this.currentParentReference.getReversedReferenceChain() : Collections.<EntityReference>emptyList();
 
         // Find the first different level
         int i = 0;
@@ -400,7 +419,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
     private void sendBeginParents(MediaWikiFilter proxyFilter) throws FilterException
     {
         int previousSize = this.previousParentReference != null ? this.previousParentReference.size() : 0;
-        int currentSize = this.currentParentReference != null ? this.currentParentReference.size() : 0;
+        int currentSize = this.currentParentReference.size();
 
         int diff = currentSize - previousSize;
 

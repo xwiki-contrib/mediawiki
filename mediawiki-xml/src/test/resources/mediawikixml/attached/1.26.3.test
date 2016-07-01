@@ -4,7 +4,7 @@
 <wikiSpace name="Main">
   <wikiDocument name="WebHome">
     <wikiDocumentLocale>
-      <wikiDocumentRevision revision="2">
+      <wikiDocumentRevision revision="1">
         <p>
           <parameters>
             <entry>
@@ -25,10 +25,7 @@
             </entry>
             <entry>
               <string>content</string>
-              <string>{{gallery}}
-[[image:Logo.png]]
-[[image:Logo.png]]
-{{/gallery}}</string>
+              <string>[[doc:Page1]]</string>
             </entry>
             <entry>
               <string>syntax</string>
@@ -42,9 +39,53 @@
             </entry>
           </parameters>
         </p>
-        <wikiAttachment name="Logo.png" size="2522">
+      </wikiDocumentRevision>
+    </wikiDocumentLocale>
+  </wikiDocument>
+  <wikiSpace name="Page1">
+    <wikiDocument name="WebHome">
+      <wikiDocumentLocale>
+        <wikiDocumentRevision revision="1">
           <p>
-            <content>iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAYAAABxLuKEAAAAIGNIUk0AAHomAACAhAAA+gAAAIDo
+            <parameters>
+              <entry>
+                <string>revision_minor</string>
+                <boolean>false</boolean>
+              </entry>
+              <entry>
+                <string>title</string>
+                <string>Page1</string>
+              </entry>
+              <entry>
+                <string>revision_date</string>
+                <date>2016-06-24 09:37:15.0 UTC</date>
+              </entry>
+              <entry>
+                <string>revision_author</string>
+                <null></null>
+              </entry>
+              <entry>
+                <string>content</string>
+                <string>{{gallery}}
+[[image:Logo.png]]
+[[image:Logo.png]]
+{{/gallery}}</string>
+              </entry>
+              <entry>
+                <string>syntax</string>
+                <org.xwiki.rendering.syntax.Syntax>
+                  <type>
+                    <name>XWiki</name>
+                    <id>xwiki</id>
+                  </type>
+                  <version>2.1</version>
+                </org.xwiki.rendering.syntax.Syntax>
+              </entry>
+            </parameters>
+          </p>
+          <wikiAttachment name="Logo.png" size="2522">
+            <p>
+              <content>iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAYAAABxLuKEAAAAIGNIUk0AAHomAACAhAAA+gAAAIDo
 AAB1MAAA6mAAADqYAAAXcJy6UTwAAAAEZ0FNQQAAsY58+1GTAAAAAXNSR0IArs4c6QAAAAZiS0dE
 AP8A/wD/oL2nkwAAAAlwSFlzAAAOxAAADsQBlSsOGwAACTFJREFUeNrtW31sE+cZf8+XZA4FYkdV
 SaqKZojis0m7FlVr/siWRKNr2MiHHVK1HX8wqagwFWlIQ6LaB84I2qQibX9Mot26lWodUDL7zkkr
@@ -89,11 +130,13 @@ cl2aj1dRVbEpHo+PsUUe/F0kvkAL5DjOv8iF0BjWbzz3QXBoLb29PZdYkQy+QEaOkwvOmJUXucgl
 AarVf9bVPXEok7n1Mb6OQCV/nc1O7enrU/IGBSXAthznPoqS4A279zNkfXVy8uYniEZ/0XkidXci
 IV+m3qPEuh3PeH+FFfkwZP39otAODo7cjfhziy1QSZEA022Ydb0BygG2NJbG0vg8jP8B0uG5UUVm
 SkwAAAAASUVORK5CYII=</content>
-          </p>
-        </wikiAttachment>
-      </wikiDocumentRevision>
-    </wikiDocumentLocale>
-  </wikiDocument>
+            </p>
+          </wikiAttachment>
+        </wikiDocumentRevision>
+      </wikiDocumentLocale>
+    </wikiDocument>
+  </wikiSpace>
+</wikiSpace>
 .#------------------------------------------------------------------------------
 .input|mediawiki+xml
 .configuration.source=../1.26.3.xml
