@@ -39,7 +39,9 @@
       </contributor>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text>[[Page1]]</text>
+      <text>[[Page1]]
+[[Space/Page]]
+[[Space/Page/]]</text>
     </revision>
   </page>
   <page>
@@ -59,6 +61,38 @@
       image:logo.png
       logo.png
       &lt;/gallery&gt;</text>
+    </revision>
+  </page>
+  <page>
+    <title>Space/Page</title>
+    <ns>0</ns>
+    <id>3</id>
+    <revision>
+      <id>1</id>
+      <parentid>3</parentid>
+      <timestamp>2016-06-24T09:37:15Z</timestamp>
+      <contributor>
+        <ip>127.0.0.1</ip>
+      </contributor>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text>content 3</text>
+    </revision>
+  </page>
+  <page>
+    <title>Space/Page/</title>
+    <ns>0</ns>
+    <id>4</id>
+    <revision>
+      <id>1</id>
+      <parentid>4</parentid>
+      <timestamp>2016-06-24T09:37:15Z</timestamp>
+      <contributor>
+        <ip>127.0.0.1</ip>
+      </contributor>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text>content 4</text>
     </revision>
   </page>
 </mediawiki>

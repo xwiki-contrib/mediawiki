@@ -158,6 +158,7 @@ public class MediaWikiContextConverterListener extends WrappingListener
             newReference = refactor((AttachmentResourceReference) reference);
         } else if (reference instanceof DocumentResourceReference) {
             newReference = refactor((DocumentResourceReference) reference);
+            newReference.setTyped(false);
         }
 
         this.currentReference.push(newReference);
@@ -182,6 +183,7 @@ public class MediaWikiContextConverterListener extends WrappingListener
         // Refactor the reference if needed
         if (reference instanceof AttachmentResourceReference) {
             newReference = refactor((AttachmentResourceReference) reference);
+            newReference.setTyped(false);
         }
 
         super.onImage(newReference, isFreeStandingURI, parameters);

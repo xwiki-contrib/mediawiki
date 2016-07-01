@@ -42,6 +42,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
@@ -196,6 +197,18 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
                         EntityType.SPACE, this.properties.getParent());
             } else {
                 parentReference = this.properties.getParent();
+            }
+        }
+
+        // See / as space separator
+        String[] elements = StringUtils.split(pageName, '/');
+        if (elements.length > 1) {
+            for (int i = 0; i < elements.length - 1; ++i) {
+                parentReference = new EntityReference(elements[i], EntityType.SPACE, parentReference);
+            }
+            pageName = elements[elements.length - 1];
+            if (pageName.isEmpty()) {
+                pageName = this.modelConfiguration.getDefaultReferenceValue(EntityType.DOCUMENT);
             }
         }
 
@@ -449,7 +462,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
         pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_TITLE, this.currentPageTitle);
 
-        String version = "1.1";
+        String version = "1";
 
         boolean beginWikiDocumentRevisionSent = false;
 
