@@ -102,7 +102,7 @@ SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
             <parameters>
               <entry>
                 <string>revision_minor</string>
-                <boolean>false</boolean>
+                <boolean>true</boolean>
               </entry>
               <entry>
                 <string>title</string>
@@ -284,4 +284,5 @@ SURBVAjXY2BgYAAAAAQAASc0JwoAAAAASUVORK5CYII=</content>
 .input|mediawiki+xml
 .configuration.source=../1.26.3.xml
 .configuration.files=file:${{{xwiki.test.folder}}}/mediawikixml/1.26.3-files/
+.configuration.fileAttached=true
 .#------------------------------------------------------------------------------
