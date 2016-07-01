@@ -73,8 +73,8 @@
               <entry>
                 <string>content</string>
                 <string>{{gallery}}
-[[image:Logo.png]]
-[[image:Logo.png]]
+[[image:Pixel_white.png]]
+[[image:Pixel_white.png]]
 {{/gallery}}</string>
               </entry>
               <entry>
@@ -89,186 +89,199 @@
               </entry>
             </parameters>
           </p>
-          <wikiAttachment name="Logo.png" size="2522">
+          <wikiAttachment name="Pixel_white.png" size="146">
             <p>
-              <content>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
-SkwAAAAASUVORK5CYII=</content>
+              <content>iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
+B3RJTUUH4AcBDQE7cMRBYQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAM
+SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
             </p>
           </wikiAttachment>
         </wikiDocumentRevision>
+        <wikiDocument name="WebHome">
+          <wikiDocumentLocale>
+            <wikiDocumentRevision revision="2">
+              <p>
+                <parameters>
+                  <entry>
+                    <string>revision_minor</string>
+                    <boolean>false</boolean>
+                  </entry>
+                  <entry>
+                    <string>title</string>
+                    <string>Page</string>
+                  </entry>
+                  <entry>
+                    <string>revision_date</string>
+                    <date>2016-06-24 09:37:15.0 UTC</date>
+                  </entry>
+                  <entry>
+                    <string>revision_author</string>
+                    <null></null>
+                  </entry>
+                  <entry>
+                    <string>content</string>
+                    <string>{{gallery}}
+[[image:Pixel_white.png]]
+[[image:Pixel_black.png]]
+{{/gallery}}</string>
+                  </entry>
+                  <entry>
+                    <string>syntax</string>
+                    <org.xwiki.rendering.syntax.Syntax>
+                      <type>
+                        <name>XWiki</name>
+                        <id>xwiki</id>
+                      </type>
+                      <version>2.1</version>
+                    </org.xwiki.rendering.syntax.Syntax>
+                  </entry>
+                </parameters>
+              </p>
+              <wikiAttachment name="Pixel_white.png" size="146">
+                <p>
+                  <content>iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
+B3RJTUUH4AcBDQE7cMRBYQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAM
+SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
+                </p>
+              </wikiAttachment>
+              <wikiAttachment name="Pixel_black.png" size="146">
+                <p>
+                  <content>iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
+B3RJTUUH4AcBDQIhpovr2AAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAM
+SURBVAjXY2BgYAAAAAQAASc0JwoAAAAASUVORK5CYII=</content>
+                </p>
+              </wikiAttachment>
+            </wikiDocumentRevision>
+          </wikiDocumentLocale>
+        </wikiDocument>
       </wikiDocumentLocale>
+      <wikiSpace name="Page_with_white_spaces">
+        <wikiDocument name="WebHome">
+          <wikiDocumentLocale>
+            <wikiDocumentRevision revision="1">
+              <p>
+                <parameters>
+                  <entry>
+                    <string>revision_minor</string>
+                    <boolean>false</boolean>
+                  </entry>
+                  <entry>
+                    <string>title</string>
+                    <string>Page with white spaces</string>
+                  </entry>
+                  <entry>
+                    <string>revision_date</string>
+                    <date>2016-06-24 09:37:15.0 UTC</date>
+                  </entry>
+                  <entry>
+                    <string>revision_author</string>
+                    <null></null>
+                  </entry>
+                  <entry>
+                    <string>content</string>
+                    <string>content 3</string>
+                  </entry>
+                  <entry>
+                    <string>syntax</string>
+                    <org.xwiki.rendering.syntax.Syntax>
+                      <type>
+                        <name>XWiki</name>
+                        <id>xwiki</id>
+                      </type>
+                      <version>2.1</version>
+                    </org.xwiki.rendering.syntax.Syntax>
+                  </entry>
+                </parameters>
+              </p>
+            </wikiDocumentRevision>
+          </wikiDocumentLocale>
+        </wikiDocument>
+      </wikiSpace>
+      <wikiSpace name="Space">
+        <wikiSpace name="Page">
+          <wikiDocument name="WebHome">
+            <wikiDocumentLocale>
+              <wikiDocumentRevision revision="1">
+                <p>
+                  <parameters>
+                    <entry>
+                      <string>revision_minor</string>
+                      <boolean>false</boolean>
+                    </entry>
+                    <entry>
+                      <string>title</string>
+                      <string>Space/Page</string>
+                    </entry>
+                    <entry>
+                      <string>revision_date</string>
+                      <date>2016-06-24 09:37:15.0 UTC</date>
+                    </entry>
+                    <entry>
+                      <string>revision_author</string>
+                      <null></null>
+                    </entry>
+                    <entry>
+                      <string>content</string>
+                      <string>content 4</string>
+                    </entry>
+                    <entry>
+                      <string>syntax</string>
+                      <org.xwiki.rendering.syntax.Syntax>
+                        <type>
+                          <name>XWiki</name>
+                          <id>xwiki</id>
+                        </type>
+                        <version>2.1</version>
+                      </org.xwiki.rendering.syntax.Syntax>
+                    </entry>
+                  </parameters>
+                </p>
+              </wikiDocumentRevision>
+            </wikiDocumentLocale>
+          </wikiDocument>
+          <wikiDocument name="WebHome">
+            <wikiDocumentLocale>
+              <wikiDocumentRevision revision="1">
+                <p>
+                  <parameters>
+                    <entry>
+                      <string>revision_minor</string>
+                      <boolean>false</boolean>
+                    </entry>
+                    <entry>
+                      <string>title</string>
+                      <string>Space/Page/</string>
+                    </entry>
+                    <entry>
+                      <string>revision_date</string>
+                      <date>2016-06-24 09:37:15.0 UTC</date>
+                    </entry>
+                    <entry>
+                      <string>revision_author</string>
+                      <null></null>
+                    </entry>
+                    <entry>
+                      <string>content</string>
+                      <string>content 5</string>
+                    </entry>
+                    <entry>
+                      <string>syntax</string>
+                      <org.xwiki.rendering.syntax.Syntax>
+                        <type>
+                          <name>XWiki</name>
+                          <id>xwiki</id>
+                        </type>
+                        <version>2.1</version>
+                      </org.xwiki.rendering.syntax.Syntax>
+                    </entry>
+                  </parameters>
+                </p>
+              </wikiDocumentRevision>
+            </wikiDocumentLocale>
+          </wikiDocument>
+        </wikiSpace>
+      </wikiSpace>
     </wikiDocument>
-  </wikiSpace>
-  <wikiSpace name="Page_with_white_spaces">
-    <wikiDocument name="WebHome">
-      <wikiDocumentLocale>
-        <wikiDocumentRevision revision="1">
-          <p>
-            <parameters>
-              <entry>
-                <string>revision_minor</string>
-                <boolean>false</boolean>
-              </entry>
-              <entry>
-                <string>title</string>
-                <string>Page with white spaces</string>
-              </entry>
-              <entry>
-                <string>revision_date</string>
-                <date>2016-06-24 09:37:15.0 UTC</date>
-              </entry>
-              <entry>
-                <string>revision_author</string>
-                <null></null>
-              </entry>
-              <entry>
-                <string>content</string>
-                <string>content 3</string>
-              </entry>
-              <entry>
-                <string>syntax</string>
-                <org.xwiki.rendering.syntax.Syntax>
-                  <type>
-                    <name>XWiki</name>
-                    <id>xwiki</id>
-                  </type>
-                  <version>2.1</version>
-                </org.xwiki.rendering.syntax.Syntax>
-              </entry>
-            </parameters>
-          </p>
-        </wikiDocumentRevision>
-      </wikiDocumentLocale>
-    </wikiDocument>
-  </wikiSpace>
-  <wikiSpace name="Space">
-    <wikiSpace name="Page">
-      <wikiDocument name="WebHome">
-        <wikiDocumentLocale>
-          <wikiDocumentRevision revision="1">
-            <p>
-              <parameters>
-                <entry>
-                  <string>revision_minor</string>
-                  <boolean>false</boolean>
-                </entry>
-                <entry>
-                  <string>title</string>
-                  <string>Space/Page</string>
-                </entry>
-                <entry>
-                  <string>revision_date</string>
-                  <date>2016-06-24 09:37:15.0 UTC</date>
-                </entry>
-                <entry>
-                  <string>revision_author</string>
-                  <null></null>
-                </entry>
-                <entry>
-                  <string>content</string>
-                  <string>content 4</string>
-                </entry>
-                <entry>
-                  <string>syntax</string>
-                  <org.xwiki.rendering.syntax.Syntax>
-                    <type>
-                      <name>XWiki</name>
-                      <id>xwiki</id>
-                    </type>
-                    <version>2.1</version>
-                  </org.xwiki.rendering.syntax.Syntax>
-                </entry>
-              </parameters>
-            </p>
-          </wikiDocumentRevision>
-        </wikiDocumentLocale>
-      </wikiDocument>
-      <wikiDocument name="WebHome">
-        <wikiDocumentLocale>
-          <wikiDocumentRevision revision="1">
-            <p>
-              <parameters>
-                <entry>
-                  <string>revision_minor</string>
-                  <boolean>false</boolean>
-                </entry>
-                <entry>
-                  <string>title</string>
-                  <string>Space/Page/</string>
-                </entry>
-                <entry>
-                  <string>revision_date</string>
-                  <date>2016-06-24 09:37:15.0 UTC</date>
-                </entry>
-                <entry>
-                  <string>revision_author</string>
-                  <null></null>
-                </entry>
-                <entry>
-                  <string>content</string>
-                  <string>content 5</string>
-                </entry>
-                <entry>
-                  <string>syntax</string>
-                  <org.xwiki.rendering.syntax.Syntax>
-                    <type>
-                      <name>XWiki</name>
-                      <id>xwiki</id>
-                    </type>
-                    <version>2.1</version>
-                  </org.xwiki.rendering.syntax.Syntax>
-                </entry>
-              </parameters>
-            </p>
-          </wikiDocumentRevision>
-        </wikiDocumentLocale>
-      </wikiDocument>
-    </wikiSpace>
-  </wikiSpace>
-</wikiSpace>
 .#------------------------------------------------------------------------------
 .input|mediawiki+xml
 .configuration.source=../1.26.3.xml

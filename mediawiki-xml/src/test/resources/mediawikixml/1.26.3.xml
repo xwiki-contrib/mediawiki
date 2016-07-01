@@ -62,8 +62,22 @@
       <model>wikitext</model>
       <format>text/x-wiki</format>
       <text>&lt;gallery&gt;
-      image:logo.png
-      logo.png
+      image:pixel white.png
+      pixel white.png
+      &lt;/gallery&gt;</text>
+    </revision>
+    <revision>
+      <id>2</id>
+      <parentid>2</parentid>
+      <timestamp>2016-06-24T09:37:15Z</timestamp>
+      <contributor>
+        <ip>127.0.0.1</ip>
+      </contributor>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text>&lt;gallery&gt;
+      image:pixel white.png
+      pixel black.png
       &lt;/gallery&gt;</text>
     </revision>
   </page>
