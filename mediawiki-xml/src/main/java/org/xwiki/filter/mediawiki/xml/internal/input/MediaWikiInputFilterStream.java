@@ -349,7 +349,9 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
                 EntityReference pageReference = toEntityReference(this.currentPageTitle);
 
                 if (pageReference != null) {
-                    if (this.properties.isConvertToXWiki() && !this.properties.isFinalPages()) {
+                    if (this.properties.isConvertToXWiki() && !this.properties.isTerminalPages()
+                        && !StringUtils.startsWithIgnoreCase(this.currentPageTitle, NAMESPACE_FILE)) {
+                        // Make the page a non terminal page
                         String defaultPageName = this.modelConfiguration.getDefaultReferenceValue(EntityType.DOCUMENT);
                         if (!pageReference.getName().equals(defaultPageName)) {
                             pageReference = new EntityReference(pageReference.getName(), EntityType.SPACE,

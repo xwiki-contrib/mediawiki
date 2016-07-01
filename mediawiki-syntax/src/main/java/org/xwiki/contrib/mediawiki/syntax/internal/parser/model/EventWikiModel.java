@@ -291,13 +291,21 @@ public class EventWikiModel extends WikiModel
     {
         ResourceReference reference;
         if (this.properties.getReferenceType() == ReferenceType.XWIKI) {
-            reference = this.imageReferenceParser.parse(srcImageLink);
+            reference = this.imageReferenceParser.parse(imageFormat.getFilename());
         } else {
-            reference = new AttachmentResourceReference(cleanReference(srcImageLink));
+            reference = new AttachmentResourceReference(cleanReference(imageFormat.getFilename()));
             reference.setTyped(false);
         }
 
         ImageTag imageTag = new ImageTag(reference, false, imageFormat);
+
+        if (imageFormat.getWidthStr() != null) {
+            imageTag.addAttribute("width", imageFormat.getWidthStr(), false);
+        }
+
+        if (imageFormat.getHeightStr() != null) {
+            imageTag.addAttribute("height", imageFormat.getHeightStr(), false);
+        }
 
         append(imageTag);
     }

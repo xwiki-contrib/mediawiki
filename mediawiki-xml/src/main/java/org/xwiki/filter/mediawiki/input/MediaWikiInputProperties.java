@@ -77,9 +77,9 @@ public class MediaWikiInputProperties extends XMLInputProperties
     private boolean convertToXWiki = true;
 
     /**
-     * @see #isFinalPages()
+     * @see #isTerminalPages()
      */
-    private boolean finalPages;
+    private boolean terminalPages;
 
     /**
      * @return the folder or package containing files
@@ -191,21 +191,19 @@ public class MediaWikiInputProperties extends XMLInputProperties
 
     /**
      * @return if true, final pages will be produces (only if #isConvertToXWiki() is true)
-     * @since 1.6
      */
-    @PropertyName("Final Page")
-    @PropertyDescription("Produce final pages (only if \"XWiki convertion\" is enabled)")
-    public boolean isFinalPages()
+    @PropertyName("Terminal Page")
+    @PropertyDescription("Produce terminal pages (only if \"XWiki convertion\" is enabled)")
+    public boolean isTerminalPages()
     {
-        return this.finalPages;
+        return this.terminalPages;
     }
 
     /**
-     * @param finalPages if true, final pages will be produces (only if #isConvertToXWiki() is true)
-     * @since 1.6
+     * @param terminalPages if true, final pages will be produces (only if #isConvertToXWiki() is true)
      */
-    public void setFinalPages(boolean finalPages)
+    public void setTerminalPages(boolean terminalPages)
     {
-        this.finalPages = finalPages;
+        this.terminalPages = terminalPages;
     }
 }
