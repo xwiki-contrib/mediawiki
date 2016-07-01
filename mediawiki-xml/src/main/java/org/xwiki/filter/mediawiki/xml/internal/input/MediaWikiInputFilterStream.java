@@ -93,8 +93,6 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
     private static final String TAG_PAGE_TITLE = "title";
 
-    private static final String TAG_PAGE_NAMESPACE = "ns";
-
     private static final String TAG_PAGE_REVISION = "revision";
 
     private static final String TAG_PAGE_REVISION_CONTRIBUTOR = "contributor";
@@ -140,8 +138,6 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
     private Map<String, String> namespaces = new HashMap<>();
 
-    String currentPageNamespace;
-
     String currentPageTitle;
 
     EntityReference previousParentReference;
@@ -182,14 +178,14 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         if (namespace != null) {
             if (namespace.equalsIgnoreCase(NAMESPACE_FILE)) {
                 return toFileEntityReference(pageName);
+            } else if (namespace.equals(NAMESPACE_USER)) {
+                // TODO: add support for users
+                return null;
+            } else if (namespace.equals(NAMESPACE_SPECIAL)) {
+                return null;
             } else {
                 parentReference = new EntityReference(namespace, EntityType.SPACE, this.properties.getParent());
             }
-        } else if (this.currentPageNamespace.equals(NAMESPACE_USER)) {
-            // TODO: add support for users
-            return null;
-        } else if (this.currentPageNamespace.equals(NAMESPACE_SPECIAL)) {
-            return null;
         } else {
             if (this.properties.getParent() == null) {
                 parentReference =
@@ -345,8 +341,6 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
                 StAXUtils.skipElement(xmlReader);
             } else if (elementName.equals(TAG_PAGE_TITLE)) {
                 this.currentPageTitle = xmlReader.getElementText();
-            } else if (elementName.equals(TAG_PAGE_NAMESPACE)) {
-                this.currentPageNamespace = this.namespaces.get(xmlReader.getElementText());
             } else if (elementName.equals(TAG_PAGE_REVISION)) {
                 // Find current page reference
                 EntityReference pageReference = toEntityReference(this.currentPageTitle);
