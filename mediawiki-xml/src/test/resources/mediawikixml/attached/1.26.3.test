@@ -31,7 +31,12 @@
 [[Page_with_white_spaces]]
 [[Page_with_white_spaces]]
 [[Main.Space.Page]]
-[[Main.Space.Page]]</string>
+[[Main.Space.Page]]
+
+
+|=col1|=col2
+|cell11|cell12
+|cell21|cell22</string>
             </entry>
             <entry>
               <string>syntax</string>

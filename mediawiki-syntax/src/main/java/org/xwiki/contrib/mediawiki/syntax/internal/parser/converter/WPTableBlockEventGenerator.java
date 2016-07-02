@@ -50,7 +50,7 @@ public class WPTableBlockEventGenerator extends AbstractEventGenerator<WPTable>
 
     private void traverse(WPRow row, IWikiModel model) throws FilterException
     {
-        Map<String, String> attributes = getWPRowAttributes(row);
+        Map<String, String> attributes = getWPRowParameters(row);
 
         getListener().beginTableRow(attributes);
 
@@ -63,7 +63,8 @@ public class WPTableBlockEventGenerator extends AbstractEventGenerator<WPTable>
 
     private void traverse(WPCell cell, IWikiModel model) throws FilterException
     {
-        Map<String, String> attributes = cell.getNodeAttributes();
+        Map<String, String> attributes =
+            cell.getNodeAttributes() != null ? cell.getNodeAttributes() : Listener.EMPTY_PARAMETERS;
 
         switch (cell.getType()) {
             case WPCell.CAPTION:
@@ -84,14 +85,17 @@ public class WPTableBlockEventGenerator extends AbstractEventGenerator<WPTable>
         }
     }
 
-    // FIXME: getrid of this hack when
-    // https://bitbucket.org/axelclk/info.bliki.wiki/pull-requests/3/allow-accessing-wprow-attributes is applied
-    private Map<String, String> getWPRowAttributes(WPRow row)
+    private Map<String, String> getWPRowParameters(WPRow row)
     {
+        Map<String, String> parameters = null;
         try {
-            return (Map<String, String>) FieldUtils.readDeclaredField(row, "fAttributes", true);
+            // FIXME: getrid of this hack when
+            // https://bitbucket.org/axelclk/info.bliki.wiki/pull-requests/3/allow-accessing-wprow-attributes is applied
+            parameters = (Map<String, String>) FieldUtils.readDeclaredField(row, "fAttributes", true);
         } catch (Exception e) {
             return Listener.EMPTY_PARAMETERS;
         }
+
+        return parameters != null ? parameters : Listener.EMPTY_PARAMETERS;
     }
 }

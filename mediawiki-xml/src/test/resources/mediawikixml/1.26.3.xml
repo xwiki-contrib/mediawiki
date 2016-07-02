@@ -44,7 +44,18 @@
 [[page with white spaces]]
 [[Page_with_white_spaces]]
 [[Space/Page]]
-[[Space/Page/]]</text>
+[[Space/Page/]]
+
+{|
+!col1
+!col2
+|-
+|cell11
+|cell12
+|-
+|cell21
+|cell22
+|}</text>
     </revision>
   </page>
   <page>

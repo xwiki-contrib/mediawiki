@@ -548,7 +548,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         proxyFilter.endWikiDocumentRevision(version, pageRevisionParameters);
     }
 
-    private String convertToXWiki21(String content)
+    private String convertToXWiki21(String content) throws FilterException
     {
         DefaultWikiPrinter printer = new DefaultWikiPrinter();
         PrintRenderer renderer = this.xwiki21Factory.createRenderer(printer);
@@ -567,7 +567,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             ((BeanInputFilterStreamFactory) this.parserFactory).createInputFilterStream(parserProperties)) {
             stream.read(listener);
         } catch (Exception e) {
-            // TODO log something ?
+            throw new FilterException("Failed to convert content page", e);
         }
 
         this.currentFiles = listener.getFiles();

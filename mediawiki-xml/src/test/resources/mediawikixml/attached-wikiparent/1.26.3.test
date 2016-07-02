@@ -32,7 +32,12 @@
 [[Page_with_white_spaces]]
 [[Page_with_white_spaces]]
 [[parentwiki:Space.Page]]
-[[parentwiki:Space.Page]]</string>
+[[parentwiki:Space.Page]]
+
+
+|=col1|=col2
+|cell11|cell12
+|cell21|cell22</string>
               </entry>
               <entry>
                 <string>syntax</string>
