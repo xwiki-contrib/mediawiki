@@ -178,9 +178,6 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         if (namespace != null) {
             if (namespace.equalsIgnoreCase(NAMESPACE_FILE)) {
                 return toFileEntityReference(pageName);
-            } else if (namespace.equals(NAMESPACE_USER)) {
-                // TODO: add support for users
-                return null;
             } else if (namespace.equals(NAMESPACE_SPECIAL)) {
                 return null;
             } else {
