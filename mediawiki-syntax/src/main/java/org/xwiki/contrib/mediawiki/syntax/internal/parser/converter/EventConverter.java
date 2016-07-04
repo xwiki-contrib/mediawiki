@@ -30,6 +30,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
@@ -218,11 +219,119 @@ public class EventConverter implements ITextConverter
     @Override
     public void nodesToText(List<? extends Object> nodes, Appendable resultBuffer, IWikiModel model) throws IOException
     {
+        // Refactor a few things
+        cleanup((List<Object>) nodes, model);
+
+        // Produce events
         try {
             traverse(nodes, model);
         } catch (FilterException e) {
             new IOException("Failed to send event", e);
         }
+    }
+
+    private Object cleanLeadingWhiteSpace(Object obj, boolean leading)
+    {
+        if (obj instanceof TagNode) {
+            cleanLeadingAndTrailingWhiteSpaces(((TagNode) obj).getChildren(), leading);
+        } else if (obj instanceof ContentToken) {
+            String content = ((ContentToken) obj).getContent();
+
+            if (leading) {
+                content = StringUtils.stripStart(content, null);
+            } else {
+                content = StringUtils.stripEnd(content, null);
+            }
+
+            return new ContentToken(content);
+        }
+
+        return obj;
+    }
+
+    private void cleanLeadingAndTrailingWhiteSpaces(List<Object> children, boolean leading)
+    {
+        if (!children.isEmpty()) {
+            int index;
+            if (leading) {
+                index = 0;
+            } else {
+                index = children.size() - 1;
+            }
+
+            Object child = children.get(index);
+
+            Object cleanChild = cleanLeadingWhiteSpace(child, leading);
+
+            if (child != cleanChild) {
+                children.set(index, cleanChild);
+            }
+        }
+    }
+
+    private TagToken cleanup(TagToken token, IWikiModel model)
+    {
+        if (token instanceof TagNode) {
+            cleanup((TagNode) token, model);
+        }
+
+        return token;
+    }
+
+    private void cleanup(TagNode node, IWikiModel model)
+    {
+        if (node.getParents() != null) {
+            // Clean leading and trailing white spaces
+            cleanLeadingAndTrailingWhiteSpaces(node.getChildren(), true);
+            cleanLeadingAndTrailingWhiteSpaces(node.getChildren(), false);
+        }
+    }
+
+    private void cleanup(List<Object> nodes, IWikiModel model)
+    {
+        for (int i = 0; i < nodes.size(); ++i) {
+            Object child = nodes.get(i);
+            Object cleanChild = cleanup(child, model);
+
+            if (cleanChild != child) {
+                nodes.set(i, cleanChild);
+            }
+        }
+    }
+
+    private Object cleanup(Object node, IWikiModel model)
+    {
+        if (node instanceof BaseToken) {
+            return cleanup((BaseToken) node, model);
+        }
+
+        return node;
+    }
+
+    private BaseToken cleanup(BaseToken token, IWikiModel model)
+    {
+        BaseToken cleanToken = token;
+
+        if (token instanceof TagToken) {
+            cleanToken = cleanup((TagToken) token, model);
+        } else if (token instanceof ContentToken) {
+            String content = ((ContentToken) token).getContent();
+
+            // White spaces are not meaningful in mediawiki
+            content = content.replaceAll("[\t ]+", " ");
+
+            // FIXME: workaround a weird handling of entities in the Bliki parser
+            // See https://bitbucket.org/axelclk/info.bliki.wiki/issues/33/weird-handling-of-html-entities
+            content = Utils.escapeXml(content, true, true, true);
+            content = StringEscapeUtils.unescapeXml(content);
+
+            // Convert non-breaking space to white space
+            content = content.replace((char) 160, ' ');
+
+            cleanToken = new ContentToken(content);
+        }
+
+        return cleanToken;
     }
 
     void traverse(List<? extends Object> nodes, IWikiModel model) throws FilterException

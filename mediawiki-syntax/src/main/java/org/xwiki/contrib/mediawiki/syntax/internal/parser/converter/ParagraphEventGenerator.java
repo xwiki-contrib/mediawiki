@@ -21,22 +21,11 @@ package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
 import org.xwiki.filter.FilterException;
 
-import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.TagNode;
 import info.bliki.wiki.model.IWikiModel;
 
 public class ParagraphEventGenerator extends AbstractEventGenerator<TagNode>
 {
-    public ParagraphEventGenerator()
-    {
-    }
-
-    @Override
-    public void init(BaseToken token, EventConverter converter)
-    {
-        super.init(token, converter);
-    }
-
     @Override
     public void begin()
     {

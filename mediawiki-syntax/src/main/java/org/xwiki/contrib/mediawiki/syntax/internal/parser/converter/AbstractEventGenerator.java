@@ -46,6 +46,12 @@ public abstract class AbstractEventGenerator<T extends BaseToken> implements Eve
     }
 
     @Override
+    public T getToken()
+    {
+        return this.token;
+    }
+
+    @Override
     public AbstractEventGenerator clone() throws CloneNotSupportedException
     {
         return (AbstractEventGenerator) super.clone();

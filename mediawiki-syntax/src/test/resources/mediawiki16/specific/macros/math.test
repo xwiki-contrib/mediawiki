@@ -11,9 +11,7 @@ Formula <math>a+b</math>
 .#-----------------------------------------------------
 beginDocument
 beginParagraph
-onMacroInline [formula] [] [
-a+b
-]
+onMacroInline [formula] [] [a+b]
 endParagraph
 beginParagraph
 onWord [Formula]

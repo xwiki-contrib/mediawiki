@@ -325,10 +325,26 @@ public class EventWikiModel extends WikiModel
     }
 
     @Override
-    public void append(BaseToken contentNode)
+    public void append(BaseToken token)
+    {
+        // Generate missing paragraph
+        if (token instanceof ContentToken && stackSize() == 0 && getRecursionLevel() == 1) {
+            // Workaround https://bitbucket.org/axelclk/info.bliki.wiki/issues/34
+            if (!((ContentToken) token).getContent().equals("\n")) {
+                pushNode(new PTag());
+
+                super.append(token);
+            }
+        } else {
+            super.append(token);
+        }
+    }
+
+    @Override
+    public boolean pushNode(TagToken node)
     {
         // TODO Auto-generated method stub
-        super.append(contentNode);
+        return super.pushNode(node);
     }
 
     @Override

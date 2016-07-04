@@ -9,8 +9,6 @@ multiline content
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
-onMacroStandalone [code] [language=language] [
-some
-multiline content
-]
+onMacroStandalone [code] [language=language] [some
+multiline content]
 endDocument

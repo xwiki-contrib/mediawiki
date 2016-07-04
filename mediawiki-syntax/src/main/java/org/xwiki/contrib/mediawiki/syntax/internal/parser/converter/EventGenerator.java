@@ -31,4 +31,6 @@ public interface EventGenerator extends Cloneable
     EventGenerator clone() throws CloneNotSupportedException;
 
     void traverse(IWikiModel model) throws FilterException;
+
+    BaseToken getToken();
 }

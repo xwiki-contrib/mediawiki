@@ -22,7 +22,6 @@ onWord [level]
 onSpace
 onWord [1]
 endHeader [1, Title_level_1]
-onNewLine
 beginSection
 beginHeader [2, Title_level_2]
 onWord [Title]
@@ -31,7 +30,6 @@ onWord [level]
 onSpace
 onWord [2]
 endHeader [2, Title_level_2]
-onNewLine
 beginSection
 beginHeader [3, Title_level_3]
 onWord [Title]
@@ -40,7 +38,6 @@ onWord [level]
 onSpace
 onWord [3]
 endHeader [3, Title_level_3]
-onNewLine
 beginSection
 beginHeader [4, Title_level_4]
 onWord [Title]
@@ -49,7 +46,6 @@ onWord [level]
 onSpace
 onWord [4]
 endHeader [4, Title_level_4]
-onNewLine
 beginSection
 beginHeader [5, Title_level_5]
 onWord [Title]
@@ -58,7 +54,6 @@ onWord [level]
 onSpace
 onWord [5]
 endHeader [5, Title_level_5]
-onNewLine
 beginSection
 beginHeader [6, Title_level_6]
 onWord [Title]
@@ -67,7 +62,6 @@ onWord [level]
 onSpace
 onWord [6]
 endHeader [6, Title_level_6]
-onNewLine
 endSection
 endSection
 beginSection
@@ -80,7 +74,6 @@ onWord [5]
 onSpecialSymbol [.]
 onWord [2]
 endHeader [5, Title_level_5.2]
-onNewLine
 endSection
 endSection
 endSection

@@ -4,14 +4,12 @@
 <macro:standalone param1="value1" param2="value2">
 some '''unparsed''' content
 </macro:standalone>
-
 a <macro:inline param1="value1" param2="value2"/> b
 .#-----------------------------------------------------
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
 onMacroStandalone [standalone] [param1=value1|param2=value2] [some '''unparsed''' content]
-onNewLine
 beginParagraph
 onWord [a]
 onSpace
