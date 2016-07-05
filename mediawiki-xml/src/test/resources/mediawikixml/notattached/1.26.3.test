@@ -32,6 +32,7 @@
 [[Page_with_white_spaces]]
 [[Main.Space.Page]]
 [[Main.Space.Page]]
+[[attach:File.File\.txt@File.txt]]
 
 |=col1|=col2
 |cell11|cell12
@@ -94,13 +95,6 @@
               </entry>
             </parameters>
           </p>
-          <wikiAttachment name="Pixel_white.png" size="146">
-            <p>
-              <content>iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
-B3RJTUUH4AcBDQE7cMRBYQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAM
-SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
-            </p>
-          </wikiAttachment>
         </wikiDocumentRevision>
         <wikiDocumentRevision revision="2">
           <p>
@@ -140,20 +134,6 @@ SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
               </entry>
             </parameters>
           </p>
-          <wikiAttachment name="Pixel_white.png" size="146">
-            <p>
-              <content>iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
-B3RJTUUH4AcBDQE7cMRBYQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAM
-SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
-            </p>
-          </wikiAttachment>
-          <wikiAttachment name="Pixel_black.png" size="146">
-            <p>
-              <content>iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
-B3RJTUUH4AcBDQIhpovr2AAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAM
-SURBVAjXY2BgYAAAAAQAASc0JwoAAAAASUVORK5CYII=</content>
-            </p>
-          </wikiAttachment>
         </wikiDocumentRevision>
       </wikiDocumentLocale>
     </wikiDocument>
@@ -419,6 +399,51 @@ SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
             <content>iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
 B3RJTUUH4AcBDQE7cMRBYQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAM
 SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
+          </p>
+        </wikiAttachment>
+      </wikiDocumentRevision>
+    </wikiDocumentLocale>
+  </wikiDocument>
+  <wikiDocument name="File.txt">
+    <wikiDocumentLocale>
+      <wikiDocumentRevision revision="1">
+        <p>
+          <parameters>
+            <entry>
+              <string>revision_minor</string>
+              <boolean>false</boolean>
+            </entry>
+            <entry>
+              <string>title</string>
+              <string>File:File.txt</string>
+            </entry>
+            <entry>
+              <string>revision_date</string>
+              <date>2016-06-24 09:37:15.0 UTC</date>
+            </entry>
+            <entry>
+              <string>revision_author</string>
+              <null></null>
+            </entry>
+            <entry>
+              <string>content</string>
+              <string>file 9</string>
+            </entry>
+            <entry>
+              <string>syntax</string>
+              <org.xwiki.rendering.syntax.Syntax>
+                <type>
+                  <name>XWiki</name>
+                  <id>xwiki</id>
+                </type>
+                <version>2.1</version>
+              </org.xwiki.rendering.syntax.Syntax>
+            </entry>
+          </parameters>
+        </p>
+        <wikiAttachment name="File.txt" size="8">
+          <p>
+            <content>Y29udGVudAo=</content>
           </p>
         </wikiAttachment>
       </wikiDocumentRevision>

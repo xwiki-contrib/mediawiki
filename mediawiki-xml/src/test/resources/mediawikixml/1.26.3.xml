@@ -45,6 +45,7 @@
 [[Page_with_white_spaces]]
 [[Space/Page]]
 [[Space/Page/]]
+[[File:file.txt]]
 
 {|
 !col1
@@ -180,6 +181,21 @@
       <model>wikitext</model>
       <format>text/x-wiki</format>
       <text>image 8</text>
+    </revision>
+  </page>
+  <page>
+    <title>File:File.txt</title>
+    <id>9</id>
+    <revision>
+      <id>1</id>
+      <parentid>9</parentid>
+      <timestamp>2016-06-24T09:37:15Z</timestamp>
+      <contributor>
+        <ip>127.0.0.1</ip>
+      </contributor>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text>file 9</text>
     </revision>
   </page>
 </mediawiki>

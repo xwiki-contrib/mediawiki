@@ -149,7 +149,9 @@ public class MediaWikiContextConverterListener extends WrappingListener
     public void beginLink(ResourceReference reference, boolean isFreeStandingURI, Map<String, String> parameters)
     {
         // Remember files
-        this.fileCatcher.beginLink(reference, isFreeStandingURI, parameters);
+        if (this.stream.getProperties().isFileAttached()) {
+            this.fileCatcher.beginLink(reference, isFreeStandingURI, parameters);
+        }
 
         ResourceReference newReference = reference;
 
@@ -176,7 +178,9 @@ public class MediaWikiContextConverterListener extends WrappingListener
     public void onImage(ResourceReference reference, boolean isFreeStandingURI, Map<String, String> parameters)
     {
         // Remember files
-        this.fileCatcher.onImage(reference, isFreeStandingURI, parameters);
+        if (this.stream.getProperties().isFileAttached()) {
+            this.fileCatcher.onImage(reference, isFreeStandingURI, parameters);
+        }
 
         ResourceReference newReference = reference;
 
@@ -193,7 +197,9 @@ public class MediaWikiContextConverterListener extends WrappingListener
     public void onMacro(String id, Map<String, String> parameters, String content, boolean isInline)
     {
         // Remember files
-        this.fileCatcher.onMacro(id, parameters, content, isInline);
+        if (this.stream.getProperties().isFileAttached()) {
+            this.fileCatcher.onMacro(id, parameters, content, isInline);
+        }
 
         // Convert macros containing wiki content
         // TODO: make it configurable

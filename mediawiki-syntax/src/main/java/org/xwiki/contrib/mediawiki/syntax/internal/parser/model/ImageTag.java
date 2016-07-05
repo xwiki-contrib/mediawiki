@@ -32,7 +32,7 @@ import info.bliki.wiki.model.ImageFormat;
 public class ImageTag extends TagNode
 {
     /**
-     * The name ofthe tag in the stack.
+     * The name of the tag in the stack.
      */
     public static final String NAME = "xwiki.image";
 

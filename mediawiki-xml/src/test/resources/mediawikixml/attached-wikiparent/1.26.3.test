@@ -33,6 +33,7 @@
 [[Page_with_white_spaces]]
 [[parentwiki:Space.Page]]
 [[parentwiki:Space.Page]]
+[[attach:File.txt]]
 
 |=col1|=col2
 |cell11|cell12
@@ -50,6 +51,11 @@
               </entry>
             </parameters>
           </p>
+          <wikiAttachment name="File.txt" size="8">
+            <p>
+              <content>Y29udGVudAo=</content>
+            </p>
+          </wikiAttachment>
         </wikiDocumentRevision>
       </wikiDocumentLocale>
     </wikiDocument>

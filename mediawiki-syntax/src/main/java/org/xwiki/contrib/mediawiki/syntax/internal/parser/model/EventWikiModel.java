@@ -27,6 +27,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tika.Tika;
+import org.apache.tika.mime.MediaType;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
@@ -59,6 +61,8 @@ import info.bliki.wiki.tags.SourceTag;
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
 public class EventWikiModel extends WikiModel
 {
+    private static final Tika TIKA = new Tika();
+
     class Tokens implements Map<String, TagToken>
     {
         @Override
@@ -289,25 +293,36 @@ public class EventWikiModel extends WikiModel
     @Override
     public void appendInternalImageLink(String hrefImageLink, String srcImageLink, ImageFormat imageFormat)
     {
-        ResourceReference reference;
-        if (this.properties.getReferenceType() == ReferenceType.XWIKI) {
-            reference = this.imageReferenceParser.parse(imageFormat.getFilename());
+        // If the image is not actually an image generate an attachment link
+        String contentType = TIKA.detect(imageFormat.getFilename());
+        if (MediaType.parse(contentType).getType().equals("image")) {
+            ResourceReference reference;
+            if (this.properties.getReferenceType() == ReferenceType.XWIKI) {
+                reference = this.imageReferenceParser.parse(imageFormat.getFilename());
+            } else {
+                reference = new AttachmentResourceReference(cleanReference(imageFormat.getFilename()));
+                reference.setTyped(false);
+            }
+
+            ImageTag imageTag = new ImageTag(reference, false, imageFormat);
+
+            if (imageFormat.getWidthStr() != null) {
+                imageTag.addAttribute("width", imageFormat.getWidthStr(), false);
+            }
+
+            if (imageFormat.getHeightStr() != null) {
+                imageTag.addAttribute("height", imageFormat.getHeightStr(), false);
+            }
+
+            append(imageTag);
         } else {
-            reference = new AttachmentResourceReference(cleanReference(imageFormat.getFilename()));
-            reference.setTyped(false);
+            AttachmentResourceReference reference =
+                new AttachmentResourceReference(cleanReference(imageFormat.getFilename()));
+            LinkTag linkTag = new LinkTag(reference, false);
+
+            // Append tag
+            append(linkTag);
         }
-
-        ImageTag imageTag = new ImageTag(reference, false, imageFormat);
-
-        if (imageFormat.getWidthStr() != null) {
-            imageTag.addAttribute("width", imageFormat.getWidthStr(), false);
-        }
-
-        if (imageFormat.getHeightStr() != null) {
-            imageTag.addAttribute("height", imageFormat.getHeightStr(), false);
-        }
-
-        append(imageTag);
     }
 
     @Override
