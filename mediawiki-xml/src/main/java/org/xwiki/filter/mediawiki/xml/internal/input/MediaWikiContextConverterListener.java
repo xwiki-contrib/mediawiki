@@ -22,7 +22,6 @@ package org.xwiki.filter.mediawiki.xml.internal.input;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -68,7 +67,8 @@ public class MediaWikiContextConverterListener extends WrappingListener
     private FileCatcherListener fileCatcher;
 
     @Inject
-    private EntityReferenceSerializer<String> serializer;
+    @Named("local")
+    private EntityReferenceSerializer<String> localSerializer;
 
     @Inject
     @Named(MediaWikiSyntaxInputProperties.FILTER_STREAM_TYPE_STRING)
@@ -103,12 +103,52 @@ public class MediaWikiContextConverterListener extends WrappingListener
         return this.fileCatcher.getFiles();
     }
 
+    private EntityReference compact(EntityReference linkReference, EntityReference pageReference)
+    {
+        if (this.stream.getProperties().isAbsoluteReferences()) {
+            return linkReference;
+        }
+
+        int diff = linkReference.size() - pageReference.size();
+
+        if (diff < 0) {
+            return linkReference;
+        }
+
+        EntityReference linkElement = linkReference;
+        for (; diff > 0; --diff) {
+            linkElement = linkElement.getParent();
+        }
+
+        // Child or same page
+        if (linkElement.equals(pageReference)) {
+            return linkReference.replaceParent(linkElement, null);
+        }
+
+        // Same parent
+        if (linkElement.getParent() != null && pageReference.getParent() != null
+            && linkElement.getParent().equals(pageReference.getParent())) {
+            return linkReference.replaceParent(linkElement.getParent(), null);
+        }
+
+        return linkReference;
+    }
+
     private String compact(EntityReference entityReference)
     {
-        if (Objects.equals(this.stream.currentParentReference, entityReference.getParent())) {
-            return entityReference.getName();
+        EntityReference compactReference;
+
+        try {
+            compactReference = compact(entityReference, this.stream.currentPageReference);
+        } catch (Exception e) {
+            // Bulletproofing
+            compactReference = entityReference;
+        }
+
+        if (entityReference != compactReference && compactReference.size() > 1) {
+            return "." + this.localSerializer.serialize(compactReference);
         } else {
-            return this.serializer.serialize(entityReference);
+            return this.localSerializer.serialize(compactReference);
         }
     }
 
@@ -136,7 +176,7 @@ public class MediaWikiContextConverterListener extends WrappingListener
 
         if (entityReference != null) {
             entityReference = new EntityReference(reference.getReference(), EntityType.ATTACHMENT, entityReference);
-            newReference = new AttachmentResourceReference(this.serializer.serialize(entityReference));
+            newReference = new AttachmentResourceReference(compact(entityReference));
             newReference.setParameters(reference.getParameters());
             newReference.setAnchor(reference.getAnchor());
             newReference.setQueryString(reference.getQueryString());

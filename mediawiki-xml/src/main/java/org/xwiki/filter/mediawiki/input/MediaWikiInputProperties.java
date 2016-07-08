@@ -82,6 +82,11 @@ public class MediaWikiInputProperties extends XMLInputProperties
     private boolean terminalPages;
 
     /**
+     * @see #isAbsoluteReferences()
+     */
+    private boolean absoluteReferences;
+
+    /**
      * @return the folder or package containing files
      */
     @PropertyName("Files")
@@ -205,5 +210,24 @@ public class MediaWikiInputProperties extends XMLInputProperties
     public void setTerminalPages(boolean terminalPages)
     {
         this.terminalPages = terminalPages;
+    }
+
+    /**
+     * @return if true, reference are forced absolute in links and images (without the wiki)
+     */
+    @PropertyName("Absolte reference")
+    @PropertyDescription("Force generating absolute reference in links and images (but without the wiki)."
+        + " Overwise the importer try to generate relative reference as much as possible.")
+    public boolean isAbsoluteReferences()
+    {
+        return this.absoluteReferences;
+    }
+
+    /**
+     * @param absoluteReferences if true, reference are forced absolute in links and images (without the wiki)
+     */
+    public void setAbsoluteReferences(boolean absoluteReferences)
+    {
+        this.absoluteReferences = absoluteReferences;
     }
 }

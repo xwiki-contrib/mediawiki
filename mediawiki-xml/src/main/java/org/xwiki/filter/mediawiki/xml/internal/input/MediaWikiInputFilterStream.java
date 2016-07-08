@@ -144,6 +144,8 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
     EntityReference currentParentReference;
 
+    EntityReference currentPageReference;
+
     Set<String> currentFiles;
 
     MediaWikiInputProperties getProperties()
@@ -193,6 +195,12 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             }
         }
 
+        // If root of the wiki make it Main space
+        if (parentReference.getType() == EntityType.WIKI && this.properties.isConvertToXWiki()) {
+            parentReference = new EntityReference(this.modelConfiguration.getDefaultReferenceValue(EntityType.SPACE),
+                EntityType.SPACE, parentReference);
+        }
+
         // See / as space separator
         String[] elements = StringUtils.split(pageName, '/');
         if (elements.length > 1) {
@@ -203,12 +211,6 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             if (pageName.isEmpty()) {
                 pageName = this.modelConfiguration.getDefaultReferenceValue(EntityType.DOCUMENT);
             }
-        }
-
-        // If root of the wiki make it Main space
-        if (parentReference.getType() == EntityType.WIKI && this.properties.isConvertToXWiki()) {
-            parentReference = new EntityReference(this.modelConfiguration.getDefaultReferenceValue(EntityType.SPACE),
-                EntityType.SPACE, parentReference);
         }
 
         return new EntityReference(pageName, EntityType.DOCUMENT, parentReference);
@@ -343,29 +345,29 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
                 this.currentPageTitle = xmlReader.getElementText();
 
                 // Find current page reference
-                EntityReference pageReference = toEntityReference(this.currentPageTitle);
+                this.currentPageReference = toEntityReference(this.currentPageTitle);
 
-                if (pageReference != null) {
+                if (this.currentPageReference != null) {
                     if (this.properties.isConvertToXWiki() && !this.properties.isTerminalPages()
                         && !StringUtils.startsWithIgnoreCase(this.currentPageTitle, NAMESPACE_FILE)) {
                         // Make the page a non terminal page
                         String defaultPageName = this.modelConfiguration.getDefaultReferenceValue(EntityType.DOCUMENT);
-                        if (!pageReference.getName().equals(defaultPageName)) {
-                            pageReference = new EntityReference(pageReference.getName(), EntityType.SPACE,
-                                pageReference.getParent());
-                            pageReference = new EntityReference(
+                        if (!this.currentPageReference.getName().equals(defaultPageName)) {
+                            this.currentPageReference = new EntityReference(this.currentPageReference.getName(), EntityType.SPACE,
+                                this.currentPageReference.getParent());
+                            this.currentPageReference = new EntityReference(
                                 this.modelConfiguration.getDefaultReferenceValue(EntityType.DOCUMENT),
-                                EntityType.DOCUMENT, pageReference);
+                                EntityType.DOCUMENT, this.currentPageReference);
                         }
                     }
 
-                    this.currentParentReference = pageReference.getParent();
+                    this.currentParentReference = this.currentPageReference.getParent();
 
                     // Send parent events
                     sendSpaceEvents(proxyFilter);
 
                     // Send document event
-                    proxyFilter.beginWikiDocument(pageReference.getName(), FilterEventParameters.EMPTY);
+                    proxyFilter.beginWikiDocument(this.currentPageReference.getName(), FilterEventParameters.EMPTY);
                     proxyFilter.beginWikiDocumentLocale(Locale.ROOT, FilterEventParameters.EMPTY);
                 } else {
                     skip = true;
@@ -376,6 +378,8 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
                 StAXUtils.skipElement(xmlReader);
             }
         }
+
+        this.currentPageReference = null;
 
         if (!skip) {
             proxyFilter.endWikiDocumentLocale(Locale.ROOT, FilterEventParameters.EMPTY);
