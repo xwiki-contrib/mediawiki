@@ -35,6 +35,8 @@
 
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>MediaWiki XML</xwiki.extension.name>
+
+    <xwiki.extension.category>filter</xwiki.extension.category>
   </properties>
   <dependencies>
     <dependency>

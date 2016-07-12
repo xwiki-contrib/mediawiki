@@ -37,6 +37,9 @@
 
     <!-- Replace old mediawiki syntax parser -->
     <xwiki.extension.features>org.xwiki.rendering:xwiki-rendering-syntax-mediawiki/8.2</xwiki.extension.features>
+
+    <!-- List it as a rendering syntax related module -->
+    <xwiki.extension.category>syntax</xwiki.extension.category>
   </properties>
   <dependencies>
     <dependency>
