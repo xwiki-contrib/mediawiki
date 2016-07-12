@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.xwiki.contrib.mediawiki</groupId>
     <artifactId>mediawiki</artifactId>
-    <version>1.7.7</version>
+    <version>1.7.8-SNAPSHOT</version>
   </parent>
   <artifactId>mediawiki-xml</artifactId>
   <name>MediaWiki - XML Input Filter</name>
