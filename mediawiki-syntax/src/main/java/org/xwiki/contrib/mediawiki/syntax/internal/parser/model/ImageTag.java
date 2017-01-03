@@ -56,6 +56,7 @@ public class ImageTag extends TagNode
         this.imageFormat = imageFormat;
 
         addAttribute("alt", this.imageFormat.getCaption(), false);
+        addAttribute("title", this.imageFormat.getCaption(), false);
     }
 
     /**
