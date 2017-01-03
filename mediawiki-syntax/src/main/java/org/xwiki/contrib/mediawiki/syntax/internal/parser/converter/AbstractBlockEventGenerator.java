@@ -48,9 +48,9 @@ public abstract class AbstractBlockEventGenerator<T extends BaseToken> extends A
     }
 
     @Override
-    public AbstractBlockEventGenerator clone() throws CloneNotSupportedException
+    public AbstractBlockEventGenerator<T> clone() throws CloneNotSupportedException
     {
-        AbstractBlockEventGenerator blockEvent = (AbstractBlockEventGenerator) super.clone();
+        AbstractBlockEventGenerator<T> blockEvent = (AbstractBlockEventGenerator<T>) super.clone();
 
         blockEvent.block = (AbstractBlock) this.block.clone();
 

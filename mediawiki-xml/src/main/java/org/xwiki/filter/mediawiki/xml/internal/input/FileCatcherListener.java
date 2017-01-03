@@ -72,23 +72,23 @@ public class FileCatcherListener extends WrappingListener
     }
 
     @Override
-    public void beginLink(ResourceReference reference, boolean isFreeStandingURI, Map<String, String> parameters)
+    public void beginLink(ResourceReference reference, boolean freestanding, Map<String, String> parameters)
     {
         if (reference instanceof AttachmentResourceReference) {
             this.files.add(reference.getReference());
         }
 
-        super.beginLink(reference, isFreeStandingURI, parameters);
+        super.beginLink(reference, freestanding, parameters);
     }
 
     @Override
-    public void onImage(ResourceReference reference, boolean isFreeStandingURI, Map<String, String> parameters)
+    public void onImage(ResourceReference reference, boolean freestanding, Map<String, String> parameters)
     {
         if (reference instanceof AttachmentResourceReference) {
             this.files.add(reference.getReference());
         }
 
-        super.onImage(reference, isFreeStandingURI, parameters);
+        super.onImage(reference, freestanding, parameters);
     }
 
     @Override

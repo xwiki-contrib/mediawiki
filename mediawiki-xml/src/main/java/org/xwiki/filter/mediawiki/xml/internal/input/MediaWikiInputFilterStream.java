@@ -83,6 +83,8 @@ import org.xwiki.xml.stax.StAXUtils;
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
 public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<MediaWikiInputProperties, MediaWikiFilter>
 {
+    private static final XMLInputFactory XML_INPUT_FACTORY = XMLInputFactory.newInstance();
+
     private static final String TAG_SITEINFO = "siteinfo";
 
     private static final String TAG_SITEINFO_NAMESPACES = "namespaces";
@@ -264,10 +266,10 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         if (this.properties.getSource() instanceof SourceInputSource) {
             xmlReader = StAXUtils.getXMLStreamReader(((SourceInputSource) this.properties.getSource()).getSource());
         } else if (this.properties.getSource() instanceof ReaderInputSource) {
-            xmlReader = XMLInputFactory.newInstance()
-                .createXMLStreamReader(((ReaderInputSource) this.properties.getSource()).getReader());
+            xmlReader =
+                XML_INPUT_FACTORY.createXMLStreamReader(((ReaderInputSource) this.properties.getSource()).getReader());
         } else if (this.properties.getSource() instanceof InputStreamInputSource) {
-            xmlReader = XMLInputFactory.newInstance()
+            xmlReader = XML_INPUT_FACTORY
                 .createXMLStreamReader(((InputStreamInputSource) this.properties.getSource()).getInputStream());
         } else {
             throw new FilterException("Unknown source type [" + this.properties.getSource().getClass() + "]");
@@ -353,8 +355,8 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
                         // Make the page a non terminal page
                         String defaultPageName = this.modelConfiguration.getDefaultReferenceValue(EntityType.DOCUMENT);
                         if (!this.currentPageReference.getName().equals(defaultPageName)) {
-                            this.currentPageReference = new EntityReference(this.currentPageReference.getName(), EntityType.SPACE,
-                                this.currentPageReference.getParent());
+                            this.currentPageReference = new EntityReference(this.currentPageReference.getName(),
+                                EntityType.SPACE, this.currentPageReference.getParent());
                             this.currentPageReference = new EntityReference(
                                 this.modelConfiguration.getDefaultReferenceValue(EntityType.DOCUMENT),
                                 EntityType.DOCUMENT, this.currentPageReference);

@@ -186,11 +186,11 @@ public class MediaWikiContextConverterListener extends WrappingListener
     }
 
     @Override
-    public void beginLink(ResourceReference reference, boolean isFreeStandingURI, Map<String, String> parameters)
+    public void beginLink(ResourceReference reference, boolean freestanding, Map<String, String> parameters)
     {
         // Remember files
         if (this.stream.getProperties().isFileAttached()) {
-            this.fileCatcher.beginLink(reference, isFreeStandingURI, parameters);
+            this.fileCatcher.beginLink(reference, freestanding, parameters);
         }
 
         ResourceReference newReference = reference;
@@ -205,21 +205,21 @@ public class MediaWikiContextConverterListener extends WrappingListener
 
         this.currentReference.push(newReference);
 
-        super.beginLink(newReference, isFreeStandingURI, parameters);
+        super.beginLink(newReference, freestanding, parameters);
     }
 
     @Override
-    public void endLink(ResourceReference reference, boolean isFreeStandingURI, Map<String, String> parameters)
+    public void endLink(ResourceReference reference, boolean freestanding, Map<String, String> parameters)
     {
-        super.endLink(this.currentReference.pop(), isFreeStandingURI, parameters);
+        super.endLink(this.currentReference.pop(), freestanding, parameters);
     }
 
     @Override
-    public void onImage(ResourceReference reference, boolean isFreeStandingURI, Map<String, String> parameters)
+    public void onImage(ResourceReference reference, boolean freestanding, Map<String, String> parameters)
     {
         // Remember files
         if (this.stream.getProperties().isFileAttached()) {
-            this.fileCatcher.onImage(reference, isFreeStandingURI, parameters);
+            this.fileCatcher.onImage(reference, freestanding, parameters);
         }
 
         ResourceReference newReference = reference;
@@ -230,7 +230,7 @@ public class MediaWikiContextConverterListener extends WrappingListener
             newReference.setTyped(false);
         }
 
-        super.onImage(newReference, isFreeStandingURI, parameters);
+        super.onImage(newReference, freestanding, parameters);
     }
 
     @Override
