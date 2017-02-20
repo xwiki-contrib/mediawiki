@@ -225,6 +225,10 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             return null;
         }
 
+        if (StringUtils.isEmpty(pageName)) {
+            return null;
+        }
+
         EntityReference parentReference = this.properties.getFileSpace();
         if (parentReference != null && parentReference.extractFirstReference(EntityType.WIKI) == null) {
             parentReference = new EntityReference(parentReference, this.properties.getParent());
