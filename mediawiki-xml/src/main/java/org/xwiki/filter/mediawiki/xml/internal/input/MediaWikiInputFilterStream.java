@@ -116,12 +116,21 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
     private static final String TAG_PAGE_REVISION_CONTENT = "text";
 
     /**
-     * This is not static, it gets initialized right after the base url is read from the xml, with the precise value
+     * This is not final, it gets initialized right after the base url is read from the xml, with the precise value
      * from the XML.
      */
     private static String PAGE_NAME_MAIN = "Main_Page";
 
-    private static final String NAMESPACE_FILE = "File";
+    /**
+     * This is not final, it gets initialized right after the namespaces are read from the package.
+     */
+    private static String NAMESPACE_FILE = "File";
+
+    /**
+     * The index of the file namespace in media wiki, allowing to use translated namespace names.
+     * From: https://www.mediawiki.org/wiki/Manual:Namespace#Built-in_namespaces
+     */
+    private static final String NAMESPACE_FILE_IDX = "6";
 
     private static final String NAMESPACE_USER = "User";
 
@@ -334,6 +343,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
                 StAXUtils.skipElement(xmlReader);
             }
         }
+        initConfigDependentKeywords();
     }
 
     private void readNamespaces(XMLStreamReader xmlReader) throws XMLStreamException
@@ -346,6 +356,14 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             } else {
                 StAXUtils.skipElement(xmlReader);
             }
+        }
+    }
+
+    private void initConfigDependentKeywords()
+    {
+        String fileNamespace = this.namespaces.get(NAMESPACE_FILE_IDX);
+        if (!StringUtils.isEmpty(fileNamespace)) {
+            NAMESPACE_FILE = fileNamespace;
         }
     }
 
