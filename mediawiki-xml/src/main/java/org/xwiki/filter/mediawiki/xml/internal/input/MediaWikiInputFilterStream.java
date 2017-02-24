@@ -164,7 +164,11 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         int index = pageName.indexOf(':');
         if (index > 0) {
             namespace = pageName.substring(0, index);
-            pageName = pageName.substring(index + 1);
+            if (this.namespaces.containsValue(namespace)) {
+                pageName = pageName.substring(index + 1);
+            } else {
+                namespace = null;
+            }
         } else {
             namespace = null;
         }
