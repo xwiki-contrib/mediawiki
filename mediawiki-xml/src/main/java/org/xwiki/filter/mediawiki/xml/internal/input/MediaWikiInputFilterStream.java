@@ -91,6 +91,8 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
     private static final String TAG_SITEINFO_NAMESPACE = "namespace";
 
+    private static final String TAG_SITEINFO_BASE = "base";
+
     private static final String TAG_PAGE = "page";
 
     private static final String TAG_PAGE_TITLE = "title";
@@ -113,7 +115,11 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
     private static final String TAG_PAGE_REVISION_CONTENT = "text";
 
-    private static final String PAGE_NAME_MAIN = "Main_Page";
+    /**
+     * This is not static, it gets initialized right after the base url is read from the xml, with the precise value
+     * from the XML.
+     */
+    private static String PAGE_NAME_MAIN = "Main_Page";
 
     private static final String NAMESPACE_FILE = "File";
 
@@ -322,6 +328,8 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
             if (elementName.equals(TAG_SITEINFO_NAMESPACES)) {
                 readNamespaces(xmlReader);
+            } else if (elementName.equals(TAG_SITEINFO_BASE)) {
+                readBaseURLInfo(xmlReader);
             } else {
                 StAXUtils.skipElement(xmlReader);
             }
@@ -337,6 +345,19 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
                 this.namespaces.put(xmlReader.getAttributeValue(null, "key"), xmlReader.getElementText());
             } else {
                 StAXUtils.skipElement(xmlReader);
+            }
+        }
+    }
+
+    private void readBaseURLInfo(XMLStreamReader xmlReader) throws XMLStreamException
+    {
+        String baseValue = xmlReader.getElementText();
+        if (!StringUtils.isEmpty(baseValue)) {
+            int lastSlash = baseValue.lastIndexOf('/');
+            // if a last slash even exists, and some string is still left after it in the string, extract that string
+            // and use it as homepage name
+            if (lastSlash > 0 &&  (lastSlash + 1 < baseValue.length())) {
+                PAGE_NAME_MAIN = baseValue.substring(lastSlash + 1);
             }
         }
     }
