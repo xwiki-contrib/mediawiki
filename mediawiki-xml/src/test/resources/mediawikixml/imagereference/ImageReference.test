@@ -1,8 +1,8 @@
 .#------------------------------------------------------------------------------
 .expect|filter+xml
 .#------------------------------------------------------------------------------
-<wikiSpace name="Test">
-  <wikiDocument name="ImageReference">
+<wikiSpace name="Main">
+  <wikiDocument name="Test_ImageReference">
     <wikiDocumentLocale>
       <wikiDocumentRevision revision="1">
         <p>
@@ -13,7 +13,7 @@
             </entry>
             <entry>
               <string>title</string>
-              <string>Test:ImageReference</string>
+              <string>Test ImageReference</string>
             </entry>
             <entry>
               <string>revision_date</string>
@@ -42,7 +42,7 @@
       </wikiDocumentRevision>
     </wikiDocumentLocale>
   </wikiDocument>
-  <wikiDocument name="EmptyImageReference">
+  <wikiDocument name="Test_EmptyImageReference">
     <wikiDocumentLocale>
       <wikiDocumentRevision revision="1">
         <p>
@@ -53,7 +53,7 @@
             </entry>
             <entry>
               <string>title</string>
-              <string>Test:EmptyImageReference</string>
+              <string>Test EmptyImageReference</string>
             </entry>
             <entry>
               <string>revision_date</string>
