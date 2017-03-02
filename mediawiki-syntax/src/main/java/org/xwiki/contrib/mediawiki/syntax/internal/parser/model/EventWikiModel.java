@@ -48,6 +48,8 @@ import info.bliki.wiki.model.Configuration;
 import info.bliki.wiki.model.ImageFormat;
 import info.bliki.wiki.model.WikiModel;
 import info.bliki.wiki.namespaces.INamespace.NamespaceCode;
+import info.bliki.wiki.namespaces.Namespace;
+import info.bliki.wiki.namespaces.Namespace.NamespaceValue;
 import info.bliki.wiki.tags.HTMLBlockTag;
 import info.bliki.wiki.tags.PTag;
 import info.bliki.wiki.tags.SourceTag;
@@ -198,6 +200,19 @@ public class EventWikiModel extends WikiModel
     public void init(MediaWikiSyntaxInputProperties properties)
     {
         this.properties = properties;
+
+        if (this.properties.getCustomNamespaces() != null) {
+            Namespace namespaces = (Namespace) this.fNamespace;
+
+            for (Map.Entry<Integer, Collection<String>> entry : this.properties.getCustomNamespaces().entrySet()) {
+                final NamespaceValue namespace = namespaces.getNamespaceByNumber(entry.getKey());
+                if (namespace != null) {
+                    for (String alias : entry.getValue()) {
+                        namespace.addAlias(alias);
+                    }
+                }
+            }
+        }
     }
 
     @Override

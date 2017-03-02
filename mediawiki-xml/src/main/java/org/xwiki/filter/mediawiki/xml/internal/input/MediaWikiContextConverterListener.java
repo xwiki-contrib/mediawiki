@@ -33,12 +33,10 @@ import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
-import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties.ReferenceType;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiStreamParser;
 import org.xwiki.filter.input.BeanInputFilterStream;
 import org.xwiki.filter.input.BeanInputFilterStreamFactory;
 import org.xwiki.filter.input.InputFilterStreamFactory;
-import org.xwiki.filter.input.StringInputSource;
 import org.xwiki.model.EntityType;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.model.reference.EntityReferenceSerializer;
@@ -90,6 +88,7 @@ public class MediaWikiContextConverterListener extends WrappingListener
     {
         setWrappedListener(listener);
 
+        this.fileCatcher.initialize(stream);
         this.fileCatcher.setWrappedListener(new VoidListener());
         this.stream = stream;
         this.targetSyntax = targetSyntax;
@@ -257,10 +256,7 @@ public class MediaWikiContextConverterListener extends WrappingListener
 
         PrintRenderer renderer = getRenderer();
         if (renderer != null) {
-            MediaWikiSyntaxInputProperties parserProperties = new MediaWikiSyntaxInputProperties();
-            parserProperties.setSource(new StringInputSource(content));
-            // Make sure to keep source references unchanged
-            parserProperties.setReferenceType(ReferenceType.MEDIAWIKI);
+            MediaWikiSyntaxInputProperties parserProperties = this.stream.createMediaWikiSyntaxInputProperties(content);
 
             Listener currentListener = getWrappedListener();
 

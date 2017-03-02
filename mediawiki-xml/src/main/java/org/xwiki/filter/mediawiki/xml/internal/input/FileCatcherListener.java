@@ -19,7 +19,6 @@
  */
 package org.xwiki.filter.mediawiki.xml.internal.input;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -31,11 +30,9 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
-import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties.ReferenceType;
 import org.xwiki.filter.input.BeanInputFilterStream;
 import org.xwiki.filter.input.BeanInputFilterStreamFactory;
 import org.xwiki.filter.input.InputFilterStreamFactory;
-import org.xwiki.filter.input.StringInputSource;
 import org.xwiki.rendering.listener.WrappingListener;
 import org.xwiki.rendering.listener.reference.AttachmentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
@@ -53,7 +50,14 @@ public class FileCatcherListener extends WrappingListener
     @Named(MediaWikiSyntaxInputProperties.FILTER_STREAM_TYPE_STRING)
     private InputFilterStreamFactory parserFactory;
 
+    private MediaWikiInputFilterStream stream;
+
     private Set<String> files = new HashSet<>();
+
+    void initialize(MediaWikiInputFilterStream stream)
+    {
+        this.stream = stream;
+    }
 
     /**
      * @return the found referenced files
@@ -61,14 +65,6 @@ public class FileCatcherListener extends WrappingListener
     public Set<String> getFiles()
     {
         return this.files;
-    }
-
-    /**
-     * @param files files to remember
-     */
-    public void addFiles(Collection<String> files)
-    {
-        this.files.addAll(files);
     }
 
     @Override
@@ -97,10 +93,7 @@ public class FileCatcherListener extends WrappingListener
         // Extract attachments from macro with wiki content
         // TODO: make it configurable
         if (id.equals("gallery") || id.equals("blockquote")) {
-            MediaWikiSyntaxInputProperties parserProperties = new MediaWikiSyntaxInputProperties();
-            parserProperties.setSource(new StringInputSource(content));
-            // Make sure to keep source references unchanged
-            parserProperties.setReferenceType(ReferenceType.MEDIAWIKI);
+            MediaWikiSyntaxInputProperties parserProperties = stream.createMediaWikiSyntaxInputProperties(content);
 
             // Generate events
             try (BeanInputFilterStream<MediaWikiSyntaxInputProperties> stream =

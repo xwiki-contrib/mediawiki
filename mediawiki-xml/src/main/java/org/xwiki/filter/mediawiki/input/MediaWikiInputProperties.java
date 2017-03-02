@@ -23,7 +23,6 @@ import org.xwiki.filter.input.InputSource;
 import org.xwiki.filter.type.FilterStreamType;
 import org.xwiki.filter.type.SystemType;
 import org.xwiki.filter.xml.input.XMLInputProperties;
-import org.xwiki.model.EntityType;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyName;
@@ -59,7 +58,7 @@ public class MediaWikiInputProperties extends XMLInputProperties
     /**
      * @see #getFileSpace()
      */
-    private EntityReference fileSpace = new EntityReference("File", EntityType.SPACE);
+    private EntityReference fileSpace;
 
     /**
      * @see #getFileAttachmed()
@@ -85,6 +84,11 @@ public class MediaWikiInputProperties extends XMLInputProperties
      * @see #isAbsoluteReferences()
      */
     private boolean absoluteReferences;
+
+    /**
+     * @see #isOnlyRegisteredNamespaces()
+     */
+    private boolean onlyRegisteredNamespaces = true;
 
     /**
      * @return the folder or package containing files
@@ -126,7 +130,8 @@ public class MediaWikiInputProperties extends XMLInputProperties
      * @return the space where to store the files
      */
     @PropertyName("Files space")
-    @PropertyDescription("The space where to store the files")
+    @PropertyDescription("The space where to store the files."
+        + "By default the namespace definded in the MediaWiki (usually \"File\").")
     public EntityReference getFileSpace()
     {
         return this.fileSpace;
@@ -229,5 +234,27 @@ public class MediaWikiInputProperties extends XMLInputProperties
     public void setAbsoluteReferences(boolean absoluteReferences)
     {
         this.absoluteReferences = absoluteReferences;
+    }
+
+    /**
+     * @return if true, only take into account registered namespaces
+     * @since 1.8
+     */
+    @PropertyName("Only take into account registered namespace")
+    @PropertyDescription("The importer automatically generate spaces when it find a namespace."
+        + "By default only officially registered MediaWiki namespace are taken into account."
+        + "If this option is disabled all \":\" bases page title prefixes will be seen as namespace separators.")
+    public boolean isOnlyRegisteredNamespaces()
+    {
+        return this.onlyRegisteredNamespaces;
+    }
+
+    /**
+     * @param onlyRegisteredNamespaces if true, only take into account registered namespaces
+     * @since 1.8
+     */
+    public void setOnlyRegisteredNamespaces(boolean onlyRegisteredNamespaces)
+    {
+        this.onlyRegisteredNamespaces = onlyRegisteredNamespaces;
     }
 }

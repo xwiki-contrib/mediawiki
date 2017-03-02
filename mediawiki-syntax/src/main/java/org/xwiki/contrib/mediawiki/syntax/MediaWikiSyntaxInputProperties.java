@@ -19,6 +19,9 @@
  */
 package org.xwiki.contrib.mediawiki.syntax;
 
+import java.util.Collection;
+import java.util.Map;
+
 import org.xwiki.filter.DefaultFilterStreamProperties;
 import org.xwiki.filter.input.InputSource;
 import org.xwiki.filter.type.FilterStreamType;
@@ -78,6 +81,11 @@ public class MediaWikiSyntaxInputProperties extends DefaultFilterStreamPropertie
     private ReferenceType referenceType = ReferenceType.XWIKI;
 
     /**
+     * @see #getCustomNamespaces()
+     */
+    private Map<Integer, Collection<String>> customNamespaces;
+
+    /**
      * @return The source to load the wiki from
      */
     @PropertyName("Source")
@@ -112,5 +120,25 @@ public class MediaWikiSyntaxInputProperties extends DefaultFilterStreamPropertie
     public void setReferenceType(ReferenceType referenceType)
     {
         this.referenceType = referenceType;
+    }
+
+    /**
+     * @return the custom namespaces
+     * @since 1.8
+     */
+    @PropertyName("Custom namespace")
+    @PropertyDescription("Allows customizing the namespaces (usually to translate them)")
+    public Map<Integer, Collection<String>> getCustomNamespaces()
+    {
+        return this.customNamespaces;
+    }
+
+    /**
+     * @param namespaces the custom namespaces
+     * @since 1.8
+     */
+    public void setCustomNamespaces(Map<Integer, Collection<String>> namespaces)
+    {
+        this.customNamespaces = namespaces;
     }
 }

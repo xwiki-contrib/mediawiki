@@ -31,7 +31,7 @@
   <name>MediaWiki - Syntax</name>
   <description>MediaWiki Syntax parser</description>
   <properties>
-    <xwiki.jacoco.instructionRatio>0.87</xwiki.jacoco.instructionRatio>
+    <xwiki.jacoco.instructionRatio>0.86</xwiki.jacoco.instructionRatio>
 
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>MediaWiki Syntax</xwiki.extension.name>
