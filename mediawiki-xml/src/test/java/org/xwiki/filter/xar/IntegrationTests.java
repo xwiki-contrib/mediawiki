@@ -36,7 +36,7 @@ import org.xwiki.test.annotation.AllComponents;
  */
 @RunWith(FilterTestSuite.class)
 @AllComponents
-@FilterTestSuite.Scope(value = "mediawikixml/"/*, pattern = "1.26.3-i18n.test"*/)
+@FilterTestSuite.Scope(value = "mediawikixml/"/*, pattern = "1.26.3.test"*/)
 public class IntegrationTests
 {
     public IntegrationTests() throws URISyntaxException

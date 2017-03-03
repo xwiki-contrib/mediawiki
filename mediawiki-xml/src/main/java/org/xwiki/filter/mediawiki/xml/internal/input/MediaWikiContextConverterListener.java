@@ -46,6 +46,7 @@ import org.xwiki.rendering.listener.WrappingListener;
 import org.xwiki.rendering.listener.reference.AttachmentResourceReference;
 import org.xwiki.rendering.listener.reference.DocumentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
+import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.renderer.PrintRenderer;
 import org.xwiki.rendering.renderer.PrintRendererFactory;
 import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
@@ -200,6 +201,13 @@ public class MediaWikiContextConverterListener extends WrappingListener
         } else if (reference instanceof DocumentResourceReference) {
             newReference = refactor((DocumentResourceReference) reference);
             newReference.setTyped(false);
+        } else if (reference.getType() == ResourceType.URL) {
+            if (reference.getReference().startsWith(this.stream.baseURL)) {
+                newReference = refactor(
+                    new DocumentResourceReference(reference.getReference().substring(this.stream.baseURL.length())));
+                newReference.setTyped(false);
+                freestanding = false;
+            }
         }
 
         this.currentReference.push(newReference);

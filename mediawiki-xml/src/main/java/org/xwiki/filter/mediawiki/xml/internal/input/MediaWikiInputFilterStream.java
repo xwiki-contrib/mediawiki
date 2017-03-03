@@ -148,6 +148,8 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
     Set<String> currentFiles;
 
+    String baseURL;
+
     MediaWikiInputProperties getProperties()
     {
         return this.properties;
@@ -349,13 +351,14 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
     private void readBaseURLInfo(XMLStreamReader xmlReader) throws XMLStreamException
     {
-        String baseValue = xmlReader.getElementText();
-        if (!StringUtils.isEmpty(baseValue)) {
-            int lastSlash = baseValue.lastIndexOf('/');
+        this.baseURL = xmlReader.getElementText();
+        if (!StringUtils.isEmpty(this.baseURL)) {
+            int lastSlash = this.baseURL.lastIndexOf('/');
             // if a last slash even exists, and some string is still left after it in the string, extract that string
             // and use it as homepage name
-            if (lastSlash > 0 && (lastSlash + 1 < baseValue.length())) {
-                this.mainPageName = baseValue.substring(lastSlash + 1);
+            if (lastSlash > 0 && (lastSlash + 1 < this.baseURL.length())) {
+                this.mainPageName = this.baseURL.substring(lastSlash + 1);
+                this.baseURL = this.baseURL.substring(0, lastSlash + 1);
             }
         }
     }
