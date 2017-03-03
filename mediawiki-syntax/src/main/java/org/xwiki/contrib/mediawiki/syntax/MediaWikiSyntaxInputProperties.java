@@ -86,6 +86,11 @@ public class MediaWikiSyntaxInputProperties extends DefaultFilterStreamPropertie
     private Map<Integer, Collection<String>> customNamespaces;
 
     /**
+     * @see #isNoToc()
+     */
+    private boolean noToc;
+
+    /**
      * @return The source to load the wiki from
      */
     @PropertyName("Source")
@@ -140,5 +145,25 @@ public class MediaWikiSyntaxInputProperties extends DefaultFilterStreamPropertie
     public void setCustomNamespaces(Map<Integer, Collection<String>> namespaces)
     {
         this.customNamespaces = namespaces;
+    }
+
+    /**
+     * @return true if no toc should be automatically generated
+     * @since 1.8
+     */
+    @PropertyName("No table of content")
+    @PropertyDescription("Disable automaticlaly generated tables of content (unless _TOC_ is explicitely used)")
+    public boolean isNoToc()
+    {
+        return this.noToc;
+    }
+
+    /**
+     * @param noToc true if no toc should be automatically generated
+     * @since 1.8
+     */
+    public void setNoToc(boolean noToc)
+    {
+        this.noToc = noToc;
     }
 }

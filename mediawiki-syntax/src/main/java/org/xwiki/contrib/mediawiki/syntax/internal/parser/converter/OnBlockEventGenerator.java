@@ -19,6 +19,7 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.filter.FilterException;
 import org.xwiki.rendering.block.AbstractBlock;
 
@@ -33,7 +34,7 @@ public class OnBlockEventGenerator<T extends BaseToken> extends AbstractBlockEve
     }
 
     @Override
-    public void traverse(IWikiModel model) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
     {
         this.block.traverse(getListener());
     }

@@ -22,6 +22,7 @@ package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 import java.util.List;
 import java.util.Map;
 
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.filter.FilterException;
 import org.xwiki.rendering.listener.HeaderLevel;
 
@@ -45,7 +46,7 @@ public class HeaderEventGenerator extends AbstractEventGenerator<HTMLBlockTag>
     }
 
     @Override
-    public void traverse(IWikiModel model) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
     {
         List<Object> children = this.token.getChildren();
 

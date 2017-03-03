@@ -22,6 +22,7 @@ package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 import java.util.Map;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.filter.FilterException;
 import org.xwiki.rendering.listener.Listener;
 
@@ -37,7 +38,7 @@ public class WPTableBlockEventGenerator extends AbstractEventGenerator<WPTable>
     }
 
     @Override
-    public void traverse(IWikiModel model) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
     {
         getListener().beginTable(this.token.getAttributes());
 

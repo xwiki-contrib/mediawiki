@@ -21,6 +21,7 @@ package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
 import java.util.Map;
 
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.filter.FilterException;
 import org.xwiki.rendering.listener.Listener;
 
@@ -82,7 +83,7 @@ public abstract class AbstractEventGenerator<T extends BaseToken> implements Eve
     }
 
     @Override
-    public void traverse(IWikiModel model) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
     {
         begin();
 

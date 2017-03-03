@@ -494,6 +494,9 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         // Set namespaces
         parserProperties.setCustomNamespaces(this.namespaces.getNamespaces());
 
+        // Set toc mode
+        parserProperties.setNoToc(this.properties.isNoToc());
+
         return parserProperties;
     }
 

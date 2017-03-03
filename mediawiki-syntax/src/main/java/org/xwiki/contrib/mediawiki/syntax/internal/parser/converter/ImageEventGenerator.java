@@ -19,6 +19,7 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.ImageTag;
 import org.xwiki.filter.FilterException;
 
@@ -30,7 +31,7 @@ public class ImageEventGenerator extends AbstractEventGenerator<ImageTag>
     {
     }
 
-    public void traverse(IWikiModel model) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
     {
         getListener().onImage(this.token.getReference(), this.token.isFreestanding(), this.token.getAttributes());
     }

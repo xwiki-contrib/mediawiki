@@ -19,6 +19,7 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.filter.FilterException;
 
 import info.bliki.htmlcleaner.TagNode;
@@ -39,12 +40,12 @@ public class ParagraphEventGenerator extends AbstractEventGenerator<TagNode>
     }
 
     @Override
-    public void traverse(IWikiModel model) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
     {
         // FIXME: hack to workaround
         // https://bitbucket.org/axelclk/info.bliki.wiki/issues/32/standalone-generate-an-empty-ptag-followed
         if (!((TagNode) this.token).getChildren().isEmpty()) {
-            super.traverse(model);
+            super.traverse(model, properties);
         }
     }
 }

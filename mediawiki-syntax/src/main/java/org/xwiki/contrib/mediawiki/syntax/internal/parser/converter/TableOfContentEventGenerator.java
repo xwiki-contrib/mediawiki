@@ -19,6 +19,7 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.filter.FilterException;
 import org.xwiki.rendering.listener.Listener;
 
@@ -39,9 +40,9 @@ public class TableOfContentEventGenerator extends AbstractEventGenerator<TableOf
     }
 
     @Override
-    public void traverse(IWikiModel model) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
     {
-        if (this.token.isShowToC()) {
+        if (this.token.isShowToC() && (this.token.isTOCIdentifier() || !properties.isNoToc())) {
             getListener().onMacro("toc", Listener.EMPTY_PARAMETERS, null, false);
         }
     }

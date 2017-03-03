@@ -22,6 +22,7 @@ package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.filter.FilterException;
 
 import info.bliki.htmlcleaner.BaseToken;
@@ -59,7 +60,7 @@ public class SourceEventGenerator extends AbstractEventGenerator<SourceTag>
     }
 
     @Override
-    public void traverse(IWikiModel model) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
     {
         getListener().onMacro("code", this.parameters, this.content, this.inline);
     }

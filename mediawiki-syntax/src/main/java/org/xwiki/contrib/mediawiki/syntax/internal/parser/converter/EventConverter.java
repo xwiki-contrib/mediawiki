@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.GalleryXMacroTag;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.ImageTag;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.LinkTag;
@@ -202,13 +203,16 @@ public class EventConverter implements ITextConverter
 
     private Listener listener;
 
+    private MediaWikiSyntaxInputProperties properties;
+
     public EventConverter()
     {
     }
 
-    public void init(Listener listener)
+    public void init(Listener listener, MediaWikiSyntaxInputProperties properties)
     {
         this.listener = listener;
+        this.properties = properties;
     }
 
     Listener getListener()
@@ -413,7 +417,7 @@ public class EventConverter implements ITextConverter
         EventGenerator blockEvent = createEventGenerator(token);
 
         if (blockEvent != null) {
-            blockEvent.traverse(model);
+            blockEvent.traverse(model, this.properties);
         } else {
             if (token instanceof TagNode) {
                 traverse(((TagNode) token).getChildren(), model);

@@ -19,6 +19,7 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.filter.FilterException;
 
 import info.bliki.htmlcleaner.BaseToken;
@@ -30,7 +31,7 @@ public interface EventGenerator extends Cloneable
 
     EventGenerator clone() throws CloneNotSupportedException;
 
-    void traverse(IWikiModel model) throws FilterException;
+    void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException;
 
     BaseToken getToken();
 }

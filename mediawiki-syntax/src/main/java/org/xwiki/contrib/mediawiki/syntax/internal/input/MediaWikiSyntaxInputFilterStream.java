@@ -88,7 +88,7 @@ public class MediaWikiSyntaxInputFilterStream
 
         // Create custom converter
         EventConverter converter = this.converterProvider.get();
-        converter.init(wrappingLisrener);
+        converter.init(wrappingLisrener, this.properties);
 
         EventWikiModel wikiModel = this.modelProvider.get();
         wikiModel.init(this.properties);

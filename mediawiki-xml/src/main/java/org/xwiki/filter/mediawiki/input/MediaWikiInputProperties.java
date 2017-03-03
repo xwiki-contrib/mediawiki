@@ -91,6 +91,11 @@ public class MediaWikiInputProperties extends XMLInputProperties
     private boolean onlyRegisteredNamespaces = true;
 
     /**
+     * @see #isNoToc()
+     */
+    private boolean noToc;
+
+    /**
      * @return the folder or package containing files
      */
     @PropertyName("Files")
@@ -256,5 +261,25 @@ public class MediaWikiInputProperties extends XMLInputProperties
     public void setOnlyRegisteredNamespaces(boolean onlyRegisteredNamespaces)
     {
         this.onlyRegisteredNamespaces = onlyRegisteredNamespaces;
+    }
+
+    /**
+     * @return true if no toc should be automatically generated
+     * @since 1.8
+     */
+    @PropertyName("No table of content")
+    @PropertyDescription("Disable automaticlaly generated tables of content (unless _TOC_ is explicitely used)")
+    public boolean isNoToc()
+    {
+        return this.noToc;
+    }
+
+    /**
+     * @param noToc true if no toc should be automatically generated
+     * @since 1.8
+     */
+    public void setNoToc(boolean noToc)
+    {
+        this.noToc = noToc;
     }
 }

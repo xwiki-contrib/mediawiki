@@ -22,6 +22,7 @@ package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 import java.lang.reflect.Method;
 import java.util.Collections;
 
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.filter.FilterException;
 import org.xwiki.rendering.block.AbstractBlock;
 import org.xwiki.rendering.block.Block;
@@ -42,7 +43,7 @@ public class WPListBlockEventGenerator extends BeginEndBlockEventGenerator<WPLis
     }
 
     @Override
-    public void traverse(IWikiModel model) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
     {
         for (Object element : this.token.getNestedElements()) {
             if (element instanceof InternalList) {

@@ -20,6 +20,7 @@
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.XMacroTag;
 import org.xwiki.filter.FilterException;
 
@@ -104,7 +105,7 @@ public class MacroEventGenerator extends AbstractEventGenerator<TagNode>
     }
 
     @Override
-    public void traverse(IWikiModel model) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
     {
         getListener().onMacro(getId(), getParameters(), getContent(), isInline());
     }
