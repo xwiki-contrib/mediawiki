@@ -54,6 +54,20 @@
             </entry>
           </parameters>
         </p>
+        <wikiObject name="XWiki.TagsClass">
+          <p>
+            <parameters>
+              <entry>
+                <string>class_reference</string>
+                <string>XWiki.TagsClass</string>
+              </entry>
+            </parameters>
+          </p>
+          <wikiClass>
+            <wikiClassProperty name="tags" type="String"></wikiClassProperty>
+          </wikiClass>
+          <wikiObjectProperty name="tags" value="CategoryName"></wikiObjectProperty>
+        </wikiObject>
         <wikiAttachment name="File.txt" size="8">
           <p>
             <content>Y29udGVudAo=</content>

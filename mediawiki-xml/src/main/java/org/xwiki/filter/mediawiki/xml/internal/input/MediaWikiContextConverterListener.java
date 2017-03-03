@@ -20,6 +20,7 @@
 package org.xwiki.filter.mediawiki.xml.internal.input;
 
 import java.util.Deque;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -33,7 +34,10 @@ import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
+import org.xwiki.contrib.mediawiki.syntax.internal.input.MediaWikiContentFilter;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiStreamParser;
+import org.xwiki.filter.FilterEventParameters;
+import org.xwiki.filter.FilterException;
 import org.xwiki.filter.input.BeanInputFilterStream;
 import org.xwiki.filter.input.BeanInputFilterStreamFactory;
 import org.xwiki.filter.input.InputFilterStreamFactory;
@@ -60,7 +64,7 @@ import org.xwiki.rendering.transformation.RenderingContext;
  */
 @Component(roles = MediaWikiContextConverterListener.class)
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
-public class MediaWikiContextConverterListener extends WrappingListener
+public class MediaWikiContextConverterListener extends WrappingListener implements MediaWikiContentFilter
 {
     @Inject
     private FileCatcherListener fileCatcher;
@@ -85,6 +89,8 @@ public class MediaWikiContextConverterListener extends WrappingListener
 
     private Syntax targetSyntax;
 
+    private Set<String> categories = new LinkedHashSet<>();
+
     void initialize(Listener listener, MediaWikiInputFilterStream stream, Syntax targetSyntax)
     {
         setWrappedListener(listener);
@@ -101,6 +107,11 @@ public class MediaWikiContextConverterListener extends WrappingListener
     public Set<String> getFiles()
     {
         return this.fileCatcher.getFiles();
+    }
+
+    public Set<String> getCategories()
+    {
+        return this.categories;
     }
 
     private EntityReference compact(EntityReference linkReference, EntityReference pageReference)
@@ -305,5 +316,11 @@ public class MediaWikiContextConverterListener extends WrappingListener
         }
 
         return null;
+    }
+
+    @Override
+    public void onCategory(String name, FilterEventParameters parameters) throws FilterException
+    {
+        this.categories.add(name);
     }
 }

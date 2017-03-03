@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -51,6 +52,7 @@ import org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiStreamParser;
 import org.xwiki.filter.FilterEventParameters;
 import org.xwiki.filter.FilterException;
 import org.xwiki.filter.event.model.WikiDocumentFilter;
+import org.xwiki.filter.event.model.WikiObjectFilter;
 import org.xwiki.filter.input.AbstractBeanInputFilterStream;
 import org.xwiki.filter.input.BeanInputFilterStream;
 import org.xwiki.filter.input.BeanInputFilterStreamFactory;
@@ -113,6 +115,8 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
     private static final String TAG_PAGE_REVISION_CONTENT = "text";
 
+    private static final String REFERENCE_TAGCLASS = "XWiki.TagsClass";
+
     /**
      * This is not final, it gets initialized right after the base url is read from the xml, with the precise value from
      * the XML.
@@ -138,6 +142,10 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
     private MediaWikiNamespaces namespaces = new MediaWikiNamespaces();
 
+    private Set<String> currentFiles;
+
+    private Set<String> currentCategories;
+
     String currentPageTitle;
 
     EntityReference previousParentReference;
@@ -145,8 +153,6 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
     EntityReference currentParentReference;
 
     EntityReference currentPageReference;
-
-    Set<String> currentFiles;
 
     String baseURL;
 
@@ -585,13 +591,17 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             this.currentFiles.add(filename);
         }
 
+        // Generate tags for categories
+        if (!this.currentCategories.isEmpty()) {
+            sendCategories(this.currentCategories, proxyFilter);
+        }
+
         // Attach files if any
         if (!this.currentFiles.isEmpty()) {
             for (String fileName : this.currentFiles) {
                 sendAttachment(fileName, proxyFilter);
             }
         }
-
         // Reset files
         this.currentFiles = null;
 
@@ -618,6 +628,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         }
 
         this.currentFiles = listener.getFiles();
+        this.currentCategories = listener.getCategories();
 
         return printer.toString();
     }
@@ -659,6 +670,26 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         }
 
         return null;
+    }
+
+    private void sendCategories(Collection<String> categories, MediaWikiFilter proxyFilter) throws FilterException
+    {
+        FilterEventParameters objectParameters = new FilterEventParameters();
+        objectParameters.put(WikiObjectFilter.PARAMETER_CLASS_REFERENCE, REFERENCE_TAGCLASS);
+
+        proxyFilter.beginWikiObject(REFERENCE_TAGCLASS, objectParameters);
+
+        // Tags class definition
+        // TODO: Remove when https://jira.xwiki.org/browse/XWIKI-14061 is fixed (9.2+)
+        proxyFilter.beginWikiClass(FilterEventParameters.EMPTY);
+        proxyFilter.beginWikiClassProperty("tags", "String", FilterEventParameters.EMPTY);
+        proxyFilter.endWikiClassProperty("tags", "String", FilterEventParameters.EMPTY);
+        proxyFilter.endWikiClass(FilterEventParameters.EMPTY);
+
+        // Tags object property
+        proxyFilter.onWikiObjectProperty("tags", StringUtils.join(categories, '|'), FilterEventParameters.EMPTY);
+
+        proxyFilter.endWikiObject(REFERENCE_TAGCLASS, objectParameters);
     }
 
     private String getPageContributor(XMLStreamReader xmlReader) throws XMLStreamException

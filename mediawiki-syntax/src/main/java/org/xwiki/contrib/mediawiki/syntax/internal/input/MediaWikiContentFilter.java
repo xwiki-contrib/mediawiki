@@ -19,32 +19,24 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.input;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import org.xwiki.component.annotation.Component;
-import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
-import org.xwiki.filter.input.AbstractBeanInputFilterStreamFactory;
+import org.xwiki.filter.FilterEventParameters;
+import org.xwiki.filter.FilterException;
+import org.xwiki.filter.annotation.Default;
+import org.xwiki.rendering.listener.Listener;
 
 /**
- * Create MediaWiki Syntax format input filters.
+ * Extend standard rendering {@link Listener} with a few MediWiki content specific events.
  * 
- * @version $Id: 20ffe2c38296482590f986268a1b87f547beebae $
+ * @version $Id$
+ * @since 1.8
  */
-@Component
-@Named(MediaWikiSyntaxInputProperties.FILTER_STREAM_TYPE_STRING)
-@Singleton
-public class MediaWikiSyntaxInputFilterStreamFactory
-    extends AbstractBeanInputFilterStreamFactory<MediaWikiSyntaxInputProperties, MediaWikiContentFilter>
+public interface MediaWikiContentFilter extends Listener
 {
     /**
-     * The default constructor.
+     * @param name the name of the category
+     * @param parameters the properties of the document
+     * @throws FilterException when failing to send event
      */
-    public MediaWikiSyntaxInputFilterStreamFactory()
-    {
-        super(MediaWikiSyntaxInputProperties.FILTER_STREAM_TYPE);
-
-        setName("MediaWiki Syntax input stream");
-        setDescription("Generates rendering events from MediaWiki Syntax content.");
-    }
+    void onCategory(String name, @Default(FilterEventParameters.DEFAULT) FilterEventParameters parameters)
+        throws FilterException;
 }

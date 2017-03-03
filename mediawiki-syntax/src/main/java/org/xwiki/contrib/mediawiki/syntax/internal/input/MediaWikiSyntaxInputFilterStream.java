@@ -33,6 +33,7 @@ import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiStreamParser;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.converter.EventConverter;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.EventWikiModel;
+import org.xwiki.filter.FilterEventParameters;
 import org.xwiki.filter.FilterException;
 import org.xwiki.filter.input.AbstractBeanInputFilterStream;
 import org.xwiki.filter.input.ReaderInputSource;
@@ -47,7 +48,7 @@ import org.xwiki.rendering.listener.MetaData;
 @Named(MediaWikiSyntaxInputProperties.FILTER_STREAM_TYPE_STRING)
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
 public class MediaWikiSyntaxInputFilterStream
-    extends AbstractBeanInputFilterStream<MediaWikiSyntaxInputProperties, Listener>
+    extends AbstractBeanInputFilterStream<MediaWikiSyntaxInputProperties, MediaWikiContentFilter>
 {
     @Inject
     private Provider<EventConverter> converterProvider;
@@ -73,7 +74,7 @@ public class MediaWikiSyntaxInputFilterStream
     }
 
     @Override
-    protected void read(Object filter, Listener proxyFilter) throws FilterException
+    protected void read(Object filter, MediaWikiContentFilter proxyFilter) throws FilterException
     {
         String source;
         try {
@@ -103,6 +104,10 @@ public class MediaWikiSyntaxInputFilterStream
             wikiModel.render(converter, source, null, false, false);
         } catch (IOException e) {
             throw new FilterException("Failed to parse source", e);
+        }
+
+        for (String category : wikiModel.getCategories().keySet()) {
+            proxyFilter.onCategory(category, FilterEventParameters.EMPTY);
         }
 
         wrappingLisrener.endDocument(metaData);
