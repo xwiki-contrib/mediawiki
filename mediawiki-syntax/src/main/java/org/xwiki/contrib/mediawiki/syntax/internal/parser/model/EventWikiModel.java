@@ -201,6 +201,7 @@ public class EventWikiModel extends WikiModel
     {
         this.properties = properties;
 
+        // Set custom namespaces
         if (this.properties.getCustomNamespaces() != null) {
             Namespace namespaces = (Namespace) this.fNamespace;
 
@@ -213,6 +214,9 @@ public class EventWikiModel extends WikiModel
                 }
             }
         }
+
+        // Disable auto generated toc
+        setNoToc(properties.isNoToc());
     }
 
     @Override

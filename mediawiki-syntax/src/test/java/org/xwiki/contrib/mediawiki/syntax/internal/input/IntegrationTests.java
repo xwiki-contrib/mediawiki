@@ -31,7 +31,7 @@ import org.xwiki.test.annotation.AllComponents;
  */
 @RunWith(FilterTestSuite.class)
 @AllComponents
-@FilterTestSuite.Scope(value = "mediawiki16/filter", pattern = "category1.test")
+@FilterTestSuite.Scope(value = "mediawiki16/filter"/*, pattern = "notoc1.test"*/)
 public class IntegrationTests
 {
 }
