@@ -54,17 +54,17 @@
             </entry>
           </parameters>
         </p>
-        <wikiObject name="XWiki.TagsClass">
+        <wikiObject name="XWiki.TagClass">
           <p>
             <parameters>
               <entry>
                 <string>class_reference</string>
-                <string>XWiki.TagsClass</string>
+                <string>XWiki.TagClass</string>
               </entry>
             </parameters>
           </p>
           <wikiClass>
-            <wikiClassProperty name="tags" type="String"></wikiClassProperty>
+            <wikiClassProperty name="tags" type="StaticList"></wikiClassProperty>
           </wikiClass>
           <wikiObjectProperty name="tags" value="CategoryName"></wikiObjectProperty>
         </wikiObject>
