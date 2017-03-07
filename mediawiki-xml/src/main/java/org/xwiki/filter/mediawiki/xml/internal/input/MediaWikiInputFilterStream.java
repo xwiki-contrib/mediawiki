@@ -115,7 +115,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
     private static final String TAG_PAGE_REVISION_CONTENT = "text";
 
-    private static final String REFERENCE_TAGCLASS = "XWiki.TagsClass";
+    private static final String REFERENCE_TAGCLASS = "XWiki.TagClass";
 
     /**
      * This is not final, it gets initialized right after the base url is read from the xml, with the precise value from
@@ -682,8 +682,8 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         // Tags class definition
         // TODO: Remove when https://jira.xwiki.org/browse/XWIKI-14061 is fixed (9.2+)
         proxyFilter.beginWikiClass(FilterEventParameters.EMPTY);
-        proxyFilter.beginWikiClassProperty("tags", "String", FilterEventParameters.EMPTY);
-        proxyFilter.endWikiClassProperty("tags", "String", FilterEventParameters.EMPTY);
+        proxyFilter.beginWikiClassProperty("tags", "StaticList", FilterEventParameters.EMPTY);
+        proxyFilter.endWikiClassProperty("tags", "StaticList", FilterEventParameters.EMPTY);
         proxyFilter.endWikiClass(FilterEventParameters.EMPTY);
 
         // Tags object property
