@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.filter.xar;
+package org.xwiki.filter.mediawiki.xml;
 
 import java.net.URISyntaxException;
 import java.net.URL;
