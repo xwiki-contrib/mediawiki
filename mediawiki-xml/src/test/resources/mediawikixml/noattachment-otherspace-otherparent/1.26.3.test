@@ -64,7 +64,11 @@
             </parameters>
           </p>
           <wikiClass>
-            <wikiClassProperty name="tags" type="StaticList"></wikiClassProperty>
+            <wikiClassProperty name="tags" type="StaticList">
+              <wikiClassPropertyField name="multiSelect" value="1"></wikiClassPropertyField>
+              <wikiClassPropertyField name="relationalStorage" value="1"></wikiClassPropertyField>
+              <wikiClassPropertyField name="separator" value="|"></wikiClassPropertyField>
+            </wikiClassProperty>
           </wikiClass>
           <wikiObjectProperty name="tags" value="CategoryName"></wikiObjectProperty>
         </wikiObject>
