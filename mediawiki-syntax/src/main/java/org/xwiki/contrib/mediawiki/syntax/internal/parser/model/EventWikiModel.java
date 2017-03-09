@@ -20,6 +20,7 @@
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.model;
 
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -185,6 +186,15 @@ public class EventWikiModel extends WikiModel
         // https://bitbucket.org/axelclk/info.bliki.wiki/pull-requests/7/is-supposed-to-be-a-block-element is released
         addTokenTag(Configuration.HTML_CENTER_OPEN.getName(),
             new HTMLBlockTag("center", Configuration.SPECIAL_BLOCK_TAGS));
+    }
+
+    @Override
+    public void setUp()
+    {
+        super.setUp();
+
+        // Make sure to keep the order from the content
+        this.categories = new LinkedHashMap<>();
     }
 
     private void addTokenTag(GalleryXMacroTag tag)
