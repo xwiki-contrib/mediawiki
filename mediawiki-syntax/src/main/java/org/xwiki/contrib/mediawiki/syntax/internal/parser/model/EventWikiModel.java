@@ -43,6 +43,8 @@ import org.xwiki.rendering.parser.ResourceReferenceParser;
 import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.ContentToken;
 import info.bliki.htmlcleaner.TagToken;
+import info.bliki.wiki.filter.AbstractWikipediaParser;
+import info.bliki.wiki.filter.WikipediaParser;
 import info.bliki.wiki.filter.WikipediaPreTagParser;
 import info.bliki.wiki.model.Configuration;
 import info.bliki.wiki.model.ImageFormat;
@@ -187,6 +189,17 @@ public class EventWikiModel extends WikiModel
             new HTMLBlockTag("center", Configuration.SPECIAL_BLOCK_TAGS));
     }
 
+    @Override
+    public AbstractWikipediaParser createNewInstance(String rawWikitext)
+    {
+        WikipediaParser wikipediaParser = (WikipediaParser) super.createNewInstance(rawWikitext);
+
+        wikipediaParser.setNoToC(this.properties.isNoToc());
+        wikipediaParser.setTemplateTag(true);
+
+        return wikipediaParser;
+    }
+
     private void addTokenTag(GalleryXMacroTag tag)
     {
         addTokenTag(tag.getName(), tag);
@@ -214,9 +227,6 @@ public class EventWikiModel extends WikiModel
                 }
             }
         }
-
-        // Disable auto generated toc
-        setNoToc(properties.isNoToc());
     }
 
     @Override

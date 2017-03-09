@@ -90,6 +90,8 @@ public class MediaWikiSyntaxInputProperties extends DefaultFilterStreamPropertie
      */
     private boolean noToc;
 
+    private String templateMacroPrefix = "";
+
     /**
      * @return The source to load the wiki from
      */
@@ -165,5 +167,25 @@ public class MediaWikiSyntaxInputProperties extends DefaultFilterStreamPropertie
     public void setNoToc(boolean noToc)
     {
         this.noToc = noToc;
+    }
+
+    /**
+     * @return the prefix to use when creating new macro name to translate templates calls
+     * @since 1.8
+     */
+    @PropertyName("Template macro name prefix")
+    @PropertyDescription("The prefix to use when creating new macro name to translate templates calls.")
+    public String getTemplateMacroPrefix()
+    {
+        return this.templateMacroPrefix;
+    }
+
+    /**
+     * @param templateMacroPrefix the prefix to use when creating new macro name to translate templates calls
+     * @since 1.8
+     */
+    public void setTemplateMacroPrefix(String templateMacroPrefix)
+    {
+        this.templateMacroPrefix = templateMacroPrefix;
     }
 }
