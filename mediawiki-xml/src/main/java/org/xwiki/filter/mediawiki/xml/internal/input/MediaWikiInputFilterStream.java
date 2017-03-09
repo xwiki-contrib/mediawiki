@@ -23,7 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -51,7 +51,6 @@ import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties.Referen
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiStreamParser;
 import org.xwiki.filter.FilterEventParameters;
 import org.xwiki.filter.FilterException;
-import org.xwiki.filter.event.model.WikiClassPropertyFilter;
 import org.xwiki.filter.event.model.WikiDocumentFilter;
 import org.xwiki.filter.event.model.WikiObjectFilter;
 import org.xwiki.filter.input.AbstractBeanInputFilterStream;
@@ -673,7 +672,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         return null;
     }
 
-    private void sendCategories(Collection<String> categories, MediaWikiFilter proxyFilter) throws FilterException
+    private void sendCategories(Set<String> categories, MediaWikiFilter proxyFilter) throws FilterException
     {
         FilterEventParameters objectParameters = new FilterEventParameters();
         objectParameters.put(WikiObjectFilter.PARAMETER_CLASS_REFERENCE, REFERENCE_TAGCLASS);
@@ -686,12 +685,12 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         proxyFilter.beginWikiClassProperty("tags", "StaticList", FilterEventParameters.EMPTY);
         proxyFilter.onWikiClassPropertyField("multiSelect", "1", FilterEventParameters.EMPTY);
         proxyFilter.onWikiClassPropertyField("relationalStorage", "1", FilterEventParameters.EMPTY);
-        proxyFilter.onWikiClassPropertyField("separator", "|", FilterEventParameters.EMPTY);
         proxyFilter.endWikiClassProperty("tags", "StaticList", FilterEventParameters.EMPTY);
         proxyFilter.endWikiClass(FilterEventParameters.EMPTY);
 
         // Tags object property
-        proxyFilter.onWikiObjectProperty("tags", StringUtils.join(categories, '|'), FilterEventParameters.EMPTY);
+        // ListProperty only supports List type so we have to convert the Set
+        proxyFilter.onWikiObjectProperty("tags", new ArrayList<>(categories), FilterEventParameters.EMPTY);
 
         proxyFilter.endWikiObject(REFERENCE_TAGCLASS, objectParameters);
     }
