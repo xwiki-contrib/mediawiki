@@ -101,7 +101,7 @@ public class MediaWikiSyntaxInputFilterStream
 
         try {
             // Parse
-            wikiModel.render(converter, source, null, false, false);
+            wikiModel.render(converter, source, null, false, true);
         } catch (IOException e) {
             throw new FilterException("Failed to parse source", e);
         }
