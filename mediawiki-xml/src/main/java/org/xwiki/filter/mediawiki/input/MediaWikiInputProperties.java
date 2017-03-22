@@ -101,6 +101,11 @@ public class MediaWikiInputProperties extends XMLInputProperties
     private String spaceSeparator;
 
     /**
+     * @see #getForbiddenCharacters()
+     */
+    private String forbiddenCharacters;
+
+    /**
      * @return the folder or package containing files
      */
     @PropertyName("Files")
@@ -306,5 +311,25 @@ public class MediaWikiInputProperties extends XMLInputProperties
     public void setSpaceSeparator(String spaceSeparator)
     {
         this.spaceSeparator = spaceSeparator;
+    }
+
+    /**
+     * @return the characters that should not end up in page names
+     * @since 1.8
+     */
+    @PropertyName("Forbidden page name characters")
+    @PropertyDescription("The characters that should not end up in page names")
+    public String getForbiddenCharacters()
+    {
+        return this.forbiddenCharacters;
+    }
+
+    /**
+     * @param forbiddenCharacters the characters that should not end up in page names
+     * @since 1.8
+     */
+    public void setForbiddenCharacters(String forbiddenCharacters)
+    {
+        this.forbiddenCharacters = forbiddenCharacters;
     }
 }

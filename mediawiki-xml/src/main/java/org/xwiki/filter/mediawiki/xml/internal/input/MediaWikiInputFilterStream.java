@@ -187,6 +187,13 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             pageName = this.modelConfiguration.getDefaultReferenceValue(EntityType.DOCUMENT);
         }
 
+        // Clean page name if required
+        if (StringUtils.isNotEmpty(this.properties.getForbiddenCharacters())) {
+            for (int i = 0; i < this.properties.getForbiddenCharacters().length(); ++i) {
+                pageName = StringUtils.remove(pageName, this.properties.getForbiddenCharacters().charAt(i));
+            }
+        }
+
         // Find page parent reference
         EntityReference parentReference;
         if (namespace != null) {
