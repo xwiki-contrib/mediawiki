@@ -60,15 +60,11 @@ public class TemplateTagEventGenerator extends AbstractEventGenerator<TemplateTa
         // Use first parameter as macro content
         String content = this.token.getAttributes().get("1");
 
-        // Skip parameter "0" and "1" which is the content which is the macro name
-        for (int i = 2; i < this.token.getAttributes().size(); ++i) {
-            String key = String.valueOf(i);
-            String value = this.token.getAttributes().get(key);
-            if (value == null) {
-                break;
+        for (Map.Entry<String, String> entry : this.token.getAttributes().entrySet()) {
+            // Skip parameter "1" since it's used as macro content
+            if (!entry.getKey().equals("1")) {
+                macroParameters.put(entry.getKey(), entry.getValue());
             }
-
-            macroParameters.put(key, value);
         }
 
         getListener().onMacro(macroName, macroParameters, content, false);

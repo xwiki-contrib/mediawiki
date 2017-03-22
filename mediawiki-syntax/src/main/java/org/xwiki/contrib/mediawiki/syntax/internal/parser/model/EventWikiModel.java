@@ -19,6 +19,7 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.model;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -210,6 +211,24 @@ public class EventWikiModel extends WikiModel
         return wikipediaParser;
     }
 
+    @Override
+    public void substituteTemplateCall(String templateName, Map<String, String> parameterMap, Appendable writer)
+        throws IOException
+    {
+        // Put back template
+        writer.append("{{");
+        writer.append(templateName);
+        if (!parameterMap.isEmpty()) {
+            for (Map.Entry<String, String> entry : parameterMap.entrySet()) {
+                writer.append('|');
+                writer.append(entry.getKey());
+                writer.append('=');
+                writer.append(entry.getValue());
+            }
+        }
+        writer.append("}}");
+    }
+    
     private void addTokenTag(GalleryXMacroTag tag)
     {
         addTokenTag(tag.getName(), tag);
