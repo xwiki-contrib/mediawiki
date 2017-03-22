@@ -96,6 +96,11 @@ public class MediaWikiInputProperties extends XMLInputProperties
     private boolean noToc;
 
     /**
+     * @see #getSpaceSeparator()
+     */
+    private String spaceSeparator;
+
+    /**
      * @return the folder or package containing files
      */
     @PropertyName("Files")
@@ -281,5 +286,25 @@ public class MediaWikiInputProperties extends XMLInputProperties
     public void setNoToc(boolean noToc)
     {
         this.noToc = noToc;
+    }
+
+    /**
+     * @return a regular expression used to cut the page name into a hierarchy
+     * @since 1.8
+     */
+    @PropertyName("Space separator")
+    @PropertyDescription("A regular expression used to cut the page name into a hierarchy")
+    public String getSpaceSeparator()
+    {
+        return this.spaceSeparator;
+    }
+
+    /**
+     * @param spaceSeparator a regular expression used to cut the page name into a hierarchy
+     * @since 1.8
+     */
+    public void setSpaceSeparator(String spaceSeparator)
+    {
+        this.spaceSeparator = spaceSeparator;
     }
 }

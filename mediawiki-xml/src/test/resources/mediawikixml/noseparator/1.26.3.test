@@ -31,12 +31,12 @@
 [[Page_with_white_spaces]]
 [[Page_with_white_spaces]]
 [[Space]]
-[[.Space.Page]]
-[[.Space.Page]]
-[[attach:filespace.File\.txt@File.txt]]
+[[Space/Page]]
+[[Space/Page/]]
+[[attach:File.txt]]
 [[User.username]]
 [[Main.WebHome]]
-[[.Space.Page]]
+[[Space/Page]]
 
 |=col1|=col2
 |cell11|cell12
@@ -78,6 +78,11 @@
             </p>
           </wikiObjectProperty>
         </wikiObject>
+        <wikiAttachment name="File.txt" size="8">
+          <p>
+            <content>Y29udGVudAo=</content>
+          </p>
+        </wikiAttachment>
       </wikiDocumentRevision>
     </wikiDocumentLocale>
   </wikiDocument>
@@ -106,9 +111,9 @@
               <entry>
                 <string>content</string>
                 <string>{{gallery}}
-[[image:filespace.Pixel_white\.png@Pixel_white.png]]
-[[image:filespace.Pixel_white\.png@Pixel_white.png]]
-[[image:filespace.Pixel_white\.png@Pixel_white.png||width="50px"]]
+[[image:Pixel_white.png]]
+[[image:Pixel_white.png]]
+[[image:Pixel_white.png||width="50px"]]
 {{/gallery}}</string>
               </entry>
               <entry>
@@ -123,6 +128,13 @@
               </entry>
             </parameters>
           </p>
+          <wikiAttachment name="Pixel_white.png" size="146">
+            <p>
+              <content>iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
+B3RJTUUH4AcBDQE7cMRBYQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAM
+SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
+            </p>
+          </wikiAttachment>
         </wikiDocumentRevision>
         <wikiDocumentRevision revision="2">
           <p>
@@ -146,8 +158,8 @@
               <entry>
                 <string>content</string>
                 <string>{{gallery}}
-[[image:filespace.Pixel_white\.png@Pixel_white.png]]
-[[image:filespace.Pixel_black\.png@Pixel_black.png]]
+[[image:Pixel_white.png]]
+[[image:Pixel_black.png]]
 {{/gallery}}</string>
               </entry>
               <entry>
@@ -162,6 +174,20 @@
               </entry>
             </parameters>
           </p>
+          <wikiAttachment name="Pixel_white.png" size="146">
+            <p>
+              <content>iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
+B3RJTUUH4AcBDQE7cMRBYQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAM
+SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
+            </p>
+          </wikiAttachment>
+          <wikiAttachment name="Pixel_black.png" size="146">
+            <p>
+              <content>iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
+B3RJTUUH4AcBDQIhpovr2AAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAM
+SURBVAjXY2BgYAAAAAQAASc0JwoAAAAASUVORK5CYII=</content>
+            </p>
+          </wikiAttachment>
         </wikiDocumentRevision>
       </wikiDocumentLocale>
     </wikiDocument>
@@ -208,89 +234,89 @@
       </wikiDocumentLocale>
     </wikiDocument>
   </wikiSpace>
-  <wikiSpace name="Space">
-    <wikiSpace name="Page">
-      <wikiDocument name="WebHome">
-        <wikiDocumentLocale>
-          <wikiDocumentRevision revision="1">
-            <p>
-              <parameters>
-                <entry>
-                  <string>revision_minor</string>
-                  <boolean>false</boolean>
-                </entry>
-                <entry>
-                  <string>title</string>
-                  <string>Space/Page</string>
-                </entry>
-                <entry>
-                  <string>revision_date</string>
-                  <date>2016-06-24 09:37:15.0 UTC</date>
-                </entry>
-                <entry>
-                  <string>revision_author</string>
-                  <null></null>
-                </entry>
-                <entry>
-                  <string>content</string>
-                  <string>content 4</string>
-                </entry>
-                <entry>
-                  <string>syntax</string>
-                  <org.xwiki.rendering.syntax.Syntax>
-                    <type>
-                      <name>XWiki</name>
-                      <id>xwiki</id>
-                    </type>
-                    <version>2.1</version>
-                  </org.xwiki.rendering.syntax.Syntax>
-                </entry>
-              </parameters>
-            </p>
-          </wikiDocumentRevision>
-        </wikiDocumentLocale>
-      </wikiDocument>
-      <wikiDocument name="WebHome">
-        <wikiDocumentLocale>
-          <wikiDocumentRevision revision="1">
-            <p>
-              <parameters>
-                <entry>
-                  <string>revision_minor</string>
-                  <boolean>false</boolean>
-                </entry>
-                <entry>
-                  <string>title</string>
-                  <string>Space/Page/</string>
-                </entry>
-                <entry>
-                  <string>revision_date</string>
-                  <date>2016-06-24 09:37:15.0 UTC</date>
-                </entry>
-                <entry>
-                  <string>revision_author</string>
-                  <null></null>
-                </entry>
-                <entry>
-                  <string>content</string>
-                  <string>content 5</string>
-                </entry>
-                <entry>
-                  <string>syntax</string>
-                  <org.xwiki.rendering.syntax.Syntax>
-                    <type>
-                      <name>XWiki</name>
-                      <id>xwiki</id>
-                    </type>
-                    <version>2.1</version>
-                  </org.xwiki.rendering.syntax.Syntax>
-                </entry>
-              </parameters>
-            </p>
-          </wikiDocumentRevision>
-        </wikiDocumentLocale>
-      </wikiDocument>
-    </wikiSpace>
+  <wikiSpace name="Space/Page">
+    <wikiDocument name="WebHome">
+      <wikiDocumentLocale>
+        <wikiDocumentRevision revision="1">
+          <p>
+            <parameters>
+              <entry>
+                <string>revision_minor</string>
+                <boolean>false</boolean>
+              </entry>
+              <entry>
+                <string>title</string>
+                <string>Space/Page</string>
+              </entry>
+              <entry>
+                <string>revision_date</string>
+                <date>2016-06-24 09:37:15.0 UTC</date>
+              </entry>
+              <entry>
+                <string>revision_author</string>
+                <null></null>
+              </entry>
+              <entry>
+                <string>content</string>
+                <string>content 4</string>
+              </entry>
+              <entry>
+                <string>syntax</string>
+                <org.xwiki.rendering.syntax.Syntax>
+                  <type>
+                    <name>XWiki</name>
+                    <id>xwiki</id>
+                  </type>
+                  <version>2.1</version>
+                </org.xwiki.rendering.syntax.Syntax>
+              </entry>
+            </parameters>
+          </p>
+        </wikiDocumentRevision>
+      </wikiDocumentLocale>
+    </wikiDocument>
+  </wikiSpace>
+  <wikiSpace name="Space/Page/">
+    <wikiDocument name="WebHome">
+      <wikiDocumentLocale>
+        <wikiDocumentRevision revision="1">
+          <p>
+            <parameters>
+              <entry>
+                <string>revision_minor</string>
+                <boolean>false</boolean>
+              </entry>
+              <entry>
+                <string>title</string>
+                <string>Space/Page/</string>
+              </entry>
+              <entry>
+                <string>revision_date</string>
+                <date>2016-06-24 09:37:15.0 UTC</date>
+              </entry>
+              <entry>
+                <string>revision_author</string>
+                <null></null>
+              </entry>
+              <entry>
+                <string>content</string>
+                <string>content 5</string>
+              </entry>
+              <entry>
+                <string>syntax</string>
+                <org.xwiki.rendering.syntax.Syntax>
+                  <type>
+                    <name>XWiki</name>
+                    <id>xwiki</id>
+                  </type>
+                  <version>2.1</version>
+                </org.xwiki.rendering.syntax.Syntax>
+              </entry>
+            </parameters>
+          </p>
+        </wikiDocumentRevision>
+      </wikiDocumentLocale>
+    </wikiDocument>
   </wikiSpace>
 </wikiSpace>
 <wikiSpace name="User">
@@ -337,152 +363,8 @@
     </wikiDocument>
   </wikiSpace>
 </wikiSpace>
-<wikiSpace name="filespace">
-  <wikiDocument name="Pixel_white.png">
-    <wikiDocumentLocale>
-      <wikiDocumentRevision revision="1">
-        <p>
-          <parameters>
-            <entry>
-              <string>revision_minor</string>
-              <boolean>false</boolean>
-            </entry>
-            <entry>
-              <string>title</string>
-              <string>File:Pixel white.png</string>
-            </entry>
-            <entry>
-              <string>revision_date</string>
-              <date>2016-06-24 09:37:15.0 UTC</date>
-            </entry>
-            <entry>
-              <string>revision_author</string>
-              <null></null>
-            </entry>
-            <entry>
-              <string>content</string>
-              <string>image 7</string>
-            </entry>
-            <entry>
-              <string>syntax</string>
-              <org.xwiki.rendering.syntax.Syntax>
-                <type>
-                  <name>XWiki</name>
-                  <id>xwiki</id>
-                </type>
-                <version>2.1</version>
-              </org.xwiki.rendering.syntax.Syntax>
-            </entry>
-          </parameters>
-        </p>
-        <wikiAttachment name="Pixel_white.png" size="146">
-          <p>
-            <content>iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
-B3RJTUUH4AcBDQE7cMRBYQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAM
-SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
-          </p>
-        </wikiAttachment>
-      </wikiDocumentRevision>
-    </wikiDocumentLocale>
-  </wikiDocument>
-  <wikiDocument name="Pixel_white.png">
-    <wikiDocumentLocale>
-      <wikiDocumentRevision revision="1">
-        <p>
-          <parameters>
-            <entry>
-              <string>revision_minor</string>
-              <boolean>false</boolean>
-            </entry>
-            <entry>
-              <string>title</string>
-              <string>File:Pixel white.png</string>
-            </entry>
-            <entry>
-              <string>revision_date</string>
-              <date>2016-06-24 09:37:15.0 UTC</date>
-            </entry>
-            <entry>
-              <string>revision_author</string>
-              <null></null>
-            </entry>
-            <entry>
-              <string>content</string>
-              <string>image 8</string>
-            </entry>
-            <entry>
-              <string>syntax</string>
-              <org.xwiki.rendering.syntax.Syntax>
-                <type>
-                  <name>XWiki</name>
-                  <id>xwiki</id>
-                </type>
-                <version>2.1</version>
-              </org.xwiki.rendering.syntax.Syntax>
-            </entry>
-          </parameters>
-        </p>
-        <wikiAttachment name="Pixel_white.png" size="146">
-          <p>
-            <content>iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
-B3RJTUUH4AcBDQE7cMRBYQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAM
-SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
-          </p>
-        </wikiAttachment>
-      </wikiDocumentRevision>
-    </wikiDocumentLocale>
-  </wikiDocument>
-  <wikiDocument name="File.txt">
-    <wikiDocumentLocale>
-      <wikiDocumentRevision revision="1">
-        <p>
-          <parameters>
-            <entry>
-              <string>revision_minor</string>
-              <boolean>false</boolean>
-            </entry>
-            <entry>
-              <string>title</string>
-              <string>File:File.txt</string>
-            </entry>
-            <entry>
-              <string>revision_date</string>
-              <date>2016-06-24 09:37:15.0 UTC</date>
-            </entry>
-            <entry>
-              <string>revision_author</string>
-              <null></null>
-            </entry>
-            <entry>
-              <string>content</string>
-              <string>file 9</string>
-            </entry>
-            <entry>
-              <string>syntax</string>
-              <org.xwiki.rendering.syntax.Syntax>
-                <type>
-                  <name>XWiki</name>
-                  <id>xwiki</id>
-                </type>
-                <version>2.1</version>
-              </org.xwiki.rendering.syntax.Syntax>
-            </entry>
-          </parameters>
-        </p>
-        <wikiAttachment name="File.txt" size="8">
-          <p>
-            <content>Y29udGVudAo=</content>
-          </p>
-        </wikiAttachment>
-      </wikiDocumentRevision>
-    </wikiDocumentLocale>
-  </wikiDocument>
-</wikiSpace>
 .#------------------------------------------------------------------------------
 .input|mediawiki+xml
 .configuration.source=../1.26.3.xml
 .configuration.files=file:${{{xwiki.test.folder}}}/mediawikixml/1.26.3-files/
-.configuration.fileAttached=false
-.configuration.fileSpace=space:filespace
-.configuration.spaceSeparator=/
 .#------------------------------------------------------------------------------

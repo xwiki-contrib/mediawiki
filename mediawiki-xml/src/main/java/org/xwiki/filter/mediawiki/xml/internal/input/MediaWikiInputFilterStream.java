@@ -213,15 +213,17 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
                 EntityType.SPACE, parentReference);
         }
 
-        // See / as space separator
-        String[] elements = StringUtils.split(pageName, '/');
-        if (elements.length > 1) {
-            for (int i = 0; i < elements.length - 1; ++i) {
-                parentReference = new EntityReference(elements[i], EntityType.SPACE, parentReference);
-            }
-            pageName = elements[elements.length - 1];
-            if (pageName.isEmpty()) {
-                pageName = this.modelConfiguration.getDefaultReferenceValue(EntityType.DOCUMENT);
+        // Split by space separators
+        if (StringUtils.isNotEmpty(this.properties.getSpaceSeparator())) {
+            String[] elements = pageName.split(this.properties.getSpaceSeparator());
+            if (elements.length > 1) {
+                for (int i = 0; i < elements.length - 1; ++i) {
+                    parentReference = new EntityReference(elements[i], EntityType.SPACE, parentReference);
+                }
+                pageName = elements[elements.length - 1];
+                if (pageName.isEmpty()) {
+                    pageName = this.modelConfiguration.getDefaultReferenceValue(EntityType.DOCUMENT);
+                }
             }
         }
 
