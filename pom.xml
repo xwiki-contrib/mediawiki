@@ -54,4 +54,20 @@
     <module>mediawiki-syntax10override</module>
     <module>mediawiki-xml</module>
   </modules>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <!-- Bliki requires Java 8 -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <source>1.8</source>
+            <target>1.8</target>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 </project>
