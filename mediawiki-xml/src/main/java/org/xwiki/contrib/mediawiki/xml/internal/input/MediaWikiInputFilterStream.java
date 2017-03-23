@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.filter.mediawiki.xml.internal.input;
+package org.xwiki.contrib.mediawiki.xml.internal.input;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,6 +49,8 @@ import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties.ReferenceType;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiStreamParser;
+import org.xwiki.contrib.mediawiki.xml.input.MediaWikiInputProperties;
+import org.xwiki.contrib.mediawiki.xml.internal.MediaWikiFilter;
 import org.xwiki.filter.FilterEventParameters;
 import org.xwiki.filter.FilterException;
 import org.xwiki.filter.event.model.WikiDocumentFilter;
@@ -62,8 +64,6 @@ import org.xwiki.filter.input.InputSource;
 import org.xwiki.filter.input.InputStreamInputSource;
 import org.xwiki.filter.input.ReaderInputSource;
 import org.xwiki.filter.input.StringInputSource;
-import org.xwiki.filter.mediawiki.input.MediaWikiInputProperties;
-import org.xwiki.filter.mediawiki.xml.internal.MediaWikiFilter;
 import org.xwiki.filter.xml.input.SourceInputSource;
 import org.xwiki.model.EntityType;
 import org.xwiki.model.ModelConfiguration;
