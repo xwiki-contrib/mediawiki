@@ -368,4 +368,5 @@ SURBVAjXY2BgYAAAAAQAASc0JwoAAAAASUVORK5CYII=</content>
 .configuration.source=../1.26.3.xml
 .configuration.files=file:${{{xwiki.test.folder}}}/mediawikixml/1.26.3-files/
 .configuration.fileAttached=true
+.configuration.spaceSeparator=/
 .#------------------------------------------------------------------------------

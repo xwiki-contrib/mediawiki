@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.filter.mediawiki.xml;
+package org.xwiki.contrib.mediawiki.xml;
 
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -41,7 +41,7 @@ public class IntegrationTests
 {
     public IntegrationTests() throws URISyntaxException
     {
-        // FIXME: remove when http://jira.xwiki.org/browse/XCOMMONS-1011 is fixed
+        // FIXME: remove when https://jira.xwiki.org/browse/XCOMMONS-1011 is fixed
         URL url = getClass().getResource("../../../../../");
         Path path = Paths.get(url.toURI());
         System.setProperty("xwiki.test.folder", path.toAbsolutePath().toString());

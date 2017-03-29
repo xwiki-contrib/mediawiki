@@ -503,4 +503,5 @@ SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
 .configuration.files=file:${{{xwiki.test.folder}}}/mediawikixml/1.26.3-files/
 .configuration.fileAttached=false
 .configuration.fileSpace=space:filespace
+.configuration.spaceSeparator=/
 .#------------------------------------------------------------------------------

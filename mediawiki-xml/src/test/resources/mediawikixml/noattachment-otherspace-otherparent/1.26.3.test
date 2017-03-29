@@ -480,4 +480,5 @@ SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
 .configuration.fileSpace=space:xwiki:filespace
 .configuration.parent=space:docspace
 .configuration.terminalPages=true
+.configuration.spaceSeparator=/
 .#------------------------------------------------------------------------------
