@@ -41,7 +41,7 @@ public class IntegrationTests
 {
     public IntegrationTests() throws URISyntaxException
     {
-        // FIXME: remove when http://jira.xwiki.org/browse/XCOMMONS-1011 is fixed
+        // FIXME: remove when https://jira.xwiki.org/browse/XCOMMONS-1011 is fixed
         URL url = getClass().getResource("../../../../../");
         Path path = Paths.get(url.toURI());
         System.setProperty("xwiki.test.folder", path.toAbsolutePath().toString());
