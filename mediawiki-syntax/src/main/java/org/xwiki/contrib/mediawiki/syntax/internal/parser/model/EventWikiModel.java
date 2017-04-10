@@ -43,6 +43,7 @@ import org.xwiki.rendering.parser.ResourceReferenceParser;
 
 import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.ContentToken;
+import info.bliki.htmlcleaner.TagNode;
 import info.bliki.htmlcleaner.TagToken;
 import info.bliki.wiki.filter.WikipediaPreTagParser;
 import info.bliki.wiki.model.Configuration;
@@ -185,6 +186,9 @@ public class EventWikiModel extends WikiModel
         // https://bitbucket.org/axelclk/info.bliki.wiki/pull-requests/7/is-supposed-to-be-a-block-element is released
         addTokenTag(Configuration.HTML_CENTER_OPEN.getName(),
             new HTMLBlockTag("center", Configuration.SPECIAL_BLOCK_TAGS));
+
+        // Security is not our concern at this level
+        TagNode.addAllowedAttribute("style");
     }
 
     @Override
