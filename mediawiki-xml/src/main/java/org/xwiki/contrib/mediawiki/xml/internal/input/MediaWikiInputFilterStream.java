@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -161,7 +163,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         return this.properties;
     }
 
-    EntityReference toEntityReference(String reference)
+    EntityReference toEntityReference(String reference, boolean link)
     {
         String pageName = reference;
         String namespace;
@@ -177,6 +179,16 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             }
         } else {
             namespace = null;
+        }
+
+        if (link) {
+            // MediaWiki actually assume the link reference is a partial URL (it just concatenate it to the base URL) so
+            // we have to decode it
+            try {
+                pageName = URLDecoder.decode(pageName, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                // Should never happen
+            }
         }
 
         // MediaWiki replace the white spaces with an underscore in the URL
@@ -392,7 +404,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
                 this.currentPageTitle = xmlReader.getElementText();
 
                 // Find current page reference
-                this.currentPageReference = toEntityReference(this.currentPageTitle);
+                this.currentPageReference = toEntityReference(this.currentPageTitle, false);
 
                 if (this.currentPageReference != null) {
                     if (this.properties.isConvertToXWiki() && !this.properties.isTerminalPages()

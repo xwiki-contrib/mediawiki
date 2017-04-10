@@ -167,9 +167,9 @@ public class MediaWikiContextConverterListener extends WrappingListener implemen
     {
         DocumentResourceReference newReference = reference;
 
-        EntityReference entityReference = this.stream.toEntityReference(reference.getReference());
+        EntityReference entityReference = this.stream.toEntityReference(reference.getReference(), true);
         if (entityReference != null) {
-            if (this.stream.currentPageReference.equals(entityReference)) {                
+            if (this.stream.currentPageReference.equals(entityReference)) {
                 newReference = new DocumentResourceReference("");
                 newReference.setTyped(false);
             } else {
