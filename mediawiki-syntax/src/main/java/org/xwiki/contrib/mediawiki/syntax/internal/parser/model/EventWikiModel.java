@@ -177,10 +177,9 @@ public class EventWikiModel extends WikiModel
         super("${image}", "${title}");
 
         addStandaloneMacroTag("blockquote");
+        addInlineMacroTag("code");
 
         addTokenTag(new GalleryXMacroTag());
-
-        addTokenTag(Configuration.HTML_CODE_OPEN.getName(), new SourceTag());
 
         // TODO: remove when
         // https://bitbucket.org/axelclk/info.bliki.wiki/pull-requests/7/is-supposed-to-be-a-block-element is released
@@ -205,6 +204,11 @@ public class EventWikiModel extends WikiModel
     private void addStandaloneMacroTag(String name)
     {
         addTokenTag(name, new XMacroTag(name, false, this));
+    }
+
+    private void addInlineMacroTag(String name)
+    {
+        addTokenTag(name, new XMacroTag(name, true, this));
     }
 
     public void init(MediaWikiSyntaxInputProperties properties)
