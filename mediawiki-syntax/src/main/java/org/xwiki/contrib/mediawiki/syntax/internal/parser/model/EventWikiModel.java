@@ -20,6 +20,7 @@
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.model;
 
 import java.util.Arrays;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -47,6 +48,8 @@ import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.ContentToken;
 import info.bliki.htmlcleaner.TagNode;
 import info.bliki.htmlcleaner.TagToken;
+import info.bliki.wiki.filter.AbstractWikipediaParser;
+import info.bliki.wiki.filter.WikipediaParser;
 import info.bliki.wiki.filter.WikipediaPreTagParser;
 import info.bliki.wiki.model.Configuration;
 import info.bliki.wiki.model.ImageFormat;
@@ -203,6 +206,35 @@ public class EventWikiModel extends WikiModel
         this.categories = new LinkedHashMap<>();
     }
 
+    @Override
+    public AbstractWikipediaParser createNewInstance(String rawWikitext)
+    {
+        WikipediaParser wikipediaParser = (WikipediaParser) super.createNewInstance(rawWikitext);
+
+        wikipediaParser.setNoToC(this.properties.isNoToc());
+        wikipediaParser.setTemplateTag(true);
+
+        return wikipediaParser;
+    }
+
+    @Override
+    public void substituteTemplateCall(String templateName, Map<String, String> parameterMap, Appendable writer)
+        throws IOException
+    {
+        // Put back template
+        writer.append("{{");
+        writer.append(templateName);
+        if (!parameterMap.isEmpty()) {
+            for (Map.Entry<String, String> entry : parameterMap.entrySet()) {
+                writer.append('|');
+                writer.append(entry.getKey());
+                writer.append('=');
+                writer.append(entry.getValue());
+            }
+        }
+        writer.append("}}");
+    }
+    
     private void addTokenTag(GalleryXMacroTag tag)
     {
         addTokenTag(tag.getName(), tag);
@@ -235,9 +267,6 @@ public class EventWikiModel extends WikiModel
                 }
             }
         }
-
-        // Disable auto generated toc
-        setNoToc(properties.isNoToc());
     }
 
     @Override

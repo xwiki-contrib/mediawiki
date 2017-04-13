@@ -82,6 +82,7 @@ import info.bliki.wiki.tags.RefTag;
 import info.bliki.wiki.tags.ReferencesTag;
 import info.bliki.wiki.tags.SourceTag;
 import info.bliki.wiki.tags.TableOfContentTag;
+import info.bliki.wiki.tags.TemplateTag;
 import info.bliki.wiki.tags.WPBoldItalicTag;
 import info.bliki.wiki.tags.util.INoBodyParsingTag;
 import info.bliki.wiki.tags.util.TagStack;
@@ -430,6 +431,8 @@ public class EventConverter implements ITextConverter
         EventGenerator event;
         if (token instanceof TableOfContentTag) {
             event = new TableOfContentEventGenerator();
+        } else if (token instanceof TemplateTag) {
+            event = new TemplateTagEventGenerator();
         } else {
             event = GENERATOR_MAP.get(token.getName());
 
