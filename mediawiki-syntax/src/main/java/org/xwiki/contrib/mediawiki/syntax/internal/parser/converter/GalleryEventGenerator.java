@@ -25,12 +25,14 @@ import java.io.StringReader;
 
 import org.apache.commons.lang3.StringUtils;
 
+import info.bliki.wiki.model.IWikiModel;
+
 public class GalleryEventGenerator extends MacroEventGenerator
 {
     @Override
-    protected String createContent()
+    protected String createContent(IWikiModel model)
     {
-        String source = super.createContent();
+        String source = super.createContent(model);
 
         // Convert to proper wiki content
         StringBuilder builder = new StringBuilder();
@@ -41,8 +43,10 @@ public class GalleryEventGenerator extends MacroEventGenerator
                 String cleanLine = line.trim();
 
                 if (StringUtils.isNotEmpty(cleanLine)) {
-                    if (!StringUtils.startsWithIgnoreCase(cleanLine, "image:")
-                        && !StringUtils.startsWithIgnoreCase(cleanLine, "file:")) {
+                    int namespaceIndex = cleanLine.indexOf(':');
+                    String namespace = namespaceIndex > 0 ? cleanLine.substring(0, namespaceIndex) : null;
+
+                    if (namespace == null || !isImageOrFileNamespace(model, namespace)) {
                         cleanLine = "File:" + cleanLine;
                     }
 
@@ -59,5 +63,22 @@ public class GalleryEventGenerator extends MacroEventGenerator
         }
 
         return builder.toString();
+    }
+
+    private boolean isImageOrFileNamespace(IWikiModel model, String namespace)
+    {
+        for (String text : model.getNamespace().getImage().getTexts()) {
+            if (namespace.equalsIgnoreCase(text)) {
+                return true;
+            }
+        }
+
+        for (String text : model.getNamespace().getMedia().getTexts()) {
+            if (namespace.equalsIgnoreCase(text)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
