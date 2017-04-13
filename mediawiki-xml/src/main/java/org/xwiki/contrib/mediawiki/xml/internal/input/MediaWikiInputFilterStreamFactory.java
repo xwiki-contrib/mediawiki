@@ -17,15 +17,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.filter.mediawiki.xml.internal.input;
+package org.xwiki.contrib.mediawiki.xml.internal.input;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
+import org.xwiki.contrib.mediawiki.xml.input.MediaWikiInputProperties;
+import org.xwiki.contrib.mediawiki.xml.internal.MediaWikiFilter;
 import org.xwiki.filter.input.AbstractBeanInputFilterStreamFactory;
-import org.xwiki.filter.mediawiki.input.MediaWikiInputProperties;
-import org.xwiki.filter.mediawiki.xml.internal.MediaWikiFilter;
 
 /**
  * Create MediaWiki XML format input filters.

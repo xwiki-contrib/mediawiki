@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.xwiki.contrib</groupId>
     <artifactId>parent-platform</artifactId>
-    <version>7.4-8</version>
+    <version>7.4-13</version>
   </parent>
   <groupId>org.xwiki.contrib.mediawiki</groupId>
   <artifactId>mediawiki</artifactId>
@@ -33,16 +33,16 @@
   <name>MediaWiki - Parent POM</name>
   <description>Parent POM for MediaWiki modules</description>
   <packaging>pom</packaging>
+  <properties>
+    <xwiki.release.jira.skip>false</xwiki.release.jira.skip>
+    <xwiki.issueManagement.jira.id>MEDIAWIKI</xwiki.issueManagement.jira.id>
+  </properties>
   <scm>
     <connection>scm:git:git://github.com/xwiki-contrib/mediawiki.git</connection>
     <developerConnection>scm:git:git@github.com:xwiki-contrib/mediawiki.git</developerConnection>
     <url>https://github.com/xwiki-contrib/mediawiki/tree/master</url>
     <tag>HEAD</tag>
   </scm>
-  <issueManagement>
-    <system>jira</system>
-    <url>http://jira.xwiki.org/browse/MEDIAWIKI</url>
-  </issueManagement>
   <developers>
     <developer>
       <id>tmortagne</id>
@@ -54,4 +54,60 @@
     <module>mediawiki-syntax10override</module>
     <module>mediawiki-xml</module>
   </modules>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <!-- Bliki requires Java 8 -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <source>1.8</source>
+            <target>1.8</target>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>release</id>
+      <activation>
+        <property>
+          <!-- This property is automatically defined by the Maven release plugin when executing
+               a release. Thus this profile will be automatically enabled when releasing -->
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <!-- Change the version of Java inherited from parent pom -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>enforce-java</id>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <skip>${xwiki.enforcer.enforce-java.skip}</skip>
+                  <rules>
+                    <requireJavaVersion>
+                      <message>You must release with Java 8!</message>
+                      <version>[1.8, 1.9)</version>
+                    </requireJavaVersion>
+                  </rules>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

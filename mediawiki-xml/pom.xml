@@ -103,8 +103,8 @@
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
           <excludes>
-              org/xwiki/filter/mediawiki/xml/internal/input/MediaWikiContextConverterListener.java,
-              org/xwiki/filter/mediawiki/xml/internal/input/MediaWikiInputFilterStream.java
+              org/xwiki/contrib/mediawiki/xml/internal/input/MediaWikiContextConverterListener.java,
+              org/xwiki/contrib/mediawiki/xml/internal/input/MediaWikiInputFilterStream.java
           </excludes>
         </configuration>
       </plugin>

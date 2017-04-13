@@ -264,4 +264,5 @@
 .configuration.source=../1.26.3-namespaces.xml
 .configuration.files=file:${{{xwiki.test.folder}}}/mediawikixml/1.26.3-files/
 .configuration.fileAttached=true
+.configuration.spaceSeparator=/
 .#------------------------------------------------------------------------------
