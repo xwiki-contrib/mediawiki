@@ -11,14 +11,14 @@ onWord [This]
 onSpace
 onWord [is]
 onSpace
-beginFormat [BOLD]
 beginFormat [ITALIC]
+beginFormat [BOLD]
 onWord [bold]
 onSpace
 onSpecialSymbol [&]
 onSpace
 onWord [italic]
-endFormat [ITALIC]
 endFormat [BOLD]
+endFormat [ITALIC]
 endParagraph
 endDocument
