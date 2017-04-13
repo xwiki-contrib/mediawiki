@@ -19,7 +19,9 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.model;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -54,7 +56,6 @@ import info.bliki.wiki.namespaces.Namespace;
 import info.bliki.wiki.namespaces.Namespace.NamespaceValue;
 import info.bliki.wiki.tags.HTMLBlockTag;
 import info.bliki.wiki.tags.PTag;
-import info.bliki.wiki.tags.SourceTag;
 
 /**
  * Custom WikiModel.
@@ -65,6 +66,8 @@ import info.bliki.wiki.tags.SourceTag;
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
 public class EventWikiModel extends WikiModel
 {
+    private static final Set<String> FORMATTED_NODE_NAMES = new HashSet<>(Arrays.asList("table", "tr", "ul", "ol", "tbody", "tfoot", "thead"));
+
     private static final Tika TIKA = new Tika();
 
     class Tokens implements Map<String, TagToken>
@@ -380,16 +383,26 @@ public class EventWikiModel extends WikiModel
     public void append(BaseToken token)
     {
         // Generate missing paragraph
-        if (token instanceof ContentToken && stackSize() == 0 && getRecursionLevel() == 1) {
-            // Workaround https://bitbucket.org/axelclk/info.bliki.wiki/issues/34
-            if (!((ContentToken) token).getContent().equals("\n")) {
-                pushNode(new PTag());
-
-                super.append(token);
-            }
+        if (token instanceof ContentToken) {
+            appendContentToken((ContentToken) token);
         } else {
             super.append(token);
         }
+    }
+
+    private void appendContentToken(ContentToken token)
+    {
+        if (stackSize() == 0 || !FORMATTED_NODE_NAMES.contains(peekNode().getName()))
+            if (stackSize() == 0 && getRecursionLevel() == 1) {
+                // Workaround https://bitbucket.org/axelclk/info.bliki.wiki/issues/34
+                if (!token.getContent().equals("\n")) {
+                    pushNode(new PTag());
+
+                    super.append(token);
+                }
+            } else {
+                super.append(token);
+            }
     }
 
     @Override
