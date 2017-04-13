@@ -1,4 +1,4 @@
-org.xwiki.filter.mediawiki.xml.internal.input.FileCatcherListener
-org.xwiki.filter.mediawiki.xml.internal.input.MediaWikiContextConverterListener
-org.xwiki.filter.mediawiki.xml.internal.input.MediaWikiInputFilterStream
-org.xwiki.filter.mediawiki.xml.internal.input.MediaWikiInputFilterStreamFactory
+org.xwiki.contrib.mediawiki.xml.internal.input.FileCatcherListener
+org.xwiki.contrib.mediawiki.xml.internal.input.MediaWikiContextConverterListener
+org.xwiki.contrib.mediawiki.xml.internal.input.MediaWikiInputFilterStream
+org.xwiki.contrib.mediawiki.xml.internal.input.MediaWikiInputFilterStreamFactory

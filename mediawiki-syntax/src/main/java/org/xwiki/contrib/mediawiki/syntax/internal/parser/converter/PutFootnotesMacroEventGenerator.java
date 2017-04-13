@@ -23,6 +23,8 @@ import java.util.Map;
 
 import org.xwiki.rendering.listener.Listener;
 
+import info.bliki.wiki.model.IWikiModel;
+
 public class PutFootnotesMacroEventGenerator extends MacroEventGenerator
 {
     public PutFootnotesMacroEventGenerator()
@@ -37,7 +39,7 @@ public class PutFootnotesMacroEventGenerator extends MacroEventGenerator
     }
 
     @Override
-    public String getContent()
+    public String getContent(IWikiModel model)
     {
         return null;
     }

@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.filter.mediawiki.xml.internal.input;
+package org.xwiki.contrib.mediawiki.xml.internal.input;
 
 import java.util.Deque;
 import java.util.LinkedHashSet;
@@ -167,9 +167,14 @@ public class MediaWikiContextConverterListener extends WrappingListener implemen
     {
         DocumentResourceReference newReference = reference;
 
-        EntityReference entityReference = this.stream.toEntityReference(reference.getReference());
+        EntityReference entityReference = this.stream.toEntityReference(reference.getReference(), true);
         if (entityReference != null) {
-            newReference = new DocumentResourceReference(compact(entityReference));
+            if (this.stream.currentPageReference.equals(entityReference)) {
+                newReference = new DocumentResourceReference("");
+                newReference.setTyped(false);
+            } else {
+                newReference = new DocumentResourceReference(compact(entityReference));
+            }
             newReference.setParameters(reference.getParameters());
             newReference.setAnchor(reference.getAnchor());
             newReference.setQueryString(reference.getQueryString());

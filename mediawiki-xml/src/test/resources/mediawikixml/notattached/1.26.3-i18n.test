@@ -502,4 +502,5 @@ SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
 .configuration.source=../1.26.3-i18n.xml
 .configuration.files=file:${{{xwiki.test.folder}}}/mediawikixml/1.26.3-files/
 .configuration.fileAttached=false
+.configuration.spaceSeparator=/
 .#------------------------------------------------------------------------------

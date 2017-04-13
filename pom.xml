@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.xwiki.contrib</groupId>
     <artifactId>parent-platform</artifactId>
-    <version>7.4-8</version>
+    <version>7.4-13</version>
   </parent>
   <groupId>org.xwiki.contrib.mediawiki</groupId>
   <artifactId>mediawiki</artifactId>
@@ -33,16 +33,16 @@
   <name>MediaWiki - Parent POM</name>
   <description>Parent POM for MediaWiki modules</description>
   <packaging>pom</packaging>
+  <properties>
+    <xwiki.release.jira.skip>false</xwiki.release.jira.skip>
+    <xwiki.issueManagement.jira.id>MEDIAWIKI</xwiki.issueManagement.jira.id>
+  </properties>
   <scm>
     <connection>scm:git:git://github.com/xwiki-contrib/mediawiki.git</connection>
     <developerConnection>scm:git:git@github.com:xwiki-contrib/mediawiki.git</developerConnection>
     <url>https://github.com/xwiki-contrib/mediawiki/tree/master</url>
     <tag>HEAD</tag>
   </scm>
-  <issueManagement>
-    <system>jira</system>
-    <url>http://jira.xwiki.org/browse/MEDIAWIKI</url>
-  </issueManagement>
   <developers>
     <developer>
       <id>tmortagne</id>

@@ -63,7 +63,7 @@ public class MacroEventGenerator extends AbstractEventGenerator<TagNode>
         return this.id;
     }
 
-    protected String createContent()
+    protected String createContent(IWikiModel model)
     {
         if (this.token instanceof XMacroTag) {
             return ((XMacroTag) this.token).getMacroContent();
@@ -82,10 +82,10 @@ public class MacroEventGenerator extends AbstractEventGenerator<TagNode>
         }
     }
 
-    public String getContent()
+    public String getContent(IWikiModel model)
     {
         if (this.content == null) {
-            this.content = createContent();
+            this.content = createContent(model);
         }
 
         return this.content;
@@ -107,6 +107,6 @@ public class MacroEventGenerator extends AbstractEventGenerator<TagNode>
     @Override
     public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
     {
-        getListener().onMacro(getId(), getParameters(), getContent(), isInline());
+        getListener().onMacro(getId(), getParameters(), getContent(model), isInline());
     }
 }

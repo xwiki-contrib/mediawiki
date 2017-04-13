@@ -35,8 +35,10 @@
 [[.Space.Page]]
 [[attach:File.File\.txt@File.txt]]
 [[User.username]]
-[[Main.WebHome]]
+[[]]
 [[.Space.Page]]
+[[]]
+[[Couldn’t]]
 
 |=col1|=col2
 |cell11|cell12
@@ -483,4 +485,5 @@ SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
 .configuration.source=../1.26.3.xml
 .configuration.files=file:${{{xwiki.test.folder}}}/mediawikixml/1.26.3-files/
 .configuration.fileAttached=false
+.configuration.spaceSeparator=/
 .#------------------------------------------------------------------------------
