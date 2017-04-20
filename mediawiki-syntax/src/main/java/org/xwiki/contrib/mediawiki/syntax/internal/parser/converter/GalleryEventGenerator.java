@@ -55,7 +55,7 @@ public class GalleryEventGenerator extends MacroEventGenerator
                     }
                     builder.append("[[");
                     builder.append(cleanLine);
-                    builder.append("]]");
+                    builder.append("|link=]]");
                 }
             }
         } catch (IOException e) {

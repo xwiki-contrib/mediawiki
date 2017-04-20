@@ -83,6 +83,7 @@ public class MediaWikiNamespaces
         addNamespace(NAMESPACE_USER_IDX, NAMESPACE_USER_DEFAULT);
         addNamespace(4, "Project");
         addNamespace(NAMESPACE_FILE_IDX, NAMESPACE_FILE_DEFAULT);
+        addNamespace(NAMESPACE_FILE_IDX, "Image");
         addNamespace(8, "MediaWiki");
         addNamespace(10, "Template");
         addNamespace(12, "Help");
@@ -189,7 +190,7 @@ public class MediaWikiNamespaces
     public String getFileName(String title)
     {
         for (String namespace : this.keyToNamespaces.get(NAMESPACE_FILE_IDX)) {
-            if (StringUtils.startsWithIgnoreCase(title, namespace)) {
+            if (StringUtils.startsWithIgnoreCase(title, namespace + ':')) {
                 return title.substring(namespace.length() + 1).replace(' ', '_');
             }
         }

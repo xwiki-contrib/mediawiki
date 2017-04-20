@@ -1,1 +1,1 @@
-[[Image:image.png]]
+[[Image:image.png|link=]]

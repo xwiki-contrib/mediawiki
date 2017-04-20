@@ -38,6 +38,8 @@ public class ImageTag extends TagNode
 
     private ResourceReference reference;
 
+    private ResourceReference link;
+
     private boolean freestanding;
 
     private ImageFormat imageFormat;
@@ -45,14 +47,17 @@ public class ImageTag extends TagNode
     /**
      * @param reference the reference of the image
      * @param freestanding true is the image is freestanding
+     * @param link the link when clicking on the image
      * @param imageFormat the image caption and options
      */
-    public ImageTag(ResourceReference reference, boolean freestanding, ImageFormat imageFormat)
+    public ImageTag(ResourceReference reference, boolean freestanding, ResourceReference link, ImageFormat imageFormat)
     {
         super(NAME);
 
         this.reference = reference;
         this.freestanding = freestanding;
+        this.link = link;
+
         this.imageFormat = imageFormat;
 
         addAttribute("alt", this.imageFormat.getCaption(), false);
@@ -73,6 +78,14 @@ public class ImageTag extends TagNode
     public boolean isFreestanding()
     {
         return this.freestanding;
+    }
+
+    /**
+     * @return the link
+     */
+    public ResourceReference getLink()
+    {
+        return this.link;
     }
 
     /**

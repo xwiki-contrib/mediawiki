@@ -163,21 +163,26 @@ public class MediaWikiContextConverterListener extends WrappingListener implemen
         }
     }
 
-    private DocumentResourceReference refactor(DocumentResourceReference reference)
+    private ResourceReference refactor(DocumentResourceReference reference)
     {
-        DocumentResourceReference newReference = reference;
+        ResourceReference newReference = reference;
 
         EntityReference entityReference = this.stream.toEntityReference(reference.getReference(), true);
         if (entityReference != null) {
-            if (this.stream.currentPageReference.equals(entityReference)) {
-                newReference = new DocumentResourceReference("");
-                newReference.setTyped(false);
+            if (entityReference.getType() == EntityType.ATTACHMENT) {
+                newReference = new AttachmentResourceReference(entityReference.getName());
             } else {
-                newReference = new DocumentResourceReference(compact(entityReference));
+                if (this.stream.currentPageReference.equals(entityReference)) {
+                    newReference = new DocumentResourceReference("");
+                    newReference.setTyped(false);
+                } else {
+                    newReference = new DocumentResourceReference(compact(entityReference));
+                }
+                newReference.setParameters(reference.getParameters());
+                ((DocumentResourceReference) newReference).setAnchor(reference.getAnchor());
+                ((DocumentResourceReference) newReference).setQueryString(reference.getQueryString());
+                newReference.setTyped(false);
             }
-            newReference.setParameters(reference.getParameters());
-            newReference.setAnchor(reference.getAnchor());
-            newReference.setQueryString(reference.getQueryString());
         }
 
         return newReference;
@@ -216,12 +221,10 @@ public class MediaWikiContextConverterListener extends WrappingListener implemen
             newReference = refactor((AttachmentResourceReference) reference);
         } else if (reference instanceof DocumentResourceReference) {
             newReference = refactor((DocumentResourceReference) reference);
-            newReference.setTyped(false);
         } else if (reference.getType() == ResourceType.URL) {
             if (reference.getReference().startsWith(this.stream.baseURL)) {
                 newReference = refactor(
                     new DocumentResourceReference(reference.getReference().substring(this.stream.baseURL.length())));
-                newReference.setTyped(false);
                 freestanding = false;
             }
         }

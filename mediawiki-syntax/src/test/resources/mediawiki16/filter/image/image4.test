@@ -24,17 +24,29 @@
     </metadata>
   </p>
   <paragraph>
-    <image>
+    <link>
       <p>
         <reference>
-          <isTyped>false</isTyped>
-          <reference>Image.png</reference>
+          <isTyped>true</isTyped>
+          <reference>Image:image.png</reference>
           <type>
-            <scheme>attach</scheme>
+            <scheme>doc</scheme>
           </type>
           <parameters></parameters>
         </reference>
       </p>
-    </image>
+      <image>
+        <p>
+          <reference>
+            <isTyped>false</isTyped>
+            <reference>Image.png</reference>
+            <type>
+              <scheme>attach</scheme>
+            </type>
+            <parameters></parameters>
+          </reference>
+        </p>
+      </image>
+    </link>
   </paragraph>
 </document>

@@ -81,8 +81,8 @@
               </entry>
               <entry>
                 <string>content</string>
-                <string>[[image:Fichier.Pixel_white\.png@Pixel_white.png]]
-[[image:Fichier.Pixel_white\.png@Pixel_white.png]]</string>
+                <string>[[[[image:Fichier.Pixel_white\.png@Pixel_white.png]]&gt;&gt;Fichier.Pixel_white\.png]]
+[[[[image:Fichier.Pixel_white\.png@Pixel_white.png]]&gt;&gt;Fichier.Pixel_white\.png]]</string>
               </entry>
               <entry>
                 <string>syntax</string>

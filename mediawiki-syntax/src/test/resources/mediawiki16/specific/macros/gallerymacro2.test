@@ -10,9 +10,9 @@ file_name.ext|caption|alt=alt language
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
-onMacroStandalone [gallery] [] [[[File:file_name.ext|caption|alt=alt language]]
-[[Image:file_name.ext|caption|alt=alt language]]
-[[File:file_name.ext|caption|alt=alt language]]]
+onMacroStandalone [gallery] [] [[[File:file_name.ext|caption|alt=alt language|link=]]
+[[Image:file_name.ext|caption|alt=alt language|link=]]
+[[File:file_name.ext|caption|alt=alt language|link=]]]
 beginParagraph
 onWord [content]
 endParagraph

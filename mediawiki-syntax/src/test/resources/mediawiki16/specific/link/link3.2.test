@@ -7,7 +7,7 @@
 .#-----------------------------------------------------
 beginDocument
 beginParagraph
-beginLink [Typed = [true] Type = [attach] Reference = [attach.ext]] [false]
-endLink [Typed = [true] Type = [attach] Reference = [attach.ext]] [false]
+beginLink [Typed = [false] Type = [url] Reference = [Image:attach.ext]] [false]
+endLink [Typed = [false] Type = [url] Reference = [Image:attach.ext]] [false]
 endParagraph
 endDocument

@@ -19,13 +19,14 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.internal.parser.model;
 
-import java.util.Arrays;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -57,7 +58,6 @@ import info.bliki.wiki.model.WikiModel;
 import info.bliki.wiki.namespaces.INamespace.NamespaceCode;
 import info.bliki.wiki.namespaces.Namespace;
 import info.bliki.wiki.namespaces.Namespace.NamespaceValue;
-import info.bliki.wiki.tags.HTMLBlockTag;
 import info.bliki.wiki.tags.PTag;
 
 /**
@@ -69,7 +69,13 @@ import info.bliki.wiki.tags.PTag;
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
 public class EventWikiModel extends WikiModel
 {
-    private static final Set<String> FORMATTED_NODE_NAMES = new HashSet<>(Arrays.asList("table", "tr", "ul", "ol", "tbody", "tfoot", "thead"));
+    private static final Set<String> FORMATTED_NODE_NAMES =
+        new HashSet<>(Arrays.asList("table", "tr", "ul", "ol", "tbody", "tfoot", "thead"));
+
+    /**
+     * Note the greatest URL validator ever but it's actually very close to what MediaWiki does...
+     */
+    private static final Pattern URL_SCHEME_PATTERN = Pattern.compile("[a-zA-Z0-9+.-]*://.*");
 
     private static final Tika TIKA = new Tika();
 
@@ -188,11 +194,6 @@ public class EventWikiModel extends WikiModel
 
         addTokenTag(new GalleryXMacroTag());
 
-        // TODO: remove when
-        // https://bitbucket.org/axelclk/info.bliki.wiki/pull-requests/7/is-supposed-to-be-a-block-element is released
-        addTokenTag(Configuration.HTML_CENTER_OPEN.getName(),
-            new HTMLBlockTag("center", Configuration.SPECIAL_BLOCK_TAGS));
-
         // Security is not our concern at this level
         TagNode.addAllowedAttribute("style");
     }
@@ -234,7 +235,7 @@ public class EventWikiModel extends WikiModel
         }
         writer.append("}}");
     }
-    
+
     private void addTokenTag(GalleryXMacroTag tag)
     {
         addTokenTag(tag.getName(), tag);
@@ -293,11 +294,8 @@ public class EventWikiModel extends WikiModel
         return cleanReference;
     }
 
-    @Override
-    public void appendInternalLink(String topic, String hashSection, String topicDescription, String cssClass,
-        boolean parseRecursive)
+    private ResourceReference toResourceReference(String topic, String hashSection)
     {
-        // Create reference
         ResourceReference reference = null;
 
         String anchor;
@@ -314,12 +312,11 @@ public class EventWikiModel extends WikiModel
             } else {
                 reference = new ResourceReference(topic, ResourceType.PATH);
             }
-        } else if (this.properties.getReferenceType() != ReferenceType.NONE) {
+        } else {
             int index = topic.indexOf(':', 1);
             if (index > 0) {
                 String namespace = topic.substring(0, index);
-                if (this.fNamespace.isNamespace(namespace, NamespaceCode.FILE_NAMESPACE_KEY)
-                    || namespace.equalsIgnoreCase("media")) {
+                if (this.fNamespace.isNamespace(namespace, NamespaceCode.MEDIA_NAMESPACE_KEY)) {
                     reference =
                         new AttachmentResourceReference(cleanReference(topic.substring(namespace.length() + 1)));
                 }
@@ -344,6 +341,16 @@ public class EventWikiModel extends WikiModel
             }
         }
 
+        return reference;
+    }
+
+    @Override
+    public void appendInternalLink(String topic, String hashSection, String topicDescription, String cssClass,
+        boolean parseRecursive)
+    {
+        // Create reference
+        ResourceReference reference = toResourceReference(topic, hashSection);
+
         // Create tag
         LinkTag linkTag = new LinkTag(reference, false);
 
@@ -365,6 +372,7 @@ public class EventWikiModel extends WikiModel
         // If the image is not actually an image generate an attachment link
         String contentType = TIKA.detect(imageFormat.getFilename());
         if (MediaType.parse(contentType).getType().equals("image")) {
+            // Image source
             ResourceReference reference;
             if (this.properties.getReferenceType() == ReferenceType.XWIKI) {
                 reference = this.imageReferenceParser.parse(imageFormat.getFilename());
@@ -373,7 +381,22 @@ public class EventWikiModel extends WikiModel
                 reference.setTyped(false);
             }
 
-            ImageTag imageTag = new ImageTag(reference, false, imageFormat);
+            // Image link
+            ResourceReference link;
+            if (imageFormat.getLink() == null) {
+                link = toResourceReference(imageFormat.getNamespace() + ':' + imageFormat.getFilename(), null);
+            } else if (imageFormat.getLink().isEmpty()) {
+                link = null;
+            } else {
+                if (URL_SCHEME_PATTERN.matcher(imageFormat.getLink()).matches()) {
+                    link = new ResourceReference(imageFormat.getLink(), ResourceType.URL);
+                } else {
+                    link = toResourceReference(imageFormat.getLink(), null);
+                }
+            }
+
+            // Create tag
+            ImageTag imageTag = new ImageTag(reference, false, link, imageFormat);
 
             if (imageFormat.getWidthStr() != null) {
                 imageTag.addAttribute("width", imageFormat.getWidthStr(), false);
@@ -432,13 +455,6 @@ public class EventWikiModel extends WikiModel
             } else {
                 super.append(token);
             }
-    }
-
-    @Override
-    public boolean pushNode(TagToken node)
-    {
-        // TODO Auto-generated method stub
-        return super.pushNode(node);
     }
 
     @Override

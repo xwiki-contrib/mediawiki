@@ -22,6 +22,8 @@ package org.xwiki.contrib.mediawiki.syntax.internal.parser.converter;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.contrib.mediawiki.syntax.internal.parser.model.ImageTag;
 import org.xwiki.filter.FilterException;
+import org.xwiki.rendering.listener.Listener;
+import org.xwiki.rendering.listener.reference.ResourceReference;
 
 import info.bliki.wiki.model.IWikiModel;
 
@@ -31,8 +33,19 @@ public class ImageEventGenerator extends AbstractEventGenerator<ImageTag>
     {
     }
 
+    @Override
     public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
     {
+        ResourceReference linkReference = this.token.getLink();
+
+        if (linkReference != null) {
+            getListener().beginLink(linkReference, false, Listener.EMPTY_PARAMETERS);
+        }
+
         getListener().onImage(this.token.getReference(), this.token.isFreestanding(), this.token.getAttributes());
+
+        if (linkReference != null) {
+            getListener().endLink(linkReference, false, Listener.EMPTY_PARAMETERS);
+        }
     }
 }

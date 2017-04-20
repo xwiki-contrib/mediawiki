@@ -96,9 +96,9 @@ public class FileCatcherListener extends WrappingListener
             MediaWikiSyntaxInputProperties parserProperties = stream.createMediaWikiSyntaxInputProperties(content);
 
             // Generate events
-            try (BeanInputFilterStream<MediaWikiSyntaxInputProperties> stream =
+            try (BeanInputFilterStream<MediaWikiSyntaxInputProperties> contentStream =
                 ((BeanInputFilterStreamFactory) this.parserFactory).createInputFilterStream(parserProperties)) {
-                stream.read(this);
+                contentStream.read(this);
             } catch (Exception e) {
                 // TODO log something ?
             }

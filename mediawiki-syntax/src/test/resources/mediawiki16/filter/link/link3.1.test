@@ -28,9 +28,9 @@
       <p>
         <reference>
           <isTyped>true</isTyped>
-          <reference>Attach.ext</reference>
+          <reference>File:attach.ext</reference>
           <type>
-            <scheme>attach</scheme>
+            <scheme>doc</scheme>
           </type>
           <parameters></parameters>
         </reference>

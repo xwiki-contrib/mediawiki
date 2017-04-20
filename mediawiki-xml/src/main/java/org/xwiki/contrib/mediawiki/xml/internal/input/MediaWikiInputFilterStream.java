@@ -69,6 +69,7 @@ import org.xwiki.filter.input.StringInputSource;
 import org.xwiki.filter.xml.input.SourceInputSource;
 import org.xwiki.model.EntityType;
 import org.xwiki.model.ModelConfiguration;
+import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.rendering.listener.Listener;
 import org.xwiki.rendering.renderer.PrintRenderer;
@@ -210,7 +211,11 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         EntityReference parentReference;
         if (namespace != null) {
             if (this.namespaces.isFileNamespace(namespace)) {
-                return toFileEntityReference(pageName);
+                if (link && this.properties.isFileAttached()) {
+                    return new EntityReference(pageName, EntityType.ATTACHMENT);
+                } else {
+                    return toFileEntityReference(pageName);
+                }
             } else if (this.namespaces.isSpecialNamespace(namespace)) {
                 return null;
             } else {
@@ -667,27 +672,29 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
     private File getFile(String fileName) throws FilterException
     {
-        InputSource files = this.properties.getFiles();
+        if (StringUtils.isNotEmpty(fileName)) {
+            InputSource files = this.properties.getFiles();
 
-        if (files instanceof FileInputSource) {
-            File folder = ((FileInputSource) files).getFile();
+            if (files instanceof FileInputSource) {
+                File folder = ((FileInputSource) files).getFile();
 
-            String md5Hex = DigestUtils.md5Hex(fileName).substring(0, 2);
-            String folderName1 = md5Hex.substring(0, 1);
-            String folderName2 = md5Hex.substring(0, 2);
+                String md5Hex = DigestUtils.md5Hex(fileName).substring(0, 2);
+                String folderName1 = md5Hex.substring(0, 1);
+                String folderName2 = md5Hex.substring(0, 2);
 
-            File folder1 = new File(folder, folderName1);
-            File folder2 = new File(folder1, folderName2);
+                File folder1 = new File(folder, folderName1);
+                File folder2 = new File(folder1, folderName2);
 
-            File file = new File(folder2, fileName);
+                File file = new File(folder2, fileName);
 
-            if (file.exists() && file.isFile()) {
-                return file;
+                if (file.exists() && file.isFile()) {
+                    return file;
+                }
+
+                this.logger.warn("Can't find file [{}]", file.getAbsolutePath());
+            } else {
+                throw new FilterException("Unsupported input source [" + files.getClass() + "] ([" + files + "])");
             }
-
-            this.logger.warn("Can't find file [{}]", file.getAbsolutePath());
-        } else {
-            throw new FilterException("Unsupported input source [" + files.getClass() + "] ([" + files + "])");
         }
 
         return null;
