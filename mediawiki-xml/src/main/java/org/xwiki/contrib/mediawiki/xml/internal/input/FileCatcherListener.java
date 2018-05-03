@@ -19,17 +19,25 @@
  */
 package org.xwiki.contrib.mediawiki.xml.internal.input;
 
+import java.awt.Dimension;
+import java.io.File;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
+import org.xwiki.filter.FilterException;
 import org.xwiki.filter.input.BeanInputFilterStream;
 import org.xwiki.filter.input.BeanInputFilterStreamFactory;
 import org.xwiki.filter.input.InputFilterStreamFactory;
@@ -46,9 +54,20 @@ import org.xwiki.rendering.listener.reference.ResourceReference;
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
 public class FileCatcherListener extends WrappingListener
 {
+    private static final String WIDTH = "width";
+
+    private static final String HEIGHT = "height";
+
+    private static final String PX_SUFFIX = "px";
+
+    private static final Pattern PXSIZE = Pattern.compile("(\\d+)" + PX_SUFFIX);
+
     @Inject
     @Named(MediaWikiSyntaxInputProperties.FILTER_STREAM_TYPE_STRING)
     private InputFilterStreamFactory parserFactory;
+
+    @Inject
+    private Logger logger;
 
     private MediaWikiInputFilterStream stream;
 
@@ -81,10 +100,53 @@ public class FileCatcherListener extends WrappingListener
     public void onImage(ResourceReference reference, boolean freestanding, Map<String, String> parameters)
     {
         if (reference instanceof AttachmentResourceReference) {
-            this.files.add(reference.getReference());
+            String fileName = reference.getReference();
+
+            this.files.add(fileName);
+
+            // Make sure the image keep aspect ratio no matter what (since that's what happen in mediawiki)
+            String widthString = parameters.get(WIDTH);
+            String heightString = parameters.get(HEIGHT);
+            if (StringUtils.isNoneEmpty(widthString) && StringUtils.isNoneEmpty(heightString)) {
+                keepAspectRatio(widthString, heightString, fileName, parameters);
+            }
         }
 
         super.onImage(reference, freestanding, parameters);
+    }
+
+    private void keepAspectRatio(String widthString, String heightString, String fileName,
+        Map<String, String> parameters)
+    {
+        // If we can't find the dimension, arbitrary remove the height to be sure the aspect ratio will be kept
+        parameters.remove(HEIGHT);
+
+        Matcher widthMatcher = PXSIZE.matcher(widthString);
+        Matcher heightMatcher = PXSIZE.matcher(heightString);
+
+        if (widthMatcher.matches() && heightMatcher.matches()) {
+            int width = NumberUtils.toInt(widthMatcher.group(1), -1);
+            int height = NumberUtils.toInt(heightMatcher.group(1), -1);
+
+            if (width != -1 && height != -1) {
+                try {
+                    File file = this.stream.getFile(fileName);
+                    Dimension dimension = MediaWikiUtils.getImageDimension(file);
+
+                    double widthRatio = width / dimension.getWidth();
+                    double heightRatio = height / dimension.getHeight();
+                    double ratio = Math.min(widthRatio, heightRatio);
+
+                    width = (int) (dimension.width * ratio);
+                    height = (int) (dimension.height * ratio);
+
+                    parameters.put(WIDTH, String.valueOf(height) + PX_SUFFIX);
+                    parameters.put(HEIGHT, String.valueOf(width) + PX_SUFFIX);
+                } catch (FilterException e) {
+                    this.logger.error("Failed to extract dimension for image [{}]", fileName);
+                }
+            }
+        }
     }
 
     @Override

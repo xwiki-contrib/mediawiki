@@ -670,7 +670,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         }
     }
 
-    private File getFile(String fileName) throws FilterException
+    public File getFile(String fileName) throws FilterException
     {
         if (StringUtils.isNotEmpty(fileName)) {
             InputSource files = this.properties.getFiles();
