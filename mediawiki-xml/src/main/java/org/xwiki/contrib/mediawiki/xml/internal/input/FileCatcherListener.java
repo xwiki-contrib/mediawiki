@@ -131,17 +131,19 @@ public class FileCatcherListener extends WrappingListener
             if (width != -1 && height != -1) {
                 try {
                     File file = this.stream.getFile(fileName);
-                    Dimension dimension = MediaWikiUtils.getImageDimension(file);
+                    if (file != null) {
+                        Dimension dimension = MediaWikiUtils.getImageDimension(file);
 
-                    double widthRatio = width / dimension.getWidth();
-                    double heightRatio = height / dimension.getHeight();
-                    double ratio = Math.min(widthRatio, heightRatio);
+                        double widthRatio = width / dimension.getWidth();
+                        double heightRatio = height / dimension.getHeight();
+                        double ratio = Math.min(widthRatio, heightRatio);
 
-                    width = (int) (dimension.width * ratio);
-                    height = (int) (dimension.height * ratio);
+                        width = (int) (dimension.width * ratio);
+                        height = (int) (dimension.height * ratio);
 
-                    parameters.put(WIDTH, String.valueOf(width) + PX_SUFFIX);
-                    parameters.put(HEIGHT, String.valueOf(height) + PX_SUFFIX);
+                        parameters.put(WIDTH, String.valueOf(width) + PX_SUFFIX);
+                        parameters.put(HEIGHT, String.valueOf(height) + PX_SUFFIX);
+                    }
                 } catch (FilterException e) {
                     this.logger.error("Failed to extract dimension for image [{}]", fileName);
                 }

@@ -37,6 +37,8 @@
     <xwiki.extension.name>MediaWiki XML</xwiki.extension.name>
 
     <xwiki.extension.category>filter</xwiki.extension.category>
+
+    <xwiki.surefire.captureconsole.skip>true</xwiki.surefire.captureconsole.skip>
   </properties>
   <dependencies>
     <dependency>

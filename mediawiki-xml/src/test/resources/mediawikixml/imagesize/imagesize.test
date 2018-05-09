@@ -2,7 +2,7 @@
 .expect|filter+xml
 .#------------------------------------------------------------------------------
 <wikiSpace name="Main">
-  <wikiSpace name="Test_ImageSize">
+  <wikiSpace name="Test_Image_size">
     <wikiDocument name="WebHome">
       <wikiDocumentLocale>
         <wikiDocumentRevision revision="1">
@@ -14,7 +14,7 @@
               </entry>
               <entry>
                 <string>title</string>
-                <string>Test ImageSize</string>
+                <string>Test Image size</string>
               </entry>
               <entry>
                 <string>revision_date</string>
@@ -26,7 +26,7 @@
               </entry>
               <entry>
                 <string>content</string>
-                <string>[[[[image:Pixel_white.png||alt="centre" height="10px" title="centre" width="10px"]]&gt;&gt;attach:Pixel_white.png]][[[[image:Pixel_white.png||alt="centre" title="centre" width="10px"]]&gt;&gt;attach:Pixel_white.png]]</string>
+                <string>[[[[image:Pixels_white.png||alt="centre" height="10px" title="centre" width="5px"]]&gt;&gt;attach:Pixels_white.png]][[[[image:Pixels_white.png||alt="centre" title="centre" width="10px"]]&gt;&gt;attach:Pixels_white.png]][[[[image:Pixels_white.png||alt="centre" height="2px" title="centre" width="1px"]]&gt;&gt;attach:Pixels_white.png]]</string>
               </entry>
               <entry>
                 <string>syntax</string>
@@ -40,13 +40,56 @@
               </entry>
             </parameters>
           </p>
-          <wikiAttachment name="Pixel_white.png" size="146">
+          <wikiAttachment name="Pixels_white.png" size="177">
             <p>
-              <content>iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
-B3RJTUUH4AcBDQE7cMRBYQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAM
-SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
+              <content>iVBORw0KGgoAAAANSUhEUgAAAAIAAAAECAIAAAArjXluAAAABmJLR0QA/wD/AP+gvaeTAAAACXBI
+WXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gUJDQMu3ZMdjAAAAB1pVFh0Q29tbWVudAAAAAAAQ3Jl
+YXRlZCB3aXRoIEdJTVBkLmUHAAAAFUlEQVQI12P8//8/AwMDEwMDAwYFAE4+AwWR1DhlAAAAAElF
+TkSuQmCC</content>
             </p>
           </wikiAttachment>
+        </wikiDocumentRevision>
+      </wikiDocumentLocale>
+    </wikiDocument>
+  </wikiSpace>
+  <wikiSpace name="Test_Image_does_not_exist">
+    <wikiDocument name="WebHome">
+      <wikiDocumentLocale>
+        <wikiDocumentRevision revision="1">
+          <p>
+            <parameters>
+              <entry>
+                <string>revision_minor</string>
+                <boolean>false</boolean>
+              </entry>
+              <entry>
+                <string>title</string>
+                <string>Test Image does not exist</string>
+              </entry>
+              <entry>
+                <string>revision_date</string>
+                <date>2017-01-26 07:21:19.0 UTC</date>
+              </entry>
+              <entry>
+                <string>revision_author</string>
+                <string>TEST Test</string>
+              </entry>
+              <entry>
+                <string>content</string>
+                <string>[[[[image:Doesnotexist.png||alt="centre" title="centre" width="10px"]]&gt;&gt;attach:doesnotexist.png]]</string>
+              </entry>
+              <entry>
+                <string>syntax</string>
+                <org.xwiki.rendering.syntax.Syntax>
+                  <type>
+                    <name>XWiki</name>
+                    <id>xwiki</id>
+                  </type>
+                  <version>2.1</version>
+                </org.xwiki.rendering.syntax.Syntax>
+              </entry>
+            </parameters>
+          </p>
         </wikiDocumentRevision>
       </wikiDocumentLocale>
     </wikiDocument>
