@@ -140,8 +140,8 @@ public class FileCatcherListener extends WrappingListener
                     width = (int) (dimension.width * ratio);
                     height = (int) (dimension.height * ratio);
 
-                    parameters.put(WIDTH, String.valueOf(height) + PX_SUFFIX);
-                    parameters.put(HEIGHT, String.valueOf(width) + PX_SUFFIX);
+                    parameters.put(WIDTH, String.valueOf(width) + PX_SUFFIX);
+                    parameters.put(HEIGHT, String.valueOf(height) + PX_SUFFIX);
                 } catch (FilterException e) {
                     this.logger.error("Failed to extract dimension for image [{}]", fileName);
                 }
