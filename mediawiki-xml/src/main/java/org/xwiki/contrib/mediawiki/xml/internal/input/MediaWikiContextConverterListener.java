@@ -91,6 +91,8 @@ public class MediaWikiContextConverterListener extends WrappingListener implemen
 
     private Set<String> categories = new LinkedHashSet<>();
 
+    private String redirectTitle;
+
     void initialize(Listener listener, MediaWikiInputFilterStream stream, Syntax targetSyntax)
     {
         setWrappedListener(listener);
@@ -112,6 +114,11 @@ public class MediaWikiContextConverterListener extends WrappingListener implemen
     public Set<String> getCategories()
     {
         return this.categories;
+    }
+
+    public String getRedirectTitle()
+    {
+        return this.redirectTitle;
     }
 
     private EntityReference compact(EntityReference linkReference, EntityReference pageReference)
@@ -330,5 +337,11 @@ public class MediaWikiContextConverterListener extends WrappingListener implemen
     public void onCategory(String name, FilterEventParameters parameters) throws FilterException
     {
         this.categories.add(name);
+    }
+
+    @Override
+    public void onRedirect(String title, FilterEventParameters parameters) throws FilterException
+    {
+        this.redirectTitle = title;
     }
 }

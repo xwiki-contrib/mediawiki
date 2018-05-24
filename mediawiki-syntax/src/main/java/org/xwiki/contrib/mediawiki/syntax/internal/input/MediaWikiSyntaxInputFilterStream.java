@@ -110,6 +110,10 @@ public class MediaWikiSyntaxInputFilterStream
             proxyFilter.onCategory(category, FilterEventParameters.EMPTY);
         }
 
+        if (wikiModel.getRedirectLink() != null) {
+            proxyFilter.onRedirect(wikiModel.getRedirectLink(), FilterEventParameters.EMPTY);
+        }
+
         wrappingLisrener.endDocument(metaData);
     }
 }

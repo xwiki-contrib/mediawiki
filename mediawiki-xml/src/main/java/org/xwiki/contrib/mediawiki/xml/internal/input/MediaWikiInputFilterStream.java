@@ -69,8 +69,8 @@ import org.xwiki.filter.input.StringInputSource;
 import org.xwiki.filter.xml.input.SourceInputSource;
 import org.xwiki.model.EntityType;
 import org.xwiki.model.ModelConfiguration;
-import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.EntityReference;
+import org.xwiki.model.reference.EntityReferenceSerializer;
 import org.xwiki.rendering.listener.Listener;
 import org.xwiki.rendering.renderer.PrintRenderer;
 import org.xwiki.rendering.renderer.PrintRendererFactory;
@@ -120,6 +120,8 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
     private static final String REFERENCE_TAGCLASS = "XWiki.TagClass";
 
+    private static final String REFERENCE_REDIRECTCLASS = "XWiki.RedirectClass";
+
     /**
      * This is not final, it gets initialized right after the base url is read from the xml, with the precise value from
      * the XML.
@@ -143,11 +145,16 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
     @Named("xwiki/2.1")
     private PrintRendererFactory xwiki21Factory;
 
+    @Inject
+    private EntityReferenceSerializer<String> serializer;
+
     private MediaWikiNamespaces namespaces = new MediaWikiNamespaces();
 
     private Set<String> currentFiles;
 
     private Set<String> currentCategories;
+
+    private String currentRedirectTitle;
 
     String currentPageTitle;
 
@@ -550,6 +557,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         boolean beginWikiDocumentRevisionSent = false;
 
         this.currentFiles = Collections.emptySet();
+        this.currentRedirectTitle = null;
 
         for (xmlReader.nextTag(); xmlReader.isStartElement(); xmlReader.nextTag()) {
             String elementName = xmlReader.getLocalName();
@@ -580,6 +588,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
                     // Remember linked files
                     this.currentFiles = listener.getFiles();
+                    this.currentRedirectTitle = listener.getRedirectTitle();
                 } else if (this.properties.isConvertToXWiki()) {
                     // Convert content to XWiki syntax
                     pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, convertToXWiki21(content));
@@ -622,6 +631,11 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             sendCategories(this.currentCategories, proxyFilter);
         }
 
+        // Add redirect if needed
+        if (this.currentRedirectTitle != null) {
+            sendRedirect(this.currentRedirectTitle, proxyFilter);
+        }
+
         // Attach files if any
         if (!this.currentFiles.isEmpty()) {
             for (String fileName : this.currentFiles) {
@@ -655,6 +669,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
         this.currentFiles = listener.getFiles();
         this.currentCategories = listener.getCategories();
+        this.currentRedirectTitle = listener.getRedirectTitle();
 
         return printer.toString();
     }
@@ -721,6 +736,28 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         proxyFilter.onWikiObjectProperty("tags", new ArrayList<>(categories), FilterEventParameters.EMPTY);
 
         proxyFilter.endWikiObject(REFERENCE_TAGCLASS, objectParameters);
+    }
+
+    private void sendRedirect(String redirectTitle, MediaWikiFilter proxyFilter) throws FilterException
+    {
+        EntityReference redirectReference = toEntityReference(redirectTitle, false);
+
+        FilterEventParameters objectParameters = new FilterEventParameters();
+        objectParameters.put(WikiObjectFilter.PARAMETER_CLASS_REFERENCE, REFERENCE_REDIRECTCLASS);
+
+        proxyFilter.beginWikiObject(REFERENCE_REDIRECTCLASS, objectParameters);
+
+        // Redirect class definition
+        // TODO: Remove when https://jira.xwiki.org/browse/XWIKI-14061 is fixed (9.2+)
+        proxyFilter.beginWikiClass(FilterEventParameters.EMPTY);
+        proxyFilter.beginWikiClassProperty("location", "String", FilterEventParameters.EMPTY);
+        proxyFilter.endWikiClassProperty("location", "String", FilterEventParameters.EMPTY);
+        proxyFilter.endWikiClass(FilterEventParameters.EMPTY);
+
+        proxyFilter.onWikiObjectProperty("location", this.serializer.serialize(redirectReference),
+            FilterEventParameters.EMPTY);
+
+        proxyFilter.endWikiObject(REFERENCE_REDIRECTCLASS, objectParameters);
     }
 
     private String getPageContributor(XMLStreamReader xmlReader) throws XMLStreamException

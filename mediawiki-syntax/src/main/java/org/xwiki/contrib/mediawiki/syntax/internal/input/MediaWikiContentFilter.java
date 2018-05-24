@@ -34,9 +34,20 @@ public interface MediaWikiContentFilter extends Listener
 {
     /**
      * @param name the name of the category
-     * @param parameters the properties of the document
+     * @param parameters some custom parameters
      * @throws FilterException when failing to send event
      */
     void onCategory(String name, @Default(FilterEventParameters.DEFAULT) FilterEventParameters parameters)
         throws FilterException;
+
+    /**
+     * @param title the title of the target redirect
+     * @param parameters some custom parameters
+     * @throws FilterException when failing to send event
+     * @since 1.11
+     */
+    default void onRedirect(String title, @Default(FilterEventParameters.DEFAULT) FilterEventParameters parameters)
+        throws FilterException
+    {
+    }
 }
