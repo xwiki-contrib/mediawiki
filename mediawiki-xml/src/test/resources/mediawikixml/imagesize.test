@@ -97,6 +97,6 @@ TkSuQmCC</content>
 </wikiSpace>
 .#------------------------------------------------------------------------------
 .input|mediawiki+xml
-.configuration.source=../imagesize.xml
+.configuration.source=imagesize.xml
 .configuration.files=file:${{{xwiki.test.folder}}}/mediawikixml/1.26.3-files/
 .#------------------------------------------------------------------------------
