@@ -1,0 +1,110 @@
+.#------------------------------------------------------------------------------
+.expect|filter+xml
+.#------------------------------------------------------------------------------
+<wikiSpace name="Main">
+  <wikiSpace name="Test">
+    <wikiSpace name="Redirected_Page">
+      <wikiDocument name="WebHome">
+        <wikiDocumentLocale>
+          <wikiDocumentRevision revision="1">
+            <p>
+              <parameters>
+                <entry>
+                  <string>revision_minor</string>
+                  <boolean>false</boolean>
+                </entry>
+                <entry>
+                  <string>title</string>
+                  <string>Redirected Page</string>
+                </entry>
+                <entry>
+                  <string>revision_date</string>
+                  <date>2017-01-26 07:21:19.0 UTC</date>
+                </entry>
+                <entry>
+                  <string>revision_author</string>
+                  <string>TEST Test</string>
+                </entry>
+                <entry>
+                  <string>content</string>
+                  <string></string>
+                </entry>
+                <entry>
+                  <string>syntax</string>
+                  <org.xwiki.rendering.syntax.Syntax>
+                    <type>
+                      <name>XWiki</name>
+                      <id>xwiki</id>
+                    </type>
+                    <version>2.1</version>
+                  </org.xwiki.rendering.syntax.Syntax>
+                </entry>
+              </parameters>
+            </p>
+            <wikiObject name="XWiki.RedirectClass">
+              <p>
+                <parameters>
+                  <entry>
+                    <string>class_reference</string>
+                    <string>XWiki.RedirectClass</string>
+                  </entry>
+                </parameters>
+              </p>
+              <wikiClass>
+                <wikiClassProperty name="location" type="String"></wikiClassProperty>
+              </wikiClass>
+              <wikiObjectProperty name="location" value="Main.Test.Target_Page"></wikiObjectProperty>
+            </wikiObject>
+          </wikiDocumentRevision>
+        </wikiDocumentLocale>
+      </wikiDocument>
+    </wikiSpace>
+    <wikiSpace name="Target_Page">
+      <wikiDocument name="WebHome">
+        <wikiDocumentLocale>
+          <wikiDocumentRevision revision="1">
+            <p>
+              <parameters>
+                <entry>
+                  <string>revision_minor</string>
+                  <boolean>false</boolean>
+                </entry>
+                <entry>
+                  <string>title</string>
+                  <string>Target Page</string>
+                </entry>
+                <entry>
+                  <string>revision_date</string>
+                  <date>2017-01-26 07:21:19.0 UTC</date>
+                </entry>
+                <entry>
+                  <string>revision_author</string>
+                  <string>TEST Test</string>
+                </entry>
+                <entry>
+                  <string>content</string>
+                  <string>target page</string>
+                </entry>
+                <entry>
+                  <string>syntax</string>
+                  <org.xwiki.rendering.syntax.Syntax>
+                    <type>
+                      <name>XWiki</name>
+                      <id>xwiki</id>
+                    </type>
+                    <version>2.1</version>
+                  </org.xwiki.rendering.syntax.Syntax>
+                </entry>
+              </parameters>
+            </p>
+          </wikiDocumentRevision>
+        </wikiDocumentLocale>
+      </wikiDocument>
+    </wikiSpace>
+  </wikiSpace>
+</wikiSpace>
+.#------------------------------------------------------------------------------
+.input|mediawiki+xml
+.configuration.source=redirect.xml
+.configuration.parent=Main.Test
+.#------------------------------------------------------------------------------
