@@ -1,0 +1,14 @@
+.#-----------------------------------------------------
+.input|mediawiki/1.6
+.#-----------------------------------------------------
+[http://xwiki.org label]
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+beginLink [Typed = [true] Type = [url] Reference = [http://xwiki.org]] [false]
+onWord [label]
+endLink [Typed = [true] Type = [url] Reference = [http://xwiki.org]] [false]
+endParagraph
+endDocument
