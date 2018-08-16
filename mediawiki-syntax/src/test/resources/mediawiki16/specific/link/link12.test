@@ -1,0 +1,17 @@
+.#-----------------------------------------------------
+.input|mediawiki/1.6
+.# Make sure external link has priority over wiki link matching
+.#-----------------------------------------------------
+[[http://xwiki.org label]]
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+onSpecialSymbol [[]
+beginLink [Typed = [true] Type = [url] Reference = [http://xwiki.org]] [false]
+onWord [label]
+endLink [Typed = [true] Type = [url] Reference = [http://xwiki.org]] [false]
+onSpecialSymbol []]
+endParagraph
+endDocument
