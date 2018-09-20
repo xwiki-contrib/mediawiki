@@ -236,7 +236,7 @@ public class MediaWikiInputProperties extends XMLInputProperties
     /**
      * @return if true, reference are forced absolute in links and images (without the wiki)
      */
-    @PropertyName("Absolte reference")
+    @PropertyName("Absolute reference")
     @PropertyDescription("Force generating absolute reference in links and images (but without the wiki)."
         + " Overwise the importer try to generate relative reference as much as possible.")
     public boolean isAbsoluteReferences()
