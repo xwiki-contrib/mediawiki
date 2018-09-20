@@ -23,6 +23,7 @@ import org.xwiki.filter.input.InputSource;
 import org.xwiki.filter.type.FilterStreamType;
 import org.xwiki.filter.type.SystemType;
 import org.xwiki.filter.xml.input.XMLInputProperties;
+import org.xwiki.model.EntityType;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyName;
@@ -139,7 +140,13 @@ public class MediaWikiInputProperties extends XMLInputProperties
      */
     public void setParent(EntityReference parent)
     {
-        this.parent = parent;
+        // Since DOCUMENT is the default type in EntityReference parser and that DOCUMENT does not make any sense as
+        // parent we convert it to space
+        if (parent != null && parent.getType() == EntityType.DOCUMENT) {
+            this.parent = new EntityReference(parent.getName(), EntityType.SPACE, parent.getParent());
+        } else {
+            this.parent = parent;
+        }
     }
 
     /**
