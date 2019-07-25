@@ -706,6 +706,13 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
                     return file;
                 }
 
+                // Try simple path
+                file = new File(folder, fileName);
+
+                if (file.exists() && file.isFile()) {
+                    return file;
+                }
+
                 this.logger.warn("Can't find file [{}]", file.getAbsolutePath());
             } else {
                 throw new FilterException("Unsupported input source [" + files.getClass() + "] ([" + files + "])");

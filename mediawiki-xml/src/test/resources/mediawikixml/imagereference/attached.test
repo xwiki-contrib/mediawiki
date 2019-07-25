@@ -136,6 +136,53 @@ SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
       </wikiDocumentRevision>
     </wikiDocumentLocale>
   </wikiDocument>
+  <wikiDocument name="Test_ImageReference_in_simple_storage">
+    <wikiDocumentLocale>
+      <wikiDocumentRevision revision="1">
+        <p>
+          <parameters>
+            <entry>
+              <string>revision_minor</string>
+              <boolean>false</boolean>
+            </entry>
+            <entry>
+              <string>title</string>
+              <string>Test ImageReference in simple storage</string>
+            </entry>
+            <entry>
+              <string>revision_date</string>
+              <date>2017-01-26 07:21:19.0 UTC</date>
+            </entry>
+            <entry>
+              <string>revision_author</string>
+              <string>TEST Test</string>
+            </entry>
+            <entry>
+              <string>content</string>
+              <string>[[[[image:Pixel_white_simple.png||alt="centre" title="centre"]]&gt;&gt;attach:Pixel_white_simple.png]]</string>
+            </entry>
+            <entry>
+              <string>syntax</string>
+              <org.xwiki.rendering.syntax.Syntax>
+                <type>
+                  <name>XWiki</name>
+                  <id>xwiki</id>
+                </type>
+                <version>2.1</version>
+              </org.xwiki.rendering.syntax.Syntax>
+            </entry>
+          </parameters>
+        </p>
+        <wikiAttachment name="Pixel_white_simple.png" size="146">
+          <p>
+            <content>iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
+B3RJTUUH4AcBDQE7cMRBYQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAM
+SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
+          </p>
+        </wikiAttachment>
+      </wikiDocumentRevision>
+    </wikiDocumentLocale>
+  </wikiDocument>
 </wikiSpace>
 .#------------------------------------------------------------------------------
 .input|mediawiki+xml
