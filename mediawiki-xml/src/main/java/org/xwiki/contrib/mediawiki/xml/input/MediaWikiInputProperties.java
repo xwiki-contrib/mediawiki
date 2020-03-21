@@ -286,7 +286,7 @@ public class MediaWikiInputProperties extends XMLInputProperties
      * @since 1.8
      */
     @PropertyName("No table of content")
-    @PropertyDescription("Disable automaticlaly generated tables of content (unless _TOC_ is explicitely used)")
+    @PropertyDescription("Disable automatically generated tables of content (unless _TOC_ is explicitely used)")
     public boolean isNoToc()
     {
         return this.noToc;
