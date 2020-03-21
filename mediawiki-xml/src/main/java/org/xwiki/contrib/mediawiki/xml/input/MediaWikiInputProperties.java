@@ -190,7 +190,7 @@ public class MediaWikiInputProperties extends XMLInputProperties
      * @return if true, the content will be parsed to produce rendering events
      */
     @PropertyName("Produce rendering events for the content")
-    @PropertyDescription("Parse the content to produce rendering events (if the output filter support them)")
+    @PropertyDescription("Parse the content to produce rendering events (if the output filter supports them)")
     public boolean isContentEvents()
     {
         return this.contentEvents;
