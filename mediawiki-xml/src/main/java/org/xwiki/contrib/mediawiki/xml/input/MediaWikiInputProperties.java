@@ -154,7 +154,7 @@ public class MediaWikiInputProperties extends XMLInputProperties
      */
     @PropertyName("Files space")
     @PropertyDescription("The space where to store the files."
-        + "By default the namespace definded in the MediaWiki (usually \"File\").")
+        + " By default the namespace defined in the MediaWiki (usually \"File\").")
     public EntityReference getFileSpace()
     {
         return this.fileSpace;
@@ -226,7 +226,7 @@ public class MediaWikiInputProperties extends XMLInputProperties
      * @return if true, final pages will be produces (only if #isConvertToXWiki() is true)
      */
     @PropertyName("Terminal Page")
-    @PropertyDescription("Produce terminal pages (only if \"XWiki convertion\" is enabled)")
+    @PropertyDescription("Produce terminal pages (only if \"XWiki conversion\" is enabled)")
     public boolean isTerminalPages()
     {
         return this.terminalPages;
@@ -265,8 +265,8 @@ public class MediaWikiInputProperties extends XMLInputProperties
      */
     @PropertyName("Only take into account registered namespace")
     @PropertyDescription("The importer automatically generate spaces when it find a namespace."
-        + "By default only officially registered MediaWiki namespace are taken into account."
-        + "If this option is disabled all \":\" bases page title prefixes will be seen as namespace separators.")
+        + " By default only officially registered MediaWiki namespace are taken into account."
+        + " If this option is disabled all \":\" bases page title prefixes will be seen as namespace separators.")
     public boolean isOnlyRegisteredNamespaces()
     {
         return this.onlyRegisteredNamespaces;
