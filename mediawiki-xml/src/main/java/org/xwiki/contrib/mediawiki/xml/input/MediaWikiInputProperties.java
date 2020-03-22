@@ -154,7 +154,7 @@ public class MediaWikiInputProperties extends XMLInputProperties
      */
     @PropertyName("Files space")
     @PropertyDescription("The space where to store the files."
-        + "By default the namespace definded in the MediaWiki (usually \"File\").")
+        + " By default the namespace defined in the MediaWiki (usually \"File\").")
     public EntityReference getFileSpace()
     {
         return this.fileSpace;
@@ -190,7 +190,7 @@ public class MediaWikiInputProperties extends XMLInputProperties
      * @return if true, the content will be parsed to produce rendering events
      */
     @PropertyName("Produce rendering events for the content")
-    @PropertyDescription("Parse the content to produce rendering events (if the output filter support them)")
+    @PropertyDescription("Parse the content to produce rendering events (if the output filter supports them)")
     public boolean isContentEvents()
     {
         return this.contentEvents;
@@ -226,7 +226,7 @@ public class MediaWikiInputProperties extends XMLInputProperties
      * @return if true, final pages will be produces (only if #isConvertToXWiki() is true)
      */
     @PropertyName("Terminal Page")
-    @PropertyDescription("Produce terminal pages (only if \"XWiki convertion\" is enabled)")
+    @PropertyDescription("Produce terminal pages (only if \"XWiki conversion\" is enabled)")
     public boolean isTerminalPages()
     {
         return this.terminalPages;
@@ -245,7 +245,7 @@ public class MediaWikiInputProperties extends XMLInputProperties
      */
     @PropertyName("Absolute reference")
     @PropertyDescription("Force generating absolute reference in links and images (but without the wiki)."
-        + " Overwise the importer try to generate relative reference as much as possible.")
+        + " Otherwise the importer try to generate relative reference as much as possible.")
     public boolean isAbsoluteReferences()
     {
         return this.absoluteReferences;
@@ -265,8 +265,8 @@ public class MediaWikiInputProperties extends XMLInputProperties
      */
     @PropertyName("Only take into account registered namespace")
     @PropertyDescription("The importer automatically generate spaces when it find a namespace."
-        + "By default only officially registered MediaWiki namespace are taken into account."
-        + "If this option is disabled all \":\" bases page title prefixes will be seen as namespace separators.")
+        + " By default only officially registered MediaWiki namespace are taken into account."
+        + " If this option is disabled all \":\" bases page title prefixes will be seen as namespace separators.")
     public boolean isOnlyRegisteredNamespaces()
     {
         return this.onlyRegisteredNamespaces;
@@ -286,7 +286,7 @@ public class MediaWikiInputProperties extends XMLInputProperties
      * @since 1.8
      */
     @PropertyName("No table of content")
-    @PropertyDescription("Disable automaticlaly generated tables of content (unless _TOC_ is explicitely used)")
+    @PropertyDescription("Disable automatically generated tables of content (unless _TOC_ is explicitely used)")
     public boolean isNoToc()
     {
         return this.noToc;
