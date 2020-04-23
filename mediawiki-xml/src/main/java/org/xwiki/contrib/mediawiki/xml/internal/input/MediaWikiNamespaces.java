@@ -138,6 +138,10 @@ public class MediaWikiNamespaces
      */
     public boolean isNamespace(int key, String namespace)
     {
+        if (namespace == null) {
+            return false;
+        }
+
         Integer standardKey = this.namespaceToKey.get(namespace.toLowerCase());
 
         return standardKey != null && standardKey.intValue() == key;

@@ -207,6 +207,11 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             pageName = this.modelConfiguration.getDefaultReferenceValue(EntityType.DOCUMENT);
         }
 
+        // Take care of attachments attached directly to the using page (which should not be cleaned)
+        if (link && this.properties.isFileAttached() && this.namespaces.isFileNamespace(namespace)) {
+            return new EntityReference(pageName, EntityType.ATTACHMENT);
+        }
+
         // Clean page name if required
         if (StringUtils.isNotEmpty(this.properties.getForbiddenCharacters())) {
             for (int i = 0; i < this.properties.getForbiddenCharacters().length(); ++i) {
@@ -218,11 +223,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         EntityReference parentReference;
         if (namespace != null) {
             if (this.namespaces.isFileNamespace(namespace)) {
-                if (link && this.properties.isFileAttached()) {
-                    return new EntityReference(pageName, EntityType.ATTACHMENT);
-                } else {
-                    return toFileEntityReference(pageName);
-                }
+                return toFileEntityReference(pageName);
             } else if (this.namespaces.isSpecialNamespace(namespace)) {
                 return null;
             } else {
