@@ -1,0 +1,105 @@
+<mediawiki xmlns="http://www.mediawiki.org/xml/export-0.10/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mediawiki.org/xml/export-0.10/ http://www.mediawiki.org/xml/export-0.10.xsd" version="0.10" xml:lang="en">
+  <siteinfo>
+    <sitename>TestWiki</sitename>
+    <dbname>test_mediawiki</dbname>
+    <base>https://localhost/mediawiki/index.php/Main_Page</base>
+    <generator>MediaWiki 1.31.7</generator>
+    <case>first-letter</case>
+    <namespaces>
+      <namespace key="-2" case="first-letter">Media</namespace>
+      <namespace key="-1" case="first-letter">Special</namespace>
+      <namespace key="0" case="first-letter" />
+      <namespace key="1" case="first-letter">Talk</namespace>
+      <namespace key="2" case="first-letter">User</namespace>
+      <namespace key="3" case="first-letter">User talk</namespace>
+      <namespace key="4" case="first-letter">TestWiki</namespace>
+      <namespace key="5" case="first-letter">TestWiki talk</namespace>
+      <namespace key="6" case="first-letter">File</namespace>
+      <namespace key="7" case="first-letter">File talk</namespace>
+      <namespace key="8" case="first-letter">MediaWiki</namespace>
+      <namespace key="9" case="first-letter">MediaWiki talk</namespace>
+      <namespace key="10" case="first-letter">Template</namespace>
+      <namespace key="11" case="first-letter">Template talk</namespace>
+      <namespace key="12" case="first-letter">Help</namespace>
+      <namespace key="13" case="first-letter">Help talk</namespace>
+      <namespace key="14" case="first-letter">Category</namespace>
+      <namespace key="15" case="first-letter">Category talk</namespace>
+      <namespace key="2300" case="first-letter">Gadget</namespace>
+      <namespace key="2301" case="first-letter">Gadget talk</namespace>
+      <namespace key="2302" case="case-sensitive">Gadget definition</namespace>
+      <namespace key="2303" case="case-sensitive">Gadget definition talk</namespace>
+    </namespaces>
+  </siteinfo>
+  <page>
+    <title>Main Page</title>
+    <ns>0</ns>
+    <id>1</id>
+    <revision>
+      <id>19</id>
+      <parentid>17</parentid>
+      <timestamp>2020-05-22T06:23:23Z</timestamp>
+      <contributor>
+        <username>ClemensRobbenhaar</username>
+        <id>1</id>
+      </contributor>
+      <comment>new test pages</comment>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve" bytes="39">* [[ Page  A+B ]]
+* [[  Page  __  __  Page  ]]</text>
+    </revision>
+  </page>
+  <page>
+    <title>Page A+B</title>
+    <ns>0</ns>
+    <id>7</id>
+    <revision>
+      <id>20</id>
+      <timestamp>2020-05-22T06:23:43Z</timestamp>
+      <contributor>
+        <username>ClemensRobbenhaar</username>
+        <id>1</id>
+      </contributor>
+      <comment>Created page with &quot;Plus encoding test.&quot;</comment>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve" bytes="19">Plus encoding test.</text>
+    </revision>
+  </page>
+  <page>
+    <title>Page Page</title>
+    <ns>0</ns>
+    <id>6</id>
+    <revision>
+      <id>27</id>
+      <parentid>24</parentid>
+      <timestamp>2020-05-23T05:49:00Z</timestamp>
+      <contributor>
+        <username>ClemensRobbenhaar</username>
+        <id>1</id>
+      </contributor>
+      <minor/>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve" bytes="78">this page has only one underscore in the title 
+[[File:A red dot.png|thumb|.]]</text>
+    </revision>
+  </page>
+  <page>
+    <title>File:A red dot.png</title>
+    <ns>6</ns>
+    <id>10</id>
+    <revision>
+      <id>26</id>
+      <timestamp>2020-05-23T05:47:39Z</timestamp>
+      <contributor>
+        <username>ClemensRobbenhaar</username>
+        <id>1</id>
+      </contributor>
+      <comment>.</comment>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve" bytes="13">== Summary ==</text>
+    </revision>
+  </page>
+</mediawiki>

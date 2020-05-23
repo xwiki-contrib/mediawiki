@@ -1,0 +1,202 @@
+.#------------------------------------------------------------------------------
+.expect|filter+xml
+.#------------------------------------------------------------------------------
+<wikiSpace name="MW-Import">
+  <wikiDocument name="WebHome">
+    <wikiDocumentLocale>
+      <wikiDocumentRevision revision="19">
+        <p>
+          <parameters>
+            <entry>
+              <string>revision_minor</string>
+              <boolean>false</boolean>
+            </entry>
+            <entry>
+              <string>title</string>
+              <string>Main Page</string>
+            </entry>
+            <entry>
+              <string>revision_date</string>
+              <date>2020-05-22 06:23:23.0 UTC</date>
+            </entry>
+            <entry>
+              <string>revision_author</string>
+              <string>ClemensRobbenhaar</string>
+            </entry>
+            <entry>
+              <string>revision_comment</string>
+              <string>new test pages</string>
+            </entry>
+            <entry>
+              <string>content</string>
+              <string>* [[Page_A+B]]
+* [[Page_Page]]</string>
+            </entry>
+            <entry>
+              <string>syntax</string>
+              <org.xwiki.rendering.syntax.Syntax>
+                <type>
+                  <name>XWiki</name>
+                  <id>xwiki</id>
+                </type>
+                <version>2.1</version>
+              </org.xwiki.rendering.syntax.Syntax>
+            </entry>
+          </parameters>
+        </p>
+      </wikiDocumentRevision>
+    </wikiDocumentLocale>
+  </wikiDocument>
+  <wikiSpace name="Page_A+B">
+    <wikiDocument name="WebHome">
+      <wikiDocumentLocale>
+        <wikiDocumentRevision revision="20">
+          <p>
+            <parameters>
+              <entry>
+                <string>revision_minor</string>
+                <boolean>false</boolean>
+              </entry>
+              <entry>
+                <string>title</string>
+                <string>Page A+B</string>
+              </entry>
+              <entry>
+                <string>revision_date</string>
+                <date>2020-05-22 06:23:43.0 UTC</date>
+              </entry>
+              <entry>
+                <string>revision_author</string>
+                <string>ClemensRobbenhaar</string>
+              </entry>
+              <entry>
+                <string>revision_comment</string>
+                <string>Created page with "Plus encoding test."</string>
+              </entry>
+              <entry>
+                <string>content</string>
+                <string>Plus encoding test.</string>
+              </entry>
+              <entry>
+                <string>syntax</string>
+                <org.xwiki.rendering.syntax.Syntax>
+                  <type>
+                    <name>XWiki</name>
+                    <id>xwiki</id>
+                  </type>
+                  <version>2.1</version>
+                </org.xwiki.rendering.syntax.Syntax>
+              </entry>
+            </parameters>
+          </p>
+        </wikiDocumentRevision>
+      </wikiDocumentLocale>
+    </wikiDocument>
+  </wikiSpace>
+  <wikiSpace name="Page_Page">
+    <wikiDocument name="WebHome">
+      <wikiDocumentLocale>
+        <wikiDocumentRevision revision="27">
+          <p>
+            <parameters>
+              <entry>
+                <string>revision_minor</string>
+                <boolean>true</boolean>
+              </entry>
+              <entry>
+                <string>title</string>
+                <string>Page Page</string>
+              </entry>
+              <entry>
+                <string>revision_date</string>
+                <date>2020-05-23 05:49:00.0 UTC</date>
+              </entry>
+              <entry>
+                <string>revision_author</string>
+                <string>ClemensRobbenhaar</string>
+              </entry>
+              <entry>
+                <string>content</string>
+                <string>this page has only one underscore in the title[[[[image:MW-Import.File.A_red_dot\.png@A_red_dot.png||alt="." title="."]]&gt;&gt;MW-Import.File.A_red_dot\.png]]</string>
+              </entry>
+              <entry>
+                <string>syntax</string>
+                <org.xwiki.rendering.syntax.Syntax>
+                  <type>
+                    <name>XWiki</name>
+                    <id>xwiki</id>
+                  </type>
+                  <version>2.1</version>
+                </org.xwiki.rendering.syntax.Syntax>
+              </entry>
+            </parameters>
+          </p>
+        </wikiDocumentRevision>
+      </wikiDocumentLocale>
+    </wikiDocument>
+  </wikiSpace>
+  <wikiSpace name="File">
+    <wikiDocument name="A_red_dot.png">
+      <wikiDocumentLocale>
+        <wikiDocumentRevision revision="26">
+          <p>
+            <parameters>
+              <entry>
+                <string>revision_minor</string>
+                <boolean>false</boolean>
+              </entry>
+              <entry>
+                <string>title</string>
+                <string>File:A red dot.png</string>
+              </entry>
+              <entry>
+                <string>revision_date</string>
+                <date>2020-05-23 05:47:39.0 UTC</date>
+              </entry>
+              <entry>
+                <string>revision_author</string>
+                <string>ClemensRobbenhaar</string>
+              </entry>
+              <entry>
+                <string>revision_comment</string>
+                <string>.</string>
+              </entry>
+              <entry>
+                <string>content</string>
+                <string>== Summary ==</string>
+              </entry>
+              <entry>
+                <string>syntax</string>
+                <org.xwiki.rendering.syntax.Syntax>
+                  <type>
+                    <name>XWiki</name>
+                    <id>xwiki</id>
+                  </type>
+                  <version>2.1</version>
+                </org.xwiki.rendering.syntax.Syntax>
+              </entry>
+            </parameters>
+          </p>
+          <wikiAttachment name="A_red_dot.png" size="268">
+            <p>
+              <content>iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
+B3RJTUUH5AUWFxA6aTQKEQAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUH
+AAAAgklEQVQY052PsRHDIBAEV8YFKNAM6oCEGLWgoiiIEtSCqmDIFCigg3MAGtuBHHijm73g/wZJ
+3PPgJ893PA7OE2CamOcu1chZMcp7ea8YlXPTV52SrBUIZK1Savq6XQq19lwrpXy/FgLOYQzG4Bwh
+ND30YbWy72wbwLqyLIzjR/3f7hdmBEi/XeBiWAAAAABJRU5ErkJggg==</content>
+            </p>
+          </wikiAttachment>
+        </wikiDocumentRevision>
+      </wikiDocumentLocale>
+    </wikiDocument>
+  </wikiSpace>
+</wikiSpace>
+.#------------------------------------------------------------------------------
+.input|mediawiki+xml
+.configuration.source=data/current.xml
+.configuration.files=file:${{{xwiki.test.folder}}}/mediawikixml/plus-in-pagename/data/images
+.configuration.filesSpace=space:MW-Import.File
+.configuration.fileAttached=false
+.configuration.parent=MW-Import
+.configuration.absoluteReference=true
+.#------------------------------------------------------------------------------

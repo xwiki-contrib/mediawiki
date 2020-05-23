@@ -193,14 +193,17 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             // MediaWiki actually assume the link reference is a partial URL (it just concatenate it to the base URL) so
             // we have to decode it
             try {
+                // but not the plus sign, as we are in a path section
+                pageName = pageName.replaceAll("\\+","%2B");
                 pageName = URLDecoder.decode(pageName, "UTF-8");
             } catch (UnsupportedEncodingException e) {
                 // Should never happen
             }
         }
 
-        // MediaWiki replace the white spaces with an underscore in the URL
+        // MediaWiki replaces white spaces with a single underscore in the URL
         pageName = pageName.replace(' ', '_');
+        pageName = pageName.replaceAll("_{2,}","_");
 
         // Maybe convert MediaWiki home page name into XWiki home page name
         if (this.properties.isConvertToXWiki() && pageName.equals(this.mainPageName)) {
