@@ -201,8 +201,9 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             }
         }
 
-        // MediaWiki replaces white spaces with a single underscore in the URL
+        // MediaWiki replaces white spaces with underscores in the URL
         pageName = pageName.replace(' ', '_');
+        // ... and also reduces several underscores into a single one
         pageName = pageName.replaceAll("_{2,}","_");
 
         // Maybe convert MediaWiki home page name into XWiki home page name
