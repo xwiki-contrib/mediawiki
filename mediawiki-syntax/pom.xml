@@ -38,6 +38,12 @@
 
     <!-- List it as a rendering syntax related module -->
     <xwiki.extension.category>syntax</xwiki.extension.category>
+
+    <!-- Components -->
+    <xwiki.extension.components>
+      org.xwiki.filter.input.InputFilterStreamFactory/mediawiki+xdom/1.6
+      org.xwiki.rendering.parser.Parser/mediawiki+xdom/1.6
+    </xwiki.extension.components>
   </properties>
   <dependencies>
     <dependency>

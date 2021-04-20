@@ -39,6 +39,11 @@
     <xwiki.extension.category>filter</xwiki.extension.category>
 
     <xwiki.surefire.captureconsole.skip>true</xwiki.surefire.captureconsole.skip>
+
+    <!-- Components -->
+    <xwiki.extension.components>
+      org.xwiki.filter.input.InputFilterStreamFactory/mediawiki+xml
+    </xwiki.extension.components>
   </properties>
   <dependencies>
     <dependency>
