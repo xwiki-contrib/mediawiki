@@ -695,7 +695,9 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         if (StringUtils.isNotEmpty(fileName)) {
             InputSource files = this.properties.getFiles();
 
-            if (files instanceof FileInputSource) {
+            if (files == null) {
+                this.logger.warn("No folder indicated to find media files");
+            } else if (files instanceof FileInputSource) {
                 File folder = ((FileInputSource) files).getFile();
 
                 String md5Hex = DigestUtils.md5Hex(fileName).substring(0, 2);
