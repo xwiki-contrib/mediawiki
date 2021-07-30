@@ -1,0 +1,66 @@
+.#------------------------------------------------------------------------------
+.expect|filter+xml
+.#------------------------------------------------------------------------------
+<wikiSpace name="Main">
+  <wikiSpace name="Test_Internal_Links">
+    <wikiDocument name="WebHome">
+      <wikiDocumentLocale>
+        <wikiDocumentRevision revision="1">
+          <p>
+            <parameters>
+              <entry>
+                <string>revision_minor</string>
+                <boolean>false</boolean>
+              </entry>
+              <entry>
+                <string>title</string>
+                <string>Test Internal Links</string>
+              </entry>
+              <entry>
+                <string>revision_date</string>
+                <date>2017-01-26 07:21:19.0 UTC</date>
+              </entry>
+              <entry>
+                <string>revision_author</string>
+                <string>TEST Test</string>
+              </entry>
+              <entry>
+                <string>content</string>
+                <string>[[Main.Page]]
+[[Main.Page||anchor="some_anchor"]]
+[[Main.Page_with_white_spaces]]
+[[Main.Page_with_white_spaces]]
+[[Main.Page_with_white_spaces]]
+[[Main.Space]]
+[[Main.Space/Page]]
+[[Main.Space/Page/]]
+[[User.username]]
+[[Main.WebHome]]
+[[Main.Space/Page]]
+[[Main.WebHome]]
+[[Main.Couldn’t]]
+[[Main.Page_with_unescaped_%_character]]
+
+</string>
+              </entry>
+              <entry>
+                <string>syntax</string>
+                <org.xwiki.rendering.syntax.Syntax>
+                  <type>
+                    <name>XWiki</name>
+                    <id>xwiki</id>
+                  </type>
+                  <version>2.1</version>
+                </org.xwiki.rendering.syntax.Syntax>
+              </entry>
+            </parameters>
+          </p>
+        </wikiDocumentRevision>
+      </wikiDocumentLocale>
+    </wikiDocument>
+  </wikiSpace>
+</wikiSpace>
+.#------------------------------------------------------------------------------
+.input|mediawiki+xml
+.configuration.source=internallinks.xml
+.#------------------------------------------------------------------------------

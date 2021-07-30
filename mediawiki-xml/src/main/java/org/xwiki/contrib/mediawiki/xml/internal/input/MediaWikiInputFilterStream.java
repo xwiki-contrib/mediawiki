@@ -19,12 +19,12 @@
  */
 package org.xwiki.contrib.mediawiki.xml.internal.input;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -190,21 +190,15 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         }
 
         if (link) {
-            // MediaWiki actually assume the link reference is a partial URL (it just concatenate it to the base URL) so
-            // we have to decode it
-            try {
-                // but not the plus sign, as we are in a path section
-                pageName = pageName.replaceAll("\\+","%2B");
-                pageName = URLDecoder.decode(pageName, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                // Should never happen
-            }
+            // MediaWiki link reference can contain URL encoding or not but it's not a perfectly valid URL encoding
+            // (because of the or "not") so we need our own fuzzy parser
+            pageName = decodeLinkReference(pageName);
         }
 
         // MediaWiki replaces white spaces with underscores in the URL
         pageName = pageName.replace(' ', '_');
         // ... and also reduces several underscores into a single one
-        pageName = pageName.replaceAll("_{2,}","_");
+        pageName = pageName.replaceAll("_{2,}", "_");
 
         // Maybe convert MediaWiki home page name into XWiki home page name
         if (this.properties.isConvertToXWiki() && pageName.equals(this.mainPageName)) {
@@ -264,6 +258,41 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         }
 
         return new EntityReference(pageName, EntityType.DOCUMENT, parentReference);
+    }
+
+    private String decodeLinkReference(String mediaWikiReference)
+    {
+        byte[] bytes = mediaWikiReference.getBytes(StandardCharsets.US_ASCII);
+        final ByteArrayOutputStream buffer = new ByteArrayOutputStream(bytes.length);
+        for (int i = 0; i < bytes.length; ++i) {
+            byte b = bytes[i];
+
+            if (b == '%') {
+                // If there is not enough encoding characters after it, assume it's just a regular %
+                if (i + 2 < bytes.length) {
+                    byte c1 = bytes[i + 1];
+                    byte c2 = bytes[i + 2];
+
+                    // If the following characters are not hexadecimal, assume it's just a regular %
+                    if (isHex(c1) && isHex(c2)) {
+                        buffer.write((char) ((Character.digit(c1, 16) << 4) + Character.digit(c2, 16)));
+
+                        // Increment to consume the encoding characters
+                        i += 2;
+                        continue;
+                    }
+                }
+            }
+
+            buffer.write(b);
+        }
+
+        return new String(buffer.toByteArray(), StandardCharsets.UTF_8);
+    }
+
+    private boolean isHex(byte c)
+    {
+        return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
     }
 
     EntityReference toFileEntityReference(String pageName)
