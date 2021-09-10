@@ -437,7 +437,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
     }
 
     private void readPage(XMLStreamReader xmlReader, Object filter, MediaWikiFilter proxyFilter)
-        throws XMLStreamException, FilterException, IOException
+        throws FilterException, XMLStreamException, IOException
     {
         boolean skip = false;
 
@@ -449,33 +449,38 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             } else if (elementName.equals(TAG_PAGE_TITLE)) {
                 this.currentPageTitle = xmlReader.getElementText();
 
-                // Find current page reference
-                this.currentPageReference = toEntityReference(this.currentPageTitle, false);
+                try {
+                    // Find current page reference
+                    this.currentPageReference = toEntityReference(this.currentPageTitle, false);
 
-                if (this.currentPageReference != null) {
-                    if (this.properties.isConvertToXWiki() && !this.properties.isTerminalPages()
-                        && !this.namespaces.isInFileNamespace(this.currentPageTitle)) {
-                        // Make the page a non terminal page
-                        String defaultPageName = this.modelConfiguration.getDefaultReferenceValue(EntityType.DOCUMENT);
-                        if (!this.currentPageReference.getName().equals(defaultPageName)) {
-                            this.currentPageReference = new EntityReference(this.currentPageReference.getName(),
-                                EntityType.SPACE, this.currentPageReference.getParent());
-                            this.currentPageReference = new EntityReference(
-                                this.modelConfiguration.getDefaultReferenceValue(EntityType.DOCUMENT),
-                                EntityType.DOCUMENT, this.currentPageReference);
+                    if (this.currentPageReference != null) {
+                        if (this.properties.isConvertToXWiki() && !this.properties.isTerminalPages()
+                            && !this.namespaces.isInFileNamespace(this.currentPageTitle)) {
+                            // Make the page a non terminal page
+                            String defaultPageName =
+                                this.modelConfiguration.getDefaultReferenceValue(EntityType.DOCUMENT);
+                            if (!this.currentPageReference.getName().equals(defaultPageName)) {
+                                this.currentPageReference = new EntityReference(this.currentPageReference.getName(),
+                                    EntityType.SPACE, this.currentPageReference.getParent());
+                                this.currentPageReference = new EntityReference(
+                                    this.modelConfiguration.getDefaultReferenceValue(EntityType.DOCUMENT),
+                                    EntityType.DOCUMENT, this.currentPageReference);
+                            }
                         }
+
+                        this.currentParentReference = this.currentPageReference.getParent();
+
+                        // Send parent events
+                        sendSpaceEvents(proxyFilter);
+
+                        // Send document event
+                        proxyFilter.beginWikiDocument(this.currentPageReference.getName(), FilterEventParameters.EMPTY);
+                        proxyFilter.beginWikiDocumentLocale(Locale.ROOT, FilterEventParameters.EMPTY);
+                    } else {
+                        skip = true;
                     }
-
-                    this.currentParentReference = this.currentPageReference.getParent();
-
-                    // Send parent events
-                    sendSpaceEvents(proxyFilter);
-
-                    // Send document event
-                    proxyFilter.beginWikiDocument(this.currentPageReference.getName(), FilterEventParameters.EMPTY);
-                    proxyFilter.beginWikiDocumentLocale(Locale.ROOT, FilterEventParameters.EMPTY);
-                } else {
-                    skip = true;
+                } catch (Exception e) {
+                    throw new FilterException("Failed to parse page with title [" + this.currentPageTitle + "]", e);
                 }
             } else if (elementName.equals(TAG_PAGE_REVISION)) {
                 readPageRevision(xmlReader, filter, proxyFilter);
@@ -603,34 +608,41 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             } else if (elementName.equals(TAG_PAGE_REVISION_CONTENT)) {
                 String content = xmlReader.getElementText();
 
-                if (this.properties.isContentEvents() && filter instanceof Listener) {
-                    // Begin document revision
-                    proxyFilter.beginWikiDocumentRevision(version, pageRevisionParameters);
-                    beginWikiDocumentRevisionSent = true;
+                try {
+                    if (this.properties.isContentEvents() && filter instanceof Listener) {
+                        // Begin document revision
+                        proxyFilter.beginWikiDocumentRevision(version, pageRevisionParameters);
+                        beginWikiDocumentRevisionSent = true;
 
-                    MediaWikiSyntaxInputProperties parserProperties = createMediaWikiSyntaxInputProperties(content);
+                        MediaWikiSyntaxInputProperties parserProperties = createMediaWikiSyntaxInputProperties(content);
 
-                    // Refactor references and find attachments
-                    MediaWikiContextConverterListener listener = this.listenerProvider.get();
-                    listener.initialize(proxyFilter, this, null);
+                        // Refactor references and find attachments
+                        MediaWikiContextConverterListener listener = this.listenerProvider.get();
+                        listener.initialize(proxyFilter, this, null);
 
-                    // Generate events
-                    try (BeanInputFilterStream<MediaWikiSyntaxInputProperties> stream =
-                        ((BeanInputFilterStreamFactory) this.parserFactory).createInputFilterStream(parserProperties)) {
-                        stream.read(listener);
+                        // Generate events
+                        try (BeanInputFilterStream<MediaWikiSyntaxInputProperties> stream =
+                            ((BeanInputFilterStreamFactory) this.parserFactory)
+                                .createInputFilterStream(parserProperties)) {
+                            stream.read(listener);
+                        }
+
+                        // Remember linked files
+                        this.currentFiles = listener.getFiles();
+                        this.currentRedirectTitle = listener.getRedirectTitle();
+                    } else if (this.properties.isConvertToXWiki()) {
+                        // Convert content to XWiki syntax
+                        pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, convertToXWiki21(content));
+                        pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_SYNTAX, Syntax.XWIKI_2_1);
+
+                    } else {
+                        // Keep MediaWiki syntax
+                        pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, content);
+                        pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_SYNTAX, MediaWikiStreamParser.SYNTAX);
                     }
-
-                    // Remember linked files
-                    this.currentFiles = listener.getFiles();
-                    this.currentRedirectTitle = listener.getRedirectTitle();
-                } else if (this.properties.isConvertToXWiki()) {
-                    // Convert content to XWiki syntax
-                    pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, convertToXWiki21(content));
-                    pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_SYNTAX, Syntax.XWIKI_2_1);
-                } else {
-                    // Keep MediaWiki syntax
-                    pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, content);
-                    pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_SYNTAX, MediaWikiStreamParser.SYNTAX);
+                } catch (Exception e) {
+                    this.logger.error("Failed to converter content located in page with title [" + this.currentPageTitle
+                        + "] and version [" + version + "]", e);
                 }
             } else if (elementName.equals(TAG_PAGE_REVISION_MINOR)) {
                 pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_REVISION_MINOR, true);
