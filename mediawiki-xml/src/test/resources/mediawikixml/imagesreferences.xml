@@ -92,7 +92,7 @@
         <username>TEST Test</username>
         <id>7</id>
       </contributor>
-      <text xml:space="preserve">[[Image:Pixel_white_simple.png|centre]]</text>
+      <text xml:space="preserve">[[Image:file_with_ä.png|centre]]</text>
       <sha1>0aptv29ff00l71xaf8eat3jgtx2v72r</sha1>
       <model>wikitext</model>
       <format>text/x-wiki</format>

@@ -159,7 +159,7 @@ SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
             </entry>
             <entry>
               <string>content</string>
-              <string>[[[[image:Pixel_white_simple.png||alt="centre" title="centre"]]&gt;&gt;attach:Pixel_white_simple.png]]</string>
+              <string>[[[[image:File_with_ä.png||alt="centre" title="centre"]]&gt;&gt;attach:file_with_?.png]]</string>
             </entry>
             <entry>
               <string>syntax</string>
@@ -173,7 +173,7 @@ SURBVAjXY/j//z8ABf4C/tzMWecAAAAASUVORK5CYII=</content>
             </entry>
           </parameters>
         </p>
-        <wikiAttachment name="Pixel_white_simple.png" size="146">
+        <wikiAttachment name="File_with_ä.png" size="146">
           <p>
             <content>iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
 B3RJTUUH4AcBDQE7cMRBYQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAM
