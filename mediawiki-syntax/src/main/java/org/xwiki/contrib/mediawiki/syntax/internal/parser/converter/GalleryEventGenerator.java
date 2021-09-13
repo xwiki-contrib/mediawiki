@@ -34,6 +34,10 @@ public class GalleryEventGenerator extends MacroEventGenerator
     {
         String source = super.createContent(model);
 
+        if (StringUtils.isEmpty(source)) {
+            return source;
+        }
+
         // Convert to proper wiki content
         StringBuilder builder = new StringBuilder();
         BufferedReader reader = new BufferedReader(new StringReader(source));
