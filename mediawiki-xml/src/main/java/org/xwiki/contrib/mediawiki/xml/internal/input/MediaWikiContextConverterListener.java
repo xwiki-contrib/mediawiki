@@ -199,7 +199,7 @@ public class MediaWikiContextConverterListener extends WrappingListener implemen
         } catch (Exception e) {
             this.logger.error(
                 "Failed to refactor the link reference [{}] located in page with title [{}] and version [{}]",
-                this.stream.currentPageTitle, this.stream.currentPageVersion, e);
+                reference, this.stream.currentPageTitle, this.stream.currentPageVersion, e);
         }
 
         return newReference;
