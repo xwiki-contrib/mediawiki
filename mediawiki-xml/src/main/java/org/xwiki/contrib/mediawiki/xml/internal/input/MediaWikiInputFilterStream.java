@@ -158,6 +158,8 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
     String currentPageTitle;
 
+    String currentPageVersion;
+
     EntityReference previousParentReference;
 
     EntityReference currentParentReference;
@@ -591,7 +593,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
         pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_TITLE, this.currentPageTitle);
 
-        String version = "1";
+        this.currentPageVersion = "1";
 
         boolean beginWikiDocumentRevisionSent = false;
 
@@ -602,7 +604,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             String elementName = xmlReader.getLocalName();
 
             if (elementName.equals(TAG_PAGE_REVISION_VERSION)) {
-                version = xmlReader.getElementText();
+                this.currentPageVersion = xmlReader.getElementText();
             } else if (elementName.equals(TAG_PAGE_REVISION_COMMENT)) {
                 pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_REVISION_COMMENT, xmlReader.getElementText());
             } else if (elementName.equals(TAG_PAGE_REVISION_CONTENT)) {
@@ -611,7 +613,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
                 try {
                     if (this.properties.isContentEvents() && filter instanceof Listener) {
                         // Begin document revision
-                        proxyFilter.beginWikiDocumentRevision(version, pageRevisionParameters);
+                        proxyFilter.beginWikiDocumentRevision(this.currentPageVersion, pageRevisionParameters);
                         beginWikiDocumentRevisionSent = true;
 
                         MediaWikiSyntaxInputProperties parserProperties = createMediaWikiSyntaxInputProperties(content);
@@ -641,8 +643,8 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
                         pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_SYNTAX, MediaWikiStreamParser.SYNTAX);
                     }
                 } catch (Exception e) {
-                    this.logger.error("Failed to converter content located in page with title [" + this.currentPageTitle
-                        + "] and version [" + version + "]", e);
+                    this.logger.error("Failed to converter content located in page with title [{}] and version [{}]",
+                        this.currentPageTitle, this.currentPageVersion, e);
                 }
             } else if (elementName.equals(TAG_PAGE_REVISION_MINOR)) {
                 pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_REVISION_MINOR, true);
@@ -663,7 +665,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         }
 
         if (!beginWikiDocumentRevisionSent) {
-            proxyFilter.beginWikiDocumentRevision(version, pageRevisionParameters);
+            proxyFilter.beginWikiDocumentRevision(this.currentPageVersion, pageRevisionParameters);
         }
 
         // It might be a page dedicated to a file
@@ -691,7 +693,10 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         // Reset files
         this.currentFiles = null;
 
-        proxyFilter.endWikiDocumentRevision(version, pageRevisionParameters);
+        proxyFilter.endWikiDocumentRevision(this.currentPageVersion, pageRevisionParameters);
+
+        // Reset version
+        this.currentPageVersion = null;
     }
 
     private String convertToXWiki21(String content) throws FilterException

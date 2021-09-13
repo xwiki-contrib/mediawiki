@@ -28,6 +28,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
@@ -82,6 +83,9 @@ public class MediaWikiContextConverterListener extends WrappingListener implemen
 
     @Inject
     private ComponentManager componentManager;
+
+    @Inject
+    private Logger logger;
 
     private MediaWikiInputFilterStream stream;
 
@@ -174,22 +178,28 @@ public class MediaWikiContextConverterListener extends WrappingListener implemen
     {
         ResourceReference newReference = reference;
 
-        EntityReference entityReference = this.stream.toEntityReference(reference.getReference(), true);
-        if (entityReference != null) {
-            if (entityReference.getType() == EntityType.ATTACHMENT) {
-                newReference = new AttachmentResourceReference(entityReference.getName());
-            } else {
-                if (this.stream.currentPageReference.equals(entityReference)) {
-                    newReference = new DocumentResourceReference("");
-                    newReference.setTyped(false);
+        try {
+            EntityReference entityReference = this.stream.toEntityReference(reference.getReference(), true);
+            if (entityReference != null) {
+                if (entityReference.getType() == EntityType.ATTACHMENT) {
+                    newReference = new AttachmentResourceReference(entityReference.getName());
                 } else {
-                    newReference = new DocumentResourceReference(compact(entityReference));
+                    if (this.stream.currentPageReference.equals(entityReference)) {
+                        newReference = new DocumentResourceReference("");
+                        newReference.setTyped(false);
+                    } else {
+                        newReference = new DocumentResourceReference(compact(entityReference));
+                    }
+                    newReference.setParameters(reference.getParameters());
+                    ((DocumentResourceReference) newReference).setAnchor(reference.getAnchor());
+                    ((DocumentResourceReference) newReference).setQueryString(reference.getQueryString());
+                    newReference.setTyped(false);
                 }
-                newReference.setParameters(reference.getParameters());
-                ((DocumentResourceReference) newReference).setAnchor(reference.getAnchor());
-                ((DocumentResourceReference) newReference).setQueryString(reference.getQueryString());
-                newReference.setTyped(false);
             }
+        } catch (Exception e) {
+            this.logger.error(
+                "Failed to refactor the link reference [{}] located in page with title [{}] and version [{}]",
+                this.stream.currentPageTitle, this.stream.currentPageVersion, e);
         }
 
         return newReference;
