@@ -701,6 +701,11 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
     private String convertToXWiki21(String content) throws FilterException
     {
+        if (this.properties.isVerbose()) {
+            this.logger.info("Parsing content located in page with title [{}] and version [{}]", this.currentPageTitle,
+                this.currentPageVersion);
+        }
+
         DefaultWikiPrinter printer = new DefaultWikiPrinter();
         PrintRenderer renderer = this.xwiki21Factory.createRenderer(printer);
 
