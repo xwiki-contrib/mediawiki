@@ -53,6 +53,7 @@ http://127.0.0.1/mediawiki/index.php/Space/Page
 [[Main_Page]]
 [[couldn%E2%80%99t]]
 [[page with unescaped % character]]
+[[Löten außer Äöü test]]
       </text>
       <model>wikitext</model>
       <format>text/x-wiki</format>

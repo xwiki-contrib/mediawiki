@@ -264,7 +264,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
     private String decodeLinkReference(String mediaWikiReference)
     {
-        byte[] bytes = mediaWikiReference.getBytes(StandardCharsets.US_ASCII);
+        byte[] bytes = mediaWikiReference.getBytes(StandardCharsets.UTF_8);
         final ByteArrayOutputStream buffer = new ByteArrayOutputStream(bytes.length);
         for (int i = 0; i < bytes.length; ++i) {
             byte b = bytes[i];
