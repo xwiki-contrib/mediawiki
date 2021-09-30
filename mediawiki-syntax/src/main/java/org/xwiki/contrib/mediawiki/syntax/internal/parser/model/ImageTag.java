@@ -60,8 +60,21 @@ public class ImageTag extends TagNode
 
         this.imageFormat = imageFormat;
 
-        addAttribute("alt", this.imageFormat.getCaption(), false);
-        addAttribute("title", this.imageFormat.getCaption(), false);
+        String alt = this.imageFormat.getAlt();
+        if (alt == null) {
+            alt = this.imageFormat.getCaption();
+        }
+        if (alt != null) {
+            addAttribute("alt", alt, false);
+        }
+
+        if (this.imageFormat.getCaption() != null) {
+            addAttribute("title", this.imageFormat.getCaption(), false);
+        }
+
+        if (this.imageFormat.getLocation() != null && !this.imageFormat.getLocation().equals("none")) {
+            addAttribute("style", "float:" + this.imageFormat.getLocation(), false);
+        }
     }
 
     /**
