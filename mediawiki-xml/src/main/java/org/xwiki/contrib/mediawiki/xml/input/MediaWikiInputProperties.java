@@ -63,7 +63,7 @@ public class MediaWikiInputProperties extends XMLInputProperties
     private EntityReference fileSpace;
 
     /**
-     * @see #getFileAttachmed()
+     * @see #isFileAttached()
      */
     private boolean fileAttached = true;
 
