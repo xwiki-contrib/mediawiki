@@ -28,7 +28,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -39,8 +38,6 @@ import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.filter.FilterException;
 import org.xwiki.filter.input.BeanInputFilterStream;
-import org.xwiki.filter.input.BeanInputFilterStreamFactory;
-import org.xwiki.filter.input.InputFilterStreamFactory;
 import org.xwiki.rendering.listener.WrappingListener;
 import org.xwiki.rendering.listener.reference.AttachmentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
@@ -61,10 +58,6 @@ public class FileCatcherListener extends WrappingListener
     private static final String PX_SUFFIX = "px";
 
     private static final Pattern PXSIZE = Pattern.compile("(\\d+)" + PX_SUFFIX);
-
-    @Inject
-    @Named(MediaWikiSyntaxInputProperties.FILTER_STREAM_TYPE_STRING)
-    private InputFilterStreamFactory parserFactory;
 
     @Inject
     private Logger logger;
@@ -161,7 +154,7 @@ public class FileCatcherListener extends WrappingListener
 
             // Generate events
             try (BeanInputFilterStream<MediaWikiSyntaxInputProperties> contentStream =
-                ((BeanInputFilterStreamFactory) this.parserFactory).createInputFilterStream(parserProperties)) {
+                this.stream.getInputFilterStreamFactory().createInputFilterStream(parserProperties)) {
                 contentStream.read(this);
             } catch (Exception e) {
                 // TODO log something ?

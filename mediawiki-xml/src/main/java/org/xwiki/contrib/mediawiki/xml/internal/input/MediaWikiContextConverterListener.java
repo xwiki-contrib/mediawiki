@@ -27,6 +27,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
@@ -35,13 +36,11 @@ import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
+import org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser.BlikiMediaWikiStreamParser;
 import org.xwiki.contrib.mediawiki.syntax.internal.input.MediaWikiContentFilter;
-import org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiStreamParser;
 import org.xwiki.filter.FilterEventParameters;
 import org.xwiki.filter.FilterException;
 import org.xwiki.filter.input.BeanInputFilterStream;
-import org.xwiki.filter.input.BeanInputFilterStreamFactory;
-import org.xwiki.filter.input.InputFilterStreamFactory;
 import org.xwiki.model.EntityType;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.model.reference.EntityReferenceSerializer;
@@ -75,14 +74,11 @@ public class MediaWikiContextConverterListener extends WrappingListener implemen
     private EntityReferenceSerializer<String> localSerializer;
 
     @Inject
-    @Named(MediaWikiSyntaxInputProperties.FILTER_STREAM_TYPE_STRING)
-    private InputFilterStreamFactory parserFactory;
-
-    @Inject
     private RenderingContext renderingContext;
 
     @Inject
-    private ComponentManager componentManager;
+    @Named("context")
+    private Provider<ComponentManager> componentManagerProvider;
 
     @Inject
     private Logger logger;
@@ -305,11 +301,11 @@ public class MediaWikiContextConverterListener extends WrappingListener implemen
             Listener currentListener = getWrappedListener();
 
             // Generate events
-            try (BeanInputFilterStream<MediaWikiSyntaxInputProperties> stream =
-                ((BeanInputFilterStreamFactory) this.parserFactory).createInputFilterStream(parserProperties)) {
+            try (BeanInputFilterStream<MediaWikiSyntaxInputProperties> syntaxStream =
+                this.stream.getInputFilterStreamFactory().createInputFilterStream(parserProperties)) {
                 setWrappedListener(renderer);
 
-                stream.read(this);
+                syntaxStream.read(this);
 
                 convertedContent = renderer.getPrinter().toString();
             } catch (Exception e) {
@@ -330,10 +326,10 @@ public class MediaWikiContextConverterListener extends WrappingListener implemen
             syntax = this.renderingContext.getTargetSyntax();
         }
 
-        if (syntax != null && !syntax.equals(MediaWikiStreamParser.SYNTAX)) {
+        if (syntax != null && !syntax.equals(BlikiMediaWikiStreamParser.SYNTAX)) {
             try {
                 PrintRendererFactory factory =
-                    this.componentManager.getInstance(PrintRendererFactory.class, syntax.toIdString());
+                    this.componentManagerProvider.get().getInstance(PrintRendererFactory.class, syntax.toIdString());
                 return factory.createRenderer(new DefaultWikiPrinter());
             } catch (ComponentLookupException e) {
                 return null;

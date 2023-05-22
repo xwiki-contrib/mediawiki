@@ -51,8 +51,12 @@
       <artifactId>commons-compress</artifactId>
     </dependency>
     <dependency>
-      <groupId>commons-configuration</groupId>
-      <artifactId>commons-configuration</artifactId>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-configuration2</artifactId>
     </dependency>
     <dependency>
       <groupId>org.xwiki.commons</groupId>
@@ -76,7 +80,7 @@
     </dependency>
     <dependency>
       <groupId>org.xwiki.contrib.mediawiki</groupId>
-      <artifactId>mediawiki-syntax</artifactId>
+      <artifactId>mediawiki-syntax-bliki</artifactId>
       <version>${project.version}</version>
     </dependency>
 

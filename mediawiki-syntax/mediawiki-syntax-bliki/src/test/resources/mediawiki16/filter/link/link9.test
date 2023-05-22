@@ -1,0 +1,40 @@
+.#------------------------------------------------------------------------------
+.input|mediawiki+xdom/1.6
+.configuration.referenceType=MEDIAWIKI
+.#------------------------------------------------------------------------------
+[[Media:with white space.ext]]
+.#------------------------------------------------------------------------------
+.expect|filter+xml
+.#------------------------------------------------------------------------------
+<document>
+  <p>
+    <metadata>
+      <metadata>
+        <entry>
+          <string>syntax</string>
+          <org.xwiki.rendering.syntax.Syntax>
+            <type>
+              <name>MediaWiki</name>
+              <id>mediawiki</id>
+            </type>
+            <version>1.6</version>
+          </org.xwiki.rendering.syntax.Syntax>
+        </entry>
+      </metadata>
+    </metadata>
+  </p>
+  <paragraph>
+    <link>
+      <p>
+        <reference>
+          <typed>true</typed>
+          <reference>With_white_space.ext</reference>
+          <type>
+            <scheme>attach</scheme>
+          </type>
+          <parameters/>
+        </reference>
+      </p>
+    </link>
+  </paragraph>
+</document>

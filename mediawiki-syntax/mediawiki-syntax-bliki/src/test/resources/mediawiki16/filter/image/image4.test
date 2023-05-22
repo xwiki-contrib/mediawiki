@@ -1,0 +1,52 @@
+.#------------------------------------------------------------------------------
+.input|mediawiki+xdom/1.6
+.configuration.referenceType=MEDIAWIKI
+.#------------------------------------------------------------------------------
+[[Image:image.png]]
+.#------------------------------------------------------------------------------
+.expect|filter+xml
+.#------------------------------------------------------------------------------
+<document>
+  <p>
+    <metadata>
+      <metadata>
+        <entry>
+          <string>syntax</string>
+          <org.xwiki.rendering.syntax.Syntax>
+            <type>
+              <name>MediaWiki</name>
+              <id>mediawiki</id>
+            </type>
+            <version>1.6</version>
+          </org.xwiki.rendering.syntax.Syntax>
+        </entry>
+      </metadata>
+    </metadata>
+  </p>
+  <paragraph>
+    <link>
+      <p>
+        <reference>
+          <typed>true</typed>
+          <reference>Image:image.png</reference>
+          <type>
+            <scheme>doc</scheme>
+          </type>
+          <parameters/>
+        </reference>
+      </p>
+      <image>
+        <p>
+          <reference>
+            <typed>false</typed>
+            <reference>Image.png</reference>
+            <type>
+              <scheme>attach</scheme>
+            </type>
+            <parameters/>
+          </reference>
+        </p>
+      </image>
+    </link>
+  </paragraph>
+</document>

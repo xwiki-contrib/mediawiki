@@ -1,0 +1,6 @@
+org.xwiki.contrib.mediawiki.syntax.bliki.internal.input.BlikiMediaWikiSyntaxInputFilterStream
+org.xwiki.contrib.mediawiki.syntax.bliki.internal.input.BlikiMediaWikiSyntaxInputFilterStreamFactory
+org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser.BlikiMediaWikiParser
+org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser.BlikiMediaWikiStreamParser
+org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser.converter.EventConverter
+org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser.model.EventWikiModel

@@ -26,6 +26,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
+import org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser.BlikiMediaWikiStreamParser;
 import org.xwiki.rendering.block.XDOM;
 import org.xwiki.rendering.parser.ParseException;
 import org.xwiki.rendering.parser.Parser;
@@ -42,7 +43,7 @@ import org.xwiki.rendering.syntax.Syntax;
 public class MediaWiki10OverrideParser implements Parser
 {
     @Inject
-    @Named(MediaWikiStreamParser.SYNTAX_STRING)
+    @Named(BlikiMediaWikiStreamParser.SYNTAX_STRING)
     private Parser parser;
 
     @Override

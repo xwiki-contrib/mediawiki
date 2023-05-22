@@ -48,9 +48,11 @@ import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
+import org.xwiki.component.manager.ComponentLookupException;
+import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties.ReferenceType;
-import org.xwiki.contrib.mediawiki.syntax.internal.parser.MediaWikiStreamParser;
+import org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser.BlikiMediaWikiStreamParser;
 import org.xwiki.contrib.mediawiki.xml.input.MediaWikiInputProperties;
 import org.xwiki.contrib.mediawiki.xml.internal.MediaWikiFilter;
 import org.xwiki.filter.FilterEventParameters;
@@ -132,10 +134,6 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
     private Logger logger;
 
     @Inject
-    @Named(MediaWikiSyntaxInputProperties.FILTER_STREAM_TYPE_STRING)
-    private InputFilterStreamFactory parserFactory;
-
-    @Inject
     private ModelConfiguration modelConfiguration;
 
     @Inject
@@ -147,6 +145,12 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
     @Inject
     private EntityReferenceSerializer<String> serializer;
+
+    @Inject
+    @Named("context")
+    private Provider<ComponentManager> componentManagerProvider;
+
+    private BeanInputFilterStreamFactory<MediaWikiSyntaxInputProperties> inputFilterStreamFactory;
 
     private MediaWikiNamespaces namespaces = new MediaWikiNamespaces();
 
@@ -171,6 +175,17 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
     MediaWikiInputProperties getProperties()
     {
         return this.properties;
+    }
+
+    BeanInputFilterStreamFactory<MediaWikiSyntaxInputProperties> getInputFilterStreamFactory()
+        throws ComponentLookupException
+    {
+        if (this.inputFilterStreamFactory == null) {
+            this.inputFilterStreamFactory = this.componentManagerProvider.get().getInstance(
+                InputFilterStreamFactory.class, this.properties.getSyntaxParser().getFilterType().serialize());
+        }
+
+        return this.inputFilterStreamFactory;
     }
 
     EntityReference toEntityReference(String reference, boolean link)
@@ -624,8 +639,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
                         // Generate events
                         try (BeanInputFilterStream<MediaWikiSyntaxInputProperties> stream =
-                            ((BeanInputFilterStreamFactory) this.parserFactory)
-                                .createInputFilterStream(parserProperties)) {
+                            getInputFilterStreamFactory().createInputFilterStream(parserProperties)) {
                             stream.read(listener);
                         }
 
@@ -640,7 +654,8 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
                     } else {
                         // Keep MediaWiki syntax
                         pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_CONTENT, content);
-                        pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_SYNTAX, MediaWikiStreamParser.SYNTAX);
+                        pageRevisionParameters.put(WikiDocumentFilter.PARAMETER_SYNTAX,
+                            BlikiMediaWikiStreamParser.SYNTAX);
                     }
                 } catch (Exception e) {
                     this.logger.error("Failed to converter content located in page with title [{}] and version [{}]",
@@ -717,7 +732,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
         // Generate events
         try (BeanInputFilterStream<MediaWikiSyntaxInputProperties> stream =
-            ((BeanInputFilterStreamFactory) this.parserFactory).createInputFilterStream(parserProperties)) {
+            getInputFilterStreamFactory().createInputFilterStream(parserProperties)) {
             stream.read(listener);
         } catch (Exception e) {
             throw new FilterException("Failed to convert content page", e);

@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<!--
+/*
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -18,22 +16,20 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
--->
+ */
+package org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser;
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.xwiki.contrib.mediawiki</groupId>
-    <artifactId>mediawiki</artifactId>
-    <version>1.13.6-SNAPSHOT</version>
-  </parent>
-  <artifactId>mediawiki-syntax</artifactId>
-  <packaging>pom</packaging>
-  <name>MediaWiki - Syntax</name>
-  <description>MediaWiki Syntax parsers</description>
+import org.junit.runner.RunWith;
+import org.xwiki.rendering.test.cts.CompatibilityTestSuite;
+import org.xwiki.rendering.test.cts.Syntax;
 
-  <modules>
-    <module>mediawiki-syntax-common</module>
-    <module>mediawiki-syntax-bliki</module>
-  </modules>
-</project>
+/**
+ * Run all CTS tests for the Mediawiki syntax.
+ *
+ * @version $Id: abf215a85904c40e156ea90fd124d38d93ebe09e $
+ */
+@RunWith(CompatibilityTestSuite.class)
+@Syntax("mediawiki/1.6")
+public class MediaWikiCompatibilityTest
+{
+}

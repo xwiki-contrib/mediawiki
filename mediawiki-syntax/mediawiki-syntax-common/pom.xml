@@ -24,39 +24,21 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.xwiki.contrib.mediawiki</groupId>
-    <artifactId>mediawiki</artifactId>
+    <artifactId>mediawiki-syntax</artifactId>
     <version>1.13.6-SNAPSHOT</version>
   </parent>
-  <artifactId>mediawiki-syntax10override</artifactId>
-  <name>MediaWiki - Syntax 1.0 Override</name>
-  <description>MediaWiki Syntax 1.0 parser override</description>
-  <properties>
-    <xwiki.jacoco.instructionRatio>0.38</xwiki.jacoco.instructionRatio>
-    <!-- Name to display by the Extension Manager -->
-    <xwiki.extension.name>Override of MediaWiki Syntax 1.0</xwiki.extension.name>
-
-    <!-- Replace old mediawiki syntax parser -->
-    <xwiki.extension.features>org.xwiki.rendering:xwiki-rendering-syntax-mediawiki/8.2</xwiki.extension.features>
-
-    <!-- List it as a rendering syntax related module -->
-    <xwiki.extension.category>syntax</xwiki.extension.category>
-
-    <!-- Components -->
-    <xwiki.extension.components>
-      org.xwiki.rendering.parser.Parser/mediawiki/1.0
-    </xwiki.extension.components>
-  </properties>
+  <artifactId>mediawiki-syntax-common</artifactId>
+  <name>MediaWiki - Syntax - Common</name>
+  <description>Tools common to all MediaWiki parsers</description>
   <dependencies>
     <dependency>
-      <groupId>org.xwiki.contrib.mediawiki</groupId>
-      <artifactId>mediawiki-syntax-bliki</artifactId>
-      <version>${project.version}</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>logback-classic</artifactId>
-          <groupId>ch.qos.logback</groupId>
-        </exclusion>
-      </exclusions>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-syntax-plain</artifactId>
+      <version>${rendering.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tika</groupId>
+      <artifactId>tika-core</artifactId>
     </dependency>
 
     <!-- Test Dependencies -->
@@ -70,6 +52,24 @@
       <groupId>org.xwiki.rendering</groupId>
       <artifactId>xwiki-rendering-syntax-event</artifactId>
       <version>${rendering.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-syntax-xwiki21</artifactId>
+      <version>${rendering.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.commons</groupId>
+      <artifactId>xwiki-commons-filter-test</artifactId>
+      <version>${commons.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.commons</groupId>
+      <artifactId>xwiki-commons-filter-stream-xml</artifactId>
+      <version>${commons.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

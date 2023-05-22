@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.mediawiki.syntax.internal.parser;
+package org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser;
 
 import java.io.Reader;
 
@@ -26,40 +26,41 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
-import org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser.BlikiMediaWikiStreamParser;
-import org.xwiki.rendering.listener.Listener;
+import org.xwiki.rendering.block.XDOM;
+import org.xwiki.rendering.internal.parser.XDOMGeneratorListener;
 import org.xwiki.rendering.parser.ParseException;
+import org.xwiki.rendering.parser.Parser;
 import org.xwiki.rendering.parser.StreamParser;
 import org.xwiki.rendering.syntax.Syntax;
 
 /**
- * Override of the 1.0 MediaWiki syntax parser using the 1.6 one.
+ * Bliki based MediaWiki block parser.
  *
- * @version $Id: fcd59f6c7ae81ffec64f5df3ca333eca4eaf18b3 $
+ * @version $Id: 82fb920b4209cb0616bebf0e226334e618a28144 $
  */
 @Component
-@Named(MediaWiki10OverrideStreamParser.MEDIAWIKI_1_0_STRING)
+@Named(BlikiMediaWikiStreamParser.SYNTAX_STRING)
 @Singleton
-public class MediaWiki10OverrideStreamParser implements StreamParser
+public class BlikiMediaWikiParser implements Parser
 {
     /**
-     * The String version of the syntax.
+     * Streaming Markdown Parser.
      */
-    public static final String MEDIAWIKI_1_0_STRING = "mediawiki/1.0";
-
     @Inject
     @Named(BlikiMediaWikiStreamParser.SYNTAX_STRING)
-    private StreamParser parser;
+    private StreamParser mediawikiStreamParser;
 
     @Override
     public Syntax getSyntax()
     {
-        return Syntax.MEDIAWIKI_1_0;
+        return BlikiMediaWikiStreamParser.SYNTAX;
     }
 
     @Override
-    public void parse(Reader source, Listener listener) throws ParseException
+    public XDOM parse(Reader source) throws ParseException
     {
-        this.parser.parse(source, listener);
+        XDOMGeneratorListener xdomGeneratorListener = new XDOMGeneratorListener();
+        this.mediawikiStreamParser.parse(source, xdomGeneratorListener);
+        return xdomGeneratorListener.getXDOM();
     }
 }
