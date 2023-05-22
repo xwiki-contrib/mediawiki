@@ -52,6 +52,7 @@ import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties.ReferenceType;
+import org.xwiki.contrib.mediawiki.syntax.bliki.internal.input.BlikiMediaWikiSyntaxInputFilterStreamFactory;
 import org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser.BlikiMediaWikiStreamParser;
 import org.xwiki.contrib.mediawiki.xml.input.MediaWikiInputProperties;
 import org.xwiki.contrib.mediawiki.xml.internal.MediaWikiFilter;
@@ -182,7 +183,7 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
     {
         if (this.inputFilterStreamFactory == null) {
             this.inputFilterStreamFactory = this.componentManagerProvider.get().getInstance(
-                InputFilterStreamFactory.class, this.properties.getSyntaxParser().getFilterType().serialize());
+                InputFilterStreamFactory.class, BlikiMediaWikiSyntaxInputFilterStreamFactory.FILTER_STREAM_TYPE_STRING);
         }
 
         return this.inputFilterStreamFactory;
