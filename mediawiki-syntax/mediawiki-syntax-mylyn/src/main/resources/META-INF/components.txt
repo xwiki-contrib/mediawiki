@@ -1,0 +1,5 @@
+org.xwiki.contrib.mediawiki.syntax.mylyn.internal.input.MylynMediaWikiSyntaxInputFilterStream
+org.xwiki.contrib.mediawiki.syntax.mylyn.internal.input.MylynMediaWikiSyntaxInputFilterStreamFactory
+org.xwiki.contrib.mediawiki.syntax.mylyn.internal.input.XWikiDocumentBuilder
+org.xwiki.contrib.mediawiki.syntax.mylyn.internal.parser.MylynMediaWikiParser
+org.xwiki.contrib.mediawiki.syntax.mylyn.internal.parser.MylynMediaWikiStreamParser

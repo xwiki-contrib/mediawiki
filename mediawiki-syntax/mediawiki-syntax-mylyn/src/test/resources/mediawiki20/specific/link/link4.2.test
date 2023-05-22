@@ -1,0 +1,13 @@
+.#-----------------------------------------------------
+.input|mediawiki/2.0
+.#-----------------------------------------------------
+[http://xwiki.org]
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+beginLink [Typed = [true] Type = [url] Reference = [http://xwiki.org]] [false]
+endLink [Typed = [true] Type = [url] Reference = [http://xwiki.org]] [false]
+endParagraph
+endDocument

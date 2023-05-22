@@ -1,0 +1,14 @@
+.#-----------------------------------------------------
+.input|mediawiki/2.0
+.#-----------------------------------------------------
+<tt class="classname">monospace</tt>
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+beginFormat [MONOSPACE] [[class]=[classname]]
+onWord [monospace]
+endFormat [MONOSPACE] [[class]=[classname]]
+endParagraph
+endDocument
