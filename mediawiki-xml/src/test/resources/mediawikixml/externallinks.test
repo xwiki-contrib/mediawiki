@@ -30,8 +30,8 @@
 url:Http://domain
 [[url:http://domain]]
 [[url:Http://domain]]
-[[label&gt;&gt;url:http://domain]]
-[[label&gt;&gt;url:Http://domain]]
+[[label>>url:http://domain]]
+[[label>>url:Http://domain]]
 
 </string>
               </entry>

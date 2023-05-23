@@ -21,7 +21,7 @@
             </entry>
             <entry>
               <string>revision_author</string>
-              <null></null>
+              <null/>
             </entry>
             <entry>
               <string>content</string>
@@ -67,7 +67,7 @@
                 </entry>
                 <entry>
                   <string>revision_author</string>
-                  <null></null>
+                  <null/>
                 </entry>
                 <entry>
                   <string>content</string>
@@ -107,7 +107,7 @@
                 </entry>
                 <entry>
                   <string>revision_author</string>
-                  <null></null>
+                  <null/>
                 </entry>
                 <entry>
                   <string>content</string>
@@ -150,7 +150,7 @@
               </entry>
               <entry>
                 <string>revision_author</string>
-                <null></null>
+                <null/>
               </entry>
               <entry>
                 <string>content</string>
@@ -192,7 +192,7 @@
               </entry>
               <entry>
                 <string>revision_author</string>
-                <null></null>
+                <null/>
               </entry>
               <entry>
                 <string>content</string>
@@ -235,7 +235,7 @@
                 </entry>
                 <entry>
                   <string>revision_author</string>
-                  <null></null>
+                  <null/>
                 </entry>
                 <entry>
                   <string>content</string>

@@ -50,9 +50,9 @@
               </parameters>
             </p>
             <wikiClass>
-              <wikiClassProperty name="location" type="String"></wikiClassProperty>
+              <wikiClassProperty name="location" type="String"/>
             </wikiClass>
-            <wikiObjectProperty name="location" value="Main.Target_Page"></wikiObjectProperty>
+            <wikiObjectProperty name="location" value="Main.Target_Page"/>
           </wikiObject>
         </wikiDocumentRevision>
       </wikiDocumentLocale>
