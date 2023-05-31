@@ -1,0 +1,14 @@
+.#-----------------------------------------------------
+.input|mediawiki/1.6
+.#-----------------------------------------------------
+[https://myhost.com/some/path(10)/file.ext Label]
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+beginLink [Typed = [true] Type = [url] Reference = [https://myhost.com/some/path(10)/file.ext]] [false]
+onWord [Label]
+endLink [Typed = [true] Type = [url] Reference = [https://myhost.com/some/path(10)/file.ext]] [false]
+endParagraph
+endDocument
