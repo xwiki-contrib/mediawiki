@@ -117,7 +117,8 @@
               </entry>
               <entry>
                 <string>content</string>
-                <string>this page has only one underscore in the title[[[[image:MW-Import.File.A_red_dot\.png@A_red_dot.png||alt="." title="."]]&gt;&gt;MW-Import.File.A_red_dot\.png]]</string>
+                <string>this page has only one underscore in the title 
+[[[[image:MW-Import.File.A_red_dot\.png@A_red_dot.png||alt="." title="."]]&gt;&gt;MW-Import.File.A_red_dot\.png]]</string>
               </entry>
               <entry>
                 <string>syntax</string>

@@ -23,10 +23,6 @@ import org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser.model.LinkTag;
 
 public class LinkEventGenerator extends AbstractEventGenerator<LinkTag>
 {
-    public LinkEventGenerator()
-    {
-    }
-
     @Override
     public void begin()
     {

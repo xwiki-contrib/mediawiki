@@ -20,8 +20,10 @@
 package org.xwiki.contrib.mediawiki.syntax.bliki.internal.input;
 
 import org.junit.runner.RunWith;
+import org.xwiki.extension.repository.CoreExtensionRepository;
 import org.xwiki.filter.test.integration.FilterTestSuite;
 import org.xwiki.test.annotation.AllComponents;
+import org.xwiki.test.mockito.MockitoComponentManager;
 
 /**
  * Run all tests found in the classpath. These {@code *.test} files must follow the conventions described in
@@ -31,7 +33,12 @@ import org.xwiki.test.annotation.AllComponents;
  */
 @RunWith(FilterTestSuite.class)
 @AllComponents
-@FilterTestSuite.Scope(value = "mediawiki16/filter"/*, pattern = "notoc1.test"*/)
+@FilterTestSuite.Scope(value = "mediawiki16/filter"/*, pattern = "figure1.test"*/)
 public class IntegrationTests
 {
+    @FilterTestSuite.Initialized
+    public void initialize(MockitoComponentManager componentManager) throws Exception
+    {
+        componentManager.registerMockComponent(CoreExtensionRepository.class);
+    }
 }

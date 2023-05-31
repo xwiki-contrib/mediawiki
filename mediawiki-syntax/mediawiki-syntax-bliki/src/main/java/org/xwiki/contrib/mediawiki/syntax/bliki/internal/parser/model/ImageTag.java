@@ -36,45 +36,46 @@ public class ImageTag extends TagNode
      */
     public static final String NAME = "xwiki.image";
 
-    private ResourceReference reference;
+    private static final String ATTRIBUTE_ALT = "alt";
 
-    private ResourceReference link;
+    private final ResourceReference reference;
 
-    private boolean freestanding;
+    private final ImageFormat imageFormat;
 
-    private ImageFormat imageFormat;
+    private final boolean freestanding;
 
     /**
      * @param reference the reference of the image
      * @param freestanding true is the image is freestanding
-     * @param link the link when clicking on the image
      * @param imageFormat the image caption and options
      */
-    public ImageTag(ResourceReference reference, boolean freestanding, ResourceReference link, ImageFormat imageFormat)
+    public ImageTag(ResourceReference reference, ImageFormat imageFormat, boolean freestanding)
     {
         super(NAME);
 
         this.reference = reference;
-        this.freestanding = freestanding;
-        this.link = link;
-
         this.imageFormat = imageFormat;
+        this.freestanding = freestanding;
 
-        String alt = this.imageFormat.getAlt();
-        if (alt == null) {
-            alt = this.imageFormat.getCaption();
-        }
-        if (alt != null) {
-            addAttribute("alt", alt, false);
-        }
-
-        if (this.imageFormat.getCaption() != null) {
-            addAttribute("title", this.imageFormat.getCaption(), false);
+        if (this.imageFormat.getAlt() != null) {
+            addAttribute(ATTRIBUTE_ALT, this.imageFormat.getAlt(), false);
+        } else if (this.imageFormat.getCaption() != null) {
+            addAttribute(ATTRIBUTE_ALT, this.imageFormat.getCaption(), false);
         }
 
-        if (this.imageFormat.getLocation() != null && !this.imageFormat.getLocation().equals("none")) {
-            addAttribute("style", "float:" + this.imageFormat.getLocation(), false);
+        if (imageFormat.getWidthStr() != null) {
+            addAttribute("width", imageFormat.getWidthStr(), false);
         }
+
+        if (imageFormat.getHeightStr() != null) {
+            addAttribute("height", imageFormat.getHeightStr(), false);
+        }
+
+        if (this.imageFormat.getHorizontalAlign() != null && !this.imageFormat.getHorizontalAlign().equals("none")) {
+            addAttribute("style", "float:" + this.imageFormat.getHorizontalAlign(), false);
+        }
+
+        // TODO: vertical alignment
     }
 
     /**
@@ -94,24 +95,10 @@ public class ImageTag extends TagNode
     }
 
     /**
-     * @return the link
-     */
-    public ResourceReference getLink()
-    {
-        return this.link;
-    }
-
-    /**
      * @return the image caption and options
      */
     public ImageFormat getImageFormat()
     {
         return this.imageFormat;
-    }
-
-    @Override
-    public boolean isReduceTokenStack()
-    {
-        return false;
     }
 }

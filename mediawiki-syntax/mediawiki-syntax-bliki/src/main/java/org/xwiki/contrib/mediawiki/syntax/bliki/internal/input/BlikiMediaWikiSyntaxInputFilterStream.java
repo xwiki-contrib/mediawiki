@@ -87,11 +87,11 @@ public class BlikiMediaWikiSyntaxInputFilterStream
 
         Listener listener = (Listener) filter;
 
-        SectionGeneratorListener wrappingLisrener = new SectionGeneratorListener(listener);
+        SectionGeneratorListener wrappingListener = new SectionGeneratorListener(listener);
 
         // Create custom converter
         EventConverter converter = this.converterProvider.get();
-        converter.init(wrappingLisrener, this.properties);
+        converter.init(wrappingListener, this.properties);
 
         EventWikiModel wikiModel = this.modelProvider.get();
         wikiModel.init(this.properties);
@@ -99,7 +99,7 @@ public class BlikiMediaWikiSyntaxInputFilterStream
         MetaData metaData = new MetaData();
         metaData.addMetaData(MetaData.SYNTAX, BlikiMediaWikiStreamParser.SYNTAX);
 
-        wrappingLisrener.beginDocument(metaData);
+        wrappingListener.beginDocument(metaData);
 
         try {
             // Parse
@@ -116,6 +116,6 @@ public class BlikiMediaWikiSyntaxInputFilterStream
             proxyFilter.onRedirect(wikiModel.getRedirectLink(), FilterEventParameters.EMPTY);
         }
 
-        wrappingLisrener.endDocument(metaData);
+        wrappingListener.endDocument(metaData);
     }
 }

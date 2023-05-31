@@ -32,13 +32,21 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.tika.Tika;
 import org.apache.tika.mime.MediaType;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
+import org.xwiki.component.manager.ComponentLookupException;
+import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
+import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties.FigureSupport;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties.ReferenceType;
+import org.xwiki.extension.CoreExtension;
+import org.xwiki.extension.repository.CoreExtensionRepository;
+import org.xwiki.extension.version.VersionConstraint;
+import org.xwiki.extension.version.internal.DefaultVersionConstraint;
 import org.xwiki.rendering.listener.reference.AttachmentResourceReference;
 import org.xwiki.rendering.listener.reference.DocumentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
@@ -69,6 +77,10 @@ import info.bliki.wiki.tags.PTag;
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
 public class EventWikiModel extends WikiModel
 {
+    // Proper figure serialization is supported only since 14.1 in XWiki syntax
+    // TODO: remove when upgrading the mediawiki parser to an XWiki 14.1RC1+ version
+    private static final VersionConstraint FIGURE_SUPPORT = new DefaultVersionConstraint("[14.1-rc-1,)");
+
     private static final Set<String> FORMATTED_NODE_NAMES =
         new HashSet<>(Arrays.asList("table", "tr", "ul", "ol", "tbody", "tfoot", "thead"));
 
@@ -171,16 +183,18 @@ public class EventWikiModel extends WikiModel
 
     private boolean nopipe;
 
-    /**
-     * @see #getImageReferenceParser()
-     */
     @Inject
     @Named("default/image")
     private ResourceReferenceParser imageReferenceParser;
 
+    @Inject
+    private ComponentManager componentManager;
+
     private final Tokens tokens = new Tokens();
 
     private MediaWikiSyntaxInputProperties properties;
+
+    private FigureSupport defaultFigureSupport;
 
     /**
      * Default constructor.
@@ -254,6 +268,7 @@ public class EventWikiModel extends WikiModel
     public void init(MediaWikiSyntaxInputProperties properties)
     {
         this.properties = properties;
+        this.defaultFigureSupport = getDefaultCaptionSupport();
 
         // Set custom namespaces
         if (this.properties.getCustomNamespaces() != null) {
@@ -268,6 +283,29 @@ public class EventWikiModel extends WikiModel
                 }
             }
         }
+    }
+
+    private FigureSupport getDefaultCaptionSupport()
+    {
+        if (this.componentManager.hasComponent(CoreExtensionRepository.class)) {
+            try {
+                // Proper figure serialization is supported only since 14.1 in XWiki syntax
+                // TODO: remove when upgrading the mediawiki parser to an XWiki 14.1RC1+ version
+                CoreExtensionRepository coreExtensionRepository =
+                    this.componentManager.getInstance(CoreExtensionRepository.class);
+
+                CoreExtension coreExtension =
+                    coreExtensionRepository.getCoreExtension("org.xwiki.rendering:xwiki-rendering-api");
+                if (coreExtension != null && FIGURE_SUPPORT.isCompatible(coreExtension.getId().getVersion())) {
+                    return FigureSupport.FIGURE;
+                }
+            } catch (ComponentLookupException e) {
+                this.logger.warn("Failed to lookup the Core Extension Repository ({}),"
+                    + " disabling FIGURE support for images by default", ExceptionUtils.getRootCauseMessage(e));
+            }
+        }
+
+        return FigureSupport.DIV;
     }
 
     @Override
@@ -395,18 +433,66 @@ public class EventWikiModel extends WikiModel
                 }
             }
 
-            // Create tag
-            ImageTag imageTag = new ImageTag(reference, false, link, imageFormat);
-
-            if (imageFormat.getWidthStr() != null) {
-                imageTag.addAttribute("width", imageFormat.getWidthStr(), false);
+            FigureSupport figureSupport = null;
+            if (ImageFormat.TYPES_STANDALONE.contains(imageFormat.getType())) {
+                // It's a framed image so it's should be a figure according to MediaWiki specification
+                // Checking if figure support is enabled
+                figureSupport = properties.getFigureSupport() == FigureSupport.DEFAULT ? this.defaultFigureSupport
+                    : properties.getFigureSupport();
             }
 
-            if (imageFormat.getHeightStr() != null) {
-                imageTag.addAttribute("height", imageFormat.getHeightStr(), false);
+            // Begin figure
+            if (figureSupport == FigureSupport.FIGURE) {
+                pushNode(new TagNode("figure"));
+            } else if (figureSupport == FigureSupport.DIV) {
+                TagNode node = new TagNode("div");
+                node.addAttribute("class", "thumbinner", false);
+                pushNode(node);
+            }
+
+            // Begin link
+            if (link != null) {
+                pushNode(new LinkTag(link, false));
+            }
+
+            // Image
+            ImageTag imageTag = new ImageTag(reference, imageFormat, false);
+
+            if (figureSupport == null && imageFormat.getCaption() != null) {
+                // If the image is not framed, pass the caption as image title
+                imageTag.addAttribute("title", imageFormat.getCaption(), false);
             }
 
             append(imageTag);
+
+            // End link
+            if (link != null) {
+                popNode();
+            }
+
+            if (figureSupport == FigureSupport.FIGURE) {
+                // Caption
+                pushNode(new TagNode("figurecaption"));
+                if (StringUtils.isNotEmpty(imageFormat.getCaption())) {
+                    WikipediaPreTagParser.parseRecursive(imageFormat.getCaption(), this, false, true);
+                }
+                popNode();
+
+                // End figure
+                popNode();
+            } else if (figureSupport == FigureSupport.DIV) {
+                // Caption
+                TagNode node = new TagNode("div");
+                node.addAttribute("class", "thumbcaption", false);
+                pushNode(node);
+                if (StringUtils.isNotEmpty(imageFormat.getCaption())) {
+                    WikipediaPreTagParser.parseRecursive(imageFormat.getCaption(), this, false, true);
+                }
+                popNode();
+
+                // End figure
+                popNode();
+            }
         } else {
             AttachmentResourceReference reference =
                 new AttachmentResourceReference(cleanReference(imageFormat.getFilename()));
@@ -466,11 +552,12 @@ public class EventWikiModel extends WikiModel
 
         LinkTag linkTag = new LinkTag(reference, withoutSquareBrackets);
 
+        // Append tag
+        pushNode(linkTag);
         if (!withoutSquareBrackets && !StringUtils.equals(link, linkName)) {
-            linkTag.addChild(new ContentToken(linkName));
+            WikipediaPreTagParser.parseRecursive(linkName, this, false, true);
         }
-
-        append(linkTag);
+        popNode();
     }
 
     boolean isInline()

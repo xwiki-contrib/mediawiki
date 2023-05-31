@@ -1,14 +1,19 @@
 .#------------------------------------------------------------------------------
 .input|mediawiki/1.6
 .#------------------------------------------------------------------------------
-[[File:image.png|right|top|frameless|50x60px]]
+[[File:image.png|frame|'''bold''']]
 .#------------------------------------------------------------------------------
 .expect|event/1.0
 .#------------------------------------------------------------------------------
 beginDocument
-beginParagraph
+beginGroup [[class]=[thumbinner]]
 beginLink [Typed = [false] Type = [url] Reference = [File:image.png]] [false]
-onImage [Typed = [false] Type = [url] Reference = [image.png]] [false] [[height]=[60px][style]=[float:right][width]=[50px]]
+onImage [Typed = [false] Type = [url] Reference = [image.png]] [false] [[alt]=['''bold''']]
 endLink [Typed = [false] Type = [url] Reference = [File:image.png]] [false]
-endParagraph
+beginGroup [[class]=[thumbcaption]]
+beginFormat [BOLD]
+onWord [bold]
+endFormat [BOLD]
+endGroup [[class]=[thumbcaption]]
+endGroup [[class]=[thumbinner]]
 endDocument

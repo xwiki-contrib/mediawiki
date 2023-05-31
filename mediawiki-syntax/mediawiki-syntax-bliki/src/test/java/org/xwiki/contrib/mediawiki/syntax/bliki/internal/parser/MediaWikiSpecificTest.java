@@ -20,7 +20,10 @@
 package org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser;
 
 import org.junit.runner.RunWith;
+import org.xwiki.extension.repository.CoreExtensionRepository;
 import org.xwiki.rendering.test.integration.RenderingTestSuite;
+import org.xwiki.test.annotation.AllComponents;
+import org.xwiki.test.mockito.MockitoComponentManager;
 
 /**
  * Run all specific tests found in {@code *.test} files located in the classpath. These {@code *.test} files must follow
@@ -29,7 +32,13 @@ import org.xwiki.rendering.test.integration.RenderingTestSuite;
  * @version $Id: 75488eb22c370f55a3e6bd9b38ec599be157b515 $
  */
 @RunWith(RenderingTestSuite.class)
-@RenderingTestSuite.Scope(value = "mediawiki16.specific"/*, pattern = "table1.test"*/)
+@AllComponents
+@RenderingTestSuite.Scope(value = "mediawiki16.specific"/*, pattern = "link13.test"*/)
 public class MediaWikiSpecificTest
 {
+    @RenderingTestSuite.Initialized
+    public void initialize(MockitoComponentManager componentManager) throws Exception
+    {
+        componentManager.registerMockComponent(CoreExtensionRepository.class);
+    }
 }

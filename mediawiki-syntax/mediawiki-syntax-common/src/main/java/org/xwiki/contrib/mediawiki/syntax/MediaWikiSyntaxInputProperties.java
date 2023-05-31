@@ -59,6 +59,33 @@ public class MediaWikiSyntaxInputProperties extends DefaultFilterStreamPropertie
     }
 
     /**
+     * How to handle image caption.
+     * 
+     * @version $Id$
+     * @since 2.0.0
+     */
+    public enum FigureSupport
+    {
+        /**
+         * The default behavior (FIGURE or IMAGE depending on the version of XWiki).
+         */
+        // TODO: remove when moving to XWiki 14.1+
+        DEFAULT,
+
+        /**
+         * Force produce native figure events in case an image have a caption. This is the default for XWiki runtime
+         * 14.1 and more.
+         */
+        FIGURE,
+
+        /**
+         * Force produce group events mimicking the structure of a figure. This is the default for XWiki runtime lower
+         * than 14.1.
+         */
+        DIV
+    }
+
+    /**
      * @see #getSource()
      */
     private InputSource source;
@@ -79,6 +106,9 @@ public class MediaWikiSyntaxInputProperties extends DefaultFilterStreamPropertie
     private boolean noToc;
 
     private String templateMacroPrefix = "";
+
+    // TODO: change the default to FIGURE when when moving to XWiki 14.1+
+    private FigureSupport figureSupport = FigureSupport.DEFAULT;
 
     /**
      * @return The source to load the wiki from
@@ -175,5 +205,27 @@ public class MediaWikiSyntaxInputProperties extends DefaultFilterStreamPropertie
     public void setTemplateMacroPrefix(String templateMacroPrefix)
     {
         this.templateMacroPrefix = templateMacroPrefix;
+    }
+
+    /**
+     * @return Indicate what to do when a figure is supposed to be generated according to MediaWiki specifications
+     * @since 2.0.0
+     */
+    @PropertyName("Framed image/figure caption support")
+    @PropertyDescription(
+        "Indicate what to do when a figure is supposed to be generated according to MediaWiki specifications.")
+    public FigureSupport getFigureSupport()
+    {
+        return this.figureSupport;
+    }
+
+    /**
+     * @param figureSupport indicate what to do when a figure is supposed to be generated according to MediaWiki
+     *            specifications
+     * @since 2.0.0
+     */
+    public void setImageCaptionSupport(FigureSupport figureSupport)
+    {
+        this.figureSupport = figureSupport;
     }
 }

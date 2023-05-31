@@ -1,0 +1,18 @@
+.#-----------------------------------------------------
+.input|mediawiki/1.6
+.#-----------------------------------------------------
+[http://xwiki.org '''bold label''']
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+beginLink [Typed = [true] Type = [url] Reference = [http://xwiki.org]] [false]
+beginFormat [BOLD]
+onWord [bold]
+onSpace
+onWord [label]
+endFormat [BOLD]
+endLink [Typed = [true] Type = [url] Reference = [http://xwiki.org]] [false]
+endParagraph
+endDocument

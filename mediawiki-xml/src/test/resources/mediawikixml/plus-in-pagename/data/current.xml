@@ -82,7 +82,7 @@
       <model>wikitext</model>
       <format>text/x-wiki</format>
       <text xml:space="preserve" bytes="78">this page has only one underscore in the title 
-[[File:A red dot.png|thumb|.]]</text>
+[[File:A red dot.png|.]]</text>
     </revision>
   </page>
   <page>
