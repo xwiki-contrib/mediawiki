@@ -283,6 +283,8 @@ public class EventWikiModel extends WikiModel
                 }
             }
         }
+
+        setForceFramedImage(this.properties.isForceFramedCaption());
     }
 
     private FigureSupport getDefaultCaptionSupport()
@@ -434,11 +436,12 @@ public class EventWikiModel extends WikiModel
             }
 
             FigureSupport figureSupport = null;
-            if (ImageFormat.TYPES_STANDALONE.contains(imageFormat.getType())) {
+            if (this.properties.isForceFramedCaption()
+                || ImageFormat.TYPES_STANDALONE.contains(imageFormat.getType())) {
                 // It's a framed image so it's should be a figure according to MediaWiki specification
                 // Checking if figure support is enabled
-                figureSupport = properties.getFigureSupport() == FigureSupport.DEFAULT ? this.defaultFigureSupport
-                    : properties.getFigureSupport();
+                figureSupport = this.properties.getFigureSupport() == FigureSupport.DEFAULT ? this.defaultFigureSupport
+                    : this.properties.getFigureSupport();
             }
 
             // Begin figure

@@ -110,6 +110,8 @@ public class MediaWikiSyntaxInputProperties extends DefaultFilterStreamPropertie
     // TODO: change the default to FIGURE when when moving to XWiki 14.1+
     private FigureSupport figureSupport = FigureSupport.DEFAULT;
 
+    private boolean forceFramedCaption;
+
     /**
      * @return The source to load the wiki from
      */
@@ -212,8 +214,7 @@ public class MediaWikiSyntaxInputProperties extends DefaultFilterStreamPropertie
      * @since 2.0.0
      */
     @PropertyName("Framed image/figure caption support")
-    @PropertyDescription(
-        "Indicate what to do when a figure is supposed to be generated according to MediaWiki specifications.")
+    @PropertyDescription("Indicate what to do when a figure is supposed to be generated according to MediaWiki specifications.")
     public FigureSupport getFigureSupport()
     {
         return this.figureSupport;
@@ -227,5 +228,25 @@ public class MediaWikiSyntaxInputProperties extends DefaultFilterStreamPropertie
     public void setImageCaptionSupport(FigureSupport figureSupport)
     {
         this.figureSupport = figureSupport;
+    }
+
+    /**
+     * @return indicate if the caption should always be forced below the image
+     * @since 2.0.0
+     */
+    @PropertyName("Force framed caption")
+    @PropertyDescription("Indicate if the caption should always be forced below the image.")
+    public boolean isForceFramedCaption()
+    {
+        return this.forceFramedCaption;
+    }
+
+    /**
+     * @param forceFramedCaption indicate if the caption should always be forced below the image
+     * @since 2.0.0
+     */
+    public void setForceFramedCaption(boolean forceFramedCaption)
+    {
+        this.forceFramedCaption = forceFramedCaption;
     }
 }

@@ -596,6 +596,9 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         // Set toc mode
         parserProperties.setNoToc(this.properties.isNoToc());
 
+        // Set force framed image caption
+        parserProperties.setForceFramedCaption(this.properties.isForceFramedCaption());
+
         return parserProperties;
     }
 

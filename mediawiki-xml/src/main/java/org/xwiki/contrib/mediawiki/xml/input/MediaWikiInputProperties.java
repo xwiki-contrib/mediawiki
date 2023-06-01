@@ -107,6 +107,8 @@ public class MediaWikiInputProperties extends XMLInputProperties
      */
     private String forbiddenCharacters;
 
+    private boolean forceFramedCaption;
+
     /**
      * @return the folder or package containing files
      */
@@ -339,5 +341,25 @@ public class MediaWikiInputProperties extends XMLInputProperties
     public void setForbiddenCharacters(String forbiddenCharacters)
     {
         this.forbiddenCharacters = forbiddenCharacters;
+    }
+
+    /**
+     * @return indicate if the caption should always be forced below the image
+     * @since 2.0.0
+     */
+    @PropertyName("Force framed caption")
+    @PropertyDescription("Indicate if the caption should always be forced below the image.")
+    public boolean isForceFramedCaption()
+    {
+        return this.forceFramedCaption;
+    }
+
+    /**
+     * @param forceFramedCaption indicate if the caption should always be forced below the image
+     * @since 2.0.0
+     */
+    public void setForceFramedCaption(boolean forceFramedCaption)
+    {
+        this.forceFramedCaption = forceFramedCaption;
     }
 }

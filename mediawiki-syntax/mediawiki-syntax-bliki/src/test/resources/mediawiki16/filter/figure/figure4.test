@@ -1,0 +1,62 @@
+.#------------------------------------------------------------------------------
+.input|mediawiki+xdom/1.6
+.configuration.imageCaptionSupport=FIGURE
+.configuration.forceFramedCaption=true
+.#------------------------------------------------------------------------------
+[[File:image.png|caption]]
+.#------------------------------------------------------------------------------
+.expect|filter+xml
+.#------------------------------------------------------------------------------
+<document>
+  <p>
+    <metadata>
+      <metadata>
+        <entry>
+          <string>syntax</string>
+          <org.xwiki.rendering.syntax.Syntax>
+            <type>
+              <name>MediaWiki</name>
+              <id>mediawiki</id>
+            </type>
+            <version>1.6</version>
+          </org.xwiki.rendering.syntax.Syntax>
+        </entry>
+      </metadata>
+    </metadata>
+  </p>
+  <figure parameters="">
+    <link>
+      <p>
+        <reference>
+          <typed>false</typed>
+          <reference>File:image.png</reference>
+          <type>
+            <scheme>url</scheme>
+          </type>
+          <parameters/>
+        </reference>
+      </p>
+      <image>
+        <p>
+          <reference>
+            <typed>false</typed>
+            <reference>image.png</reference>
+            <type>
+              <scheme>url</scheme>
+            </type>
+            <parameters/>
+          </reference>
+          <parameters>
+            <entry>
+              <string>alt</string>
+              <string>caption</string>
+            </entry>
+          </parameters>
+        </p>
+      </image>
+    </link>
+    <figureCaption parameters="">
+      <word>caption</word>
+    </figureCaption>
+  </figure>
+</document>
