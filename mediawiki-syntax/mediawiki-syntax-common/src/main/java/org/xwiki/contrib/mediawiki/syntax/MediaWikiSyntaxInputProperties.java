@@ -214,7 +214,8 @@ public class MediaWikiSyntaxInputProperties extends DefaultFilterStreamPropertie
      * @since 2.0.0
      */
     @PropertyName("Framed image/figure caption support")
-    @PropertyDescription("Indicate what to do when a figure is supposed to be generated according to MediaWiki specifications.")
+    @PropertyDescription("Indicate what to do when a figure is supposed to be generated according to"
+        + " MediaWiki specifications.")
     public FigureSupport getFigureSupport()
     {
         return this.figureSupport;
