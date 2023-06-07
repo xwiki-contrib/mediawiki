@@ -57,7 +57,7 @@
     <dependency>
       <groupId>info.bliki.wiki</groupId>
       <artifactId>bliki-core</artifactId>
-      <version>3.1.1-SNAPSHOT</version>
+      <version>3.2.0-xwiki</version>
     </dependency>
     <dependency>
       <groupId>org.xwiki.rendering</groupId>
