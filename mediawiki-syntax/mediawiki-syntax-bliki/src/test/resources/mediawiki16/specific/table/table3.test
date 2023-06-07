@@ -1,0 +1,35 @@
+.#-----------------------------------------------------
+.input|mediawiki/1.6
+.#-----------------------------------------------------
+{|
+|+
+caption
+!col1
+!col2
+|-
+|cell11
+|cell12
+|}
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginGroup
+beginGroup
+onNewLine
+onWord [caption]
+endGroup
+beginTable
+beginTableRow
+endTableRow
+beginTableRow
+beginTableCell
+onWord [cell11]
+endTableCell
+beginTableCell
+onWord [cell12]
+endTableCell
+endTableRow
+endTable
+endGroup
+endDocument

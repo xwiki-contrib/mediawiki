@@ -33,7 +33,7 @@ import org.xwiki.test.mockito.MockitoComponentManager;
  */
 @RunWith(RenderingTestSuite.class)
 @AllComponents
-@RenderingTestSuite.Scope(value = "mediawiki16.specific"/*, pattern = "link13.test"*/)
+@RenderingTestSuite.Scope(value = "mediawiki16.specific"/*, pattern = "table3.test"*/)
 public class MediaWikiSpecificTest
 {
     @RenderingTestSuite.Initialized

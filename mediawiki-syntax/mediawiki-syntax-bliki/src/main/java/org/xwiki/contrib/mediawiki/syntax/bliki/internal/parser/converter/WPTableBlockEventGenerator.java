@@ -21,7 +21,6 @@ package org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser.converter;
 
 import java.util.Map;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.filter.FilterException;
 import org.xwiki.rendering.listener.Listener;
@@ -33,13 +32,27 @@ import info.bliki.wiki.model.IWikiModel;
 
 public class WPTableBlockEventGenerator extends AbstractEventGenerator<WPTable>
 {
-    public WPTableBlockEventGenerator()
-    {
-    }
-
     @Override
     public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
     {
+        // Caption
+        // Since there is no support for table caption in XWiki Rendering we have to hack it some other way
+        // TODO: modify when https://jira.xwiki.org/browse/XRENDERING-269 is implemented
+        boolean caption = false;
+        if (this.token.getRowsSize() > 0) {
+            WPRow firstRow = this.token.get(0);
+            if (firstRow.getNumColumns() > 0 && firstRow.getType() == WPCell.CAPTION) {
+                caption = true;
+
+                getListener().beginGroup(Listener.EMPTY_PARAMETERS);
+
+                getListener().beginGroup(Listener.EMPTY_PARAMETERS);
+                this.converter.traverse(firstRow.get(0).getTagStack(), model);
+                getListener().endGroup(Listener.EMPTY_PARAMETERS);
+            }
+        }
+
+        // Table
         getListener().beginTable(this.token.getAttributes());
 
         for (int i = 0; i < this.token.getRowsSize(); ++i) {
@@ -47,16 +60,23 @@ public class WPTableBlockEventGenerator extends AbstractEventGenerator<WPTable>
         }
 
         getListener().endTable(this.token.getAttributes());
+
+        if (caption) {
+            getListener().endGroup(Listener.EMPTY_PARAMETERS);
+        }
     }
 
     private void traverse(WPRow row, IWikiModel model) throws FilterException
     {
-        Map<String, String> attributes = getWPRowParameters(row);
+        Map<String, String> attributes = row.getAttributes();
 
         getListener().beginTableRow(attributes);
 
         for (int i = 0; i < row.getNumColumns(); ++i) {
-            traverse(row.get(i), model);
+            if (row.getType() != WPCell.CAPTION) {
+                // Ignored because it's handled before the table
+                traverse(row.get(i), model);
+            }
         }
 
         getListener().endTableRow(attributes);
@@ -68,10 +88,6 @@ public class WPTableBlockEventGenerator extends AbstractEventGenerator<WPTable>
             cell.getNodeAttributes() != null ? cell.getNodeAttributes() : Listener.EMPTY_PARAMETERS;
 
         switch (cell.getType()) {
-            case WPCell.CAPTION:
-                // TODO: add support for table caption in Rendering API
-                break;
-
             case WPCell.TH:
                 getListener().beginTableHeadCell(attributes);
                 this.converter.traverse(cell.getTagStack(), model);
@@ -84,19 +100,5 @@ public class WPTableBlockEventGenerator extends AbstractEventGenerator<WPTable>
                 getListener().endTableCell(attributes);
                 break;
         }
-    }
-
-    private Map<String, String> getWPRowParameters(WPRow row)
-    {
-        Map<String, String> parameters = null;
-        try {
-            // FIXME: getrid of this hack when
-            // https://bitbucket.org/axelclk/info.bliki.wiki/pull-requests/3/allow-accessing-wprow-attributes is applied
-            parameters = (Map<String, String>) FieldUtils.readDeclaredField(row, "fAttributes", true);
-        } catch (Exception e) {
-            return Listener.EMPTY_PARAMETERS;
-        }
-
-        return parameters != null ? parameters : Listener.EMPTY_PARAMETERS;
     }
 }
