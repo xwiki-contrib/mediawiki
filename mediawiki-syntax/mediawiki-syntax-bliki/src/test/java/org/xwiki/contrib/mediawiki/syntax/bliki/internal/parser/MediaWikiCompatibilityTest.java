@@ -20,12 +20,9 @@
 package org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser;
 
 import org.junit.runner.RunWith;
-import org.xwiki.extension.repository.CoreExtensionRepository;
 import org.xwiki.rendering.test.cts.CompatibilityTestSuite;
-import org.xwiki.rendering.test.cts.Initialized;
 import org.xwiki.rendering.test.cts.Syntax;
 import org.xwiki.test.annotation.AllComponents;
-import org.xwiki.test.mockito.MockitoComponentManager;
 
 /**
  * Run all CTS tests for the Mediawiki syntax.
@@ -37,9 +34,4 @@ import org.xwiki.test.mockito.MockitoComponentManager;
 @Syntax("mediawiki/1.6")
 public class MediaWikiCompatibilityTest
 {
-    @Initialized
-    public void initialize(MockitoComponentManager componentManager) throws Exception
-    {
-        componentManager.registerMockComponent(CoreExtensionRepository.class);
-    }
 }

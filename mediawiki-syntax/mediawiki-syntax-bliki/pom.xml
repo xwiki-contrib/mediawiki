@@ -64,14 +64,6 @@
       <artifactId>xwiki-rendering-syntax-plain</artifactId>
       <version>${rendering.version}</version>
     </dependency>
-    <!-- Used to check the version of a dependency -->
-    <dependency>
-      <groupId>org.xwiki.commons</groupId>
-      <artifactId>xwiki-commons-extension-api</artifactId>
-      <version>${commons.version}</version>
-      <!-- Make it optional it case this parser is used outside of a running XWiki instance -->
-      <optional>true</optional>
-    </dependency>
 
     <!-- Test Dependencies -->
     <dependency>

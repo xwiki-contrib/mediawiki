@@ -67,12 +67,6 @@ public class MediaWikiSyntaxInputProperties extends DefaultFilterStreamPropertie
     public enum FigureSupport
     {
         /**
-         * The default behavior (FIGURE or IMAGE depending on the version of XWiki).
-         */
-        // TODO: remove when moving to XWiki 14.1+
-        DEFAULT,
-
-        /**
          * Force produce native figure events in case an image have a caption. This is the default for XWiki runtime
          * 14.1 and more.
          */
@@ -107,8 +101,9 @@ public class MediaWikiSyntaxInputProperties extends DefaultFilterStreamPropertie
 
     private String templateMacroPrefix = "";
 
-    // TODO: change the default to FIGURE when when moving to XWiki 14.1+
-    private FigureSupport figureSupport = FigureSupport.DEFAULT;
+    // TODO: change the default to FIGURE when when moving to a version of XWiki will full support for image figure with
+    // link around it
+    private FigureSupport figureSupport = FigureSupport.DIV;
 
     private boolean forceFramedCaption;
 
