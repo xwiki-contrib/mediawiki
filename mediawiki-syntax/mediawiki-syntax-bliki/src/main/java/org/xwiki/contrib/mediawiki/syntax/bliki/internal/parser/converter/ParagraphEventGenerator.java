@@ -44,7 +44,7 @@ public class ParagraphEventGenerator extends AbstractEventGenerator<TagNode>
     {
         // FIXME: hack to workaround
         // https://bitbucket.org/axelclk/info.bliki.wiki/issues/32/standalone-generate-an-empty-ptag-followed
-        if (!((TagNode) this.token).getChildren().isEmpty()) {
+        if (!this.token.getChildren().isEmpty()) {
             super.traverse(model, properties);
         }
     }
