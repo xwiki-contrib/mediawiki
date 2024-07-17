@@ -20,11 +20,15 @@
 package org.xwiki.contrib.mediawiki.syntax;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
+import org.xwiki.contrib.mediawiki.MediaWikiNamespace;
+import org.xwiki.contrib.mediawiki.MediaWikiNamespaces;
 import org.xwiki.filter.DefaultFilterStreamProperties;
 import org.xwiki.filter.input.InputSource;
 import org.xwiki.properties.annotation.PropertyDescription;
+import org.xwiki.properties.annotation.PropertyHidden;
 import org.xwiki.properties.annotation.PropertyMandatory;
 import org.xwiki.properties.annotation.PropertyName;
 
@@ -95,6 +99,11 @@ public class MediaWikiSyntaxInputProperties extends DefaultFilterStreamPropertie
     private Map<Integer, Collection<String>> customNamespaces;
 
     /**
+     * @see #getMediaWikiNamespaces()
+     */
+    private final MediaWikiNamespaces namespaces;
+
+    /**
      * @see #isNoToc()
      */
     private boolean noToc;
@@ -106,6 +115,22 @@ public class MediaWikiSyntaxInputProperties extends DefaultFilterStreamPropertie
     private FigureSupport figureSupport = FigureSupport.DIV;
 
     private boolean forceFramedCaption;
+
+    /**
+     * The default constructor.
+     */
+    public MediaWikiSyntaxInputProperties()
+    {
+        this(new MediaWikiNamespaces());
+    }
+
+    /**
+     * @param namespaces the namespaces
+     */
+    public MediaWikiSyntaxInputProperties(MediaWikiNamespaces namespaces)
+    {
+        this.namespaces = namespaces;
+    }
 
     /**
      * @return The source to load the wiki from
@@ -145,23 +170,44 @@ public class MediaWikiSyntaxInputProperties extends DefaultFilterStreamPropertie
     }
 
     /**
+     * @return the namespaces
+     * @since 2.1.0
+     */
+    public MediaWikiNamespaces getMediaWikiNamespaces()
+    {
+        return this.namespaces;
+    }
+
+    /**
      * @return the custom namespaces
      * @since 1.8
+     * @deprecated use {@link #getMediaWikiNamespaces()} instead
      */
+    @Deprecated
+    @PropertyHidden
     @PropertyName("Custom namespace")
     @PropertyDescription("Allows customizing the namespaces (usually to translate them)")
     public Map<Integer, Collection<String>> getCustomNamespaces()
     {
+        if (this.customNamespaces == null) {
+            this.customNamespaces = new HashMap<>();
+            for (Map.Entry<Integer, MediaWikiNamespace> entry : this.namespaces.getNamespaces().entrySet()) {
+                this.customNamespaces.put(entry.getKey(), entry.getValue().getNames());
+            }
+        }
+
         return this.customNamespaces;
     }
 
     /**
      * @param namespaces the custom namespaces
      * @since 1.8
+     * @deprecated
      */
+    @Deprecated
     public void setCustomNamespaces(Map<Integer, Collection<String>> namespaces)
     {
-        this.customNamespaces = namespaces;
+        // Not supported anymore
     }
 
     /**

@@ -50,6 +50,7 @@ import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
+import org.xwiki.contrib.mediawiki.MediaWikiNamespaces;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties.ReferenceType;
 import org.xwiki.contrib.mediawiki.syntax.bliki.internal.input.BlikiMediaWikiSyntaxInputFilterStreamFactory;
@@ -433,7 +434,10 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             String elementName = xmlReader.getLocalName();
 
             if (elementName.equals(TAG_SITEINFO_NAMESPACE)) {
-                this.namespaces.addNamespace(xmlReader.getAttributeValue(null, "key"), xmlReader.getElementText());
+                String key = xmlReader.getAttributeValue(null, "key");
+                String caseValue = xmlReader.getAttributeValue(null, "case");
+
+                this.namespaces.addNamespace(key, xmlReader.getElementText(), caseValue);
             } else {
                 StAXUtils.skipElement(xmlReader);
             }
@@ -582,16 +586,13 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
 
     public MediaWikiSyntaxInputProperties createMediaWikiSyntaxInputProperties(String content)
     {
-        MediaWikiSyntaxInputProperties parserProperties = new MediaWikiSyntaxInputProperties();
+        MediaWikiSyntaxInputProperties parserProperties = new MediaWikiSyntaxInputProperties(this.namespaces);
 
         // Set source
         parserProperties.setSource(new StringInputSource(content));
 
         // Make sure to keep source references unchanged
         parserProperties.setReferenceType(ReferenceType.MEDIAWIKI);
-
-        // Set namespaces
-        parserProperties.setCustomNamespaces(this.namespaces.getNamespaces());
 
         // Set toc mode
         parserProperties.setNoToc(this.properties.isNoToc());
@@ -784,10 +785,10 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
                 }
 
                 // Try simple path
-                file = new File(folder, fileName);
+                File fileFallback = new File(folder, fileName);
 
-                if (file.exists() && file.isFile()) {
-                    return file;
+                if (fileFallback.exists() && fileFallback.isFile()) {
+                    return fileFallback;
                 }
 
                 this.logger.warn("Can't find file [{}]", file.getAbsolutePath());

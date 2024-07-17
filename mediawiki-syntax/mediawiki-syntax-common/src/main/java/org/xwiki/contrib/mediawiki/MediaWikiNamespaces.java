@@ -17,11 +17,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.mediawiki.xml.internal.input;
+package org.xwiki.contrib.mediawiki;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +30,7 @@ import org.apache.commons.lang3.StringUtils;
  * See https://www.mediawiki.org/wiki/Manual:Namespace for more details.
  * 
  * @version $Id$
- * @since 1.8
+ * @since 2.1.0
  */
 public class MediaWikiNamespaces
 {
@@ -66,11 +64,9 @@ public class MediaWikiNamespaces
      */
     public static final int NAMESPACE_SPECIAL_IDX = -1;
 
-    private final Map<Integer, Collection<String>> keyToNamespaces = new HashMap<>();
+    private final Map<Integer, MediaWikiNamespace> keyToNamespace = new HashMap<>();
 
-    private final Map<String, Integer> namespaceToKey = new HashMap<>();
-
-    private final Map<Integer, String> defaultNamespace = new HashMap<>();
+    private final Map<String, MediaWikiNamespace> nameToNamespace = new HashMap<>();
 
     /**
      * Default constructor.
@@ -79,47 +75,46 @@ public class MediaWikiNamespaces
     {
         // Initialize with standard namespaces.
         // See https://www.mediawiki.org/wiki/Manual:Namespace#Built-in_namespaces
-        addNamespace(0, "");
-        addNamespace(NAMESPACE_USER_IDX, NAMESPACE_USER_DEFAULT);
-        addNamespace(4, "Project");
-        addNamespace(NAMESPACE_FILE_IDX, NAMESPACE_FILE_DEFAULT);
-        addNamespace(NAMESPACE_FILE_IDX, "Image");
-        addNamespace(8, "MediaWiki");
-        addNamespace(10, "Template");
-        addNamespace(12, "Help");
-        addNamespace(14, "Category");
+        addNamespace(0, "", MediaWikiNamespace.CASE_FIRST_LETTER);
+        addNamespace(NAMESPACE_USER_IDX, NAMESPACE_USER_DEFAULT, MediaWikiNamespace.CASE_FIRST_LETTER);
+        addNamespace(4, "Project", MediaWikiNamespace.CASE_FIRST_LETTER);
+        addNamespace(NAMESPACE_FILE_IDX, NAMESPACE_FILE_DEFAULT, MediaWikiNamespace.CASE_FIRST_LETTER);
+        addNamespace(NAMESPACE_FILE_IDX, "Image", MediaWikiNamespace.CASE_FIRST_LETTER);
+        addNamespace(8, "MediaWiki", MediaWikiNamespace.CASE_FIRST_LETTER);
+        addNamespace(10, "Template", MediaWikiNamespace.CASE_FIRST_LETTER);
+        addNamespace(12, "Help", MediaWikiNamespace.CASE_FIRST_LETTER);
+        addNamespace(14, "Category", MediaWikiNamespace.CASE_FIRST_LETTER);
 
-        addNamespace(NAMESPACE_SPECIAL_IDX, NAMESPACE_SPECIAL_DEFAULT);
-        addNamespace(-2, "Media");
+        addNamespace(NAMESPACE_SPECIAL_IDX, NAMESPACE_SPECIAL_DEFAULT, MediaWikiNamespace.CASE_FIRST_LETTER);
+        addNamespace(-2, "Media", MediaWikiNamespace.CASE_FIRST_LETTER);
     }
 
     /**
      * @param key the key associated to the namespace
      * @param namespace the namespace
+     * @param caseValue the namespace case setup
      */
-    public void addNamespace(String key, String namespace)
+    public void addNamespace(String key, String namespace, String caseValue)
     {
-        addNamespace(Integer.valueOf(key), namespace);
+        addNamespace(Integer.valueOf(key), namespace, caseValue);
     }
 
     /**
      * @param key the key associated to the namespace
-     * @param namespace the namespace
+     * @param name the namespace
+     * @param caseValue the namespace case setup
      */
-    public void addNamespace(int key, String namespace)
+    public void addNamespace(int key, String name, String caseValue)
     {
-        Collection<String> namespaces = this.keyToNamespaces.get(key);
+        // Get the previous namespace
+        MediaWikiNamespace namespace =
+            this.keyToNamespace.computeIfAbsent(key, k -> new MediaWikiNamespace(name, key, caseValue));
 
-        if (namespaces == null) {
-            namespaces = new HashSet<>();
-            namespaces.add(namespace);
-            this.keyToNamespaces.put(key, namespaces);
-        }
+        // Update the previous namespace
+        namespace.update(name, caseValue);
 
-        namespaces.add(namespace);
-
-        this.namespaceToKey.put(namespace.toLowerCase(), key);
-        this.defaultNamespace.put(key, namespace);
+        // Add the new name to the mapping
+        this.nameToNamespace.put(name.toLowerCase(), namespace);
     }
 
     /**
@@ -128,23 +123,23 @@ public class MediaWikiNamespaces
      */
     public boolean isNamespace(String name)
     {
-        return this.namespaceToKey.containsKey(name.toLowerCase());
+        return this.nameToNamespace.containsKey(name.toLowerCase());
     }
 
     /**
      * @param key the namespace key
-     * @param namespace the namespace name
+     * @param name the namespace name
      * @return true if the passed namespace name is associated to the passed namespace key
      */
-    public boolean isNamespace(int key, String namespace)
+    public boolean isNamespace(int key, String name)
     {
-        if (namespace == null) {
+        if (name == null) {
             return false;
         }
 
-        Integer standardKey = this.namespaceToKey.get(namespace.toLowerCase());
+        MediaWikiNamespace namespace = this.nameToNamespace.get(name.toLowerCase());
 
-        return standardKey != null && standardKey.intValue() == key;
+        return namespace != null && namespace.getKey() != null && namespace.getKey().intValue() == key;
     }
 
     /**
@@ -157,11 +152,22 @@ public class MediaWikiNamespaces
     }
 
     /**
+     * @param name the name of the namespace
+     * @return the namespace corresponding to the passed name
+     */
+    public MediaWikiNamespace getNamespace(String name)
+    {
+        return this.nameToNamespace.get(name.toLowerCase());
+    }
+
+    /**
      * @return the default namespace used as file namespace alias
      */
     public String getFileNamespace()
     {
-        return this.defaultNamespace.get(NAMESPACE_FILE_IDX);
+        MediaWikiNamespace namespace = this.keyToNamespace.get(NAMESPACE_FILE_IDX);
+
+        return namespace != null ? namespace.getName() : null;
     }
 
     /**
@@ -170,9 +176,9 @@ public class MediaWikiNamespaces
      */
     public String resolve(String name)
     {
-        Integer key = this.namespaceToKey.get(name.toLowerCase());
-        if (key != null) {
-            return this.defaultNamespace.get(key);
+        MediaWikiNamespace namespace = this.nameToNamespace.get(name.toLowerCase());
+        if (namespace != null) {
+            return namespace.getName();
         }
 
         return name;
@@ -184,7 +190,9 @@ public class MediaWikiNamespaces
      */
     public String getDefaultNamespace(int key)
     {
-        return this.defaultNamespace.get(key);
+        MediaWikiNamespace namespace = this.keyToNamespace.get(key);
+
+        return namespace != null ? namespace.getName() : null;
     }
 
     /**
@@ -193,9 +201,9 @@ public class MediaWikiNamespaces
      */
     public String getFileName(String title)
     {
-        for (String namespace : this.keyToNamespaces.get(NAMESPACE_FILE_IDX)) {
-            if (StringUtils.startsWithIgnoreCase(title, namespace + ':')) {
-                return title.substring(namespace.length() + 1).replace(' ', '_');
+        for (String name : this.keyToNamespace.get(NAMESPACE_FILE_IDX).getNames()) {
+            if (StringUtils.startsWithIgnoreCase(title, name + ':')) {
+                return title.substring(name.length() + 1).replace(' ', '_');
             }
         }
 
@@ -223,8 +231,8 @@ public class MediaWikiNamespaces
     /**
      * @return the namespaces
      */
-    public Map<Integer, Collection<String>> getNamespaces()
+    public Map<Integer, MediaWikiNamespace> getNamespaces()
     {
-        return this.keyToNamespaces;
+        return this.keyToNamespace;
     }
 }

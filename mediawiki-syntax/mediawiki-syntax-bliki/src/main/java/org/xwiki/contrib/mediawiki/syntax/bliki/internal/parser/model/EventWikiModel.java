@@ -37,6 +37,7 @@ import org.apache.tika.mime.MediaType;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
+import org.xwiki.contrib.mediawiki.MediaWikiNamespace;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties.FigureSupport;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties.ReferenceType;
@@ -279,7 +280,17 @@ public class EventWikiModel extends WikiModel
         return super.appendRawNamespaceLinks(rawNamespaceTopic, viewableLinkDescription, containsNoPipe);
     }
 
-    private String cleanReference(String reference)
+    private String cleanReference(String namespace, String reference)
+    {
+        return cleanReference(this.properties.getMediaWikiNamespaces().getNamespace(namespace), reference);
+    }
+
+    private String cleanReference(MediaWikiNamespace namespace, String reference)
+    {
+        return cleanReference(namespace == null || namespace.isCapitalized(), reference);
+    }
+
+    private String cleanReference(boolean capitalize, String reference)
     {
         String cleanReference = reference;
 
@@ -287,8 +298,10 @@ public class EventWikiModel extends WikiModel
             // MediaWiki automatically replace white space with underscore in pages or files
             cleanReference = cleanReference.replace(' ', '_');
 
-            // MediaWiki automatically capitalize references to pages or files
-            cleanReference = StringUtils.capitalize(cleanReference);
+            if (capitalize) {
+                // MediaWiki automatically capitalize references to pages or files by default
+                cleanReference = StringUtils.capitalize(cleanReference);
+            }
         }
 
         return cleanReference;
@@ -317,8 +330,8 @@ public class EventWikiModel extends WikiModel
             if (index > 0) {
                 String namespace = topic.substring(0, index);
                 if (this.fNamespace.isNamespace(namespace, NamespaceCode.MEDIA_NAMESPACE_KEY)) {
-                    reference =
-                        new AttachmentResourceReference(cleanReference(topic.substring(namespace.length() + 1)));
+                    reference = new AttachmentResourceReference(
+                        cleanReference(namespace, topic.substring(namespace.length() + 1)));
                 }
             }
         }
@@ -328,7 +341,7 @@ public class EventWikiModel extends WikiModel
             if (this.properties.getReferenceType() == ReferenceType.XWIKI) {
                 reference = this.linkReferenceParser.parse(topic);
             } else {
-                reference = new DocumentResourceReference(cleanReference(topic));
+                reference = new DocumentResourceReference(cleanReference("", topic));
             }
 
             // Set anchor
@@ -377,7 +390,8 @@ public class EventWikiModel extends WikiModel
             if (this.properties.getReferenceType() == ReferenceType.XWIKI) {
                 reference = this.imageReferenceParser.parse(imageFormat.getFilename());
             } else {
-                reference = new AttachmentResourceReference(cleanReference(imageFormat.getFilename()));
+                reference = new AttachmentResourceReference(
+                    cleanReference(imageFormat.getNamespace(), imageFormat.getFilename()));
                 reference.setTyped(false);
             }
 
@@ -457,7 +471,7 @@ public class EventWikiModel extends WikiModel
             }
         } else {
             AttachmentResourceReference reference =
-                new AttachmentResourceReference(cleanReference(imageFormat.getFilename()));
+                new AttachmentResourceReference(cleanReference(imageFormat.getNamespace(), imageFormat.getFilename()));
             LinkTag linkTag = new LinkTag(reference, false);
 
             // Append tag

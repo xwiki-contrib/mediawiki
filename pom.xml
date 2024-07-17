@@ -54,4 +54,29 @@
     <module>mediawiki-syntax10override</module>
     <module>mediawiki-xml</module>
   </modules>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.revapi</groupId>
+        <artifactId>revapi-maven-plugin</artifactId>
+        <configuration>
+          <analysisConfiguration><![CDATA[
+            {
+              "revapi": {
+                "ignore" : [
+                  {
+                    "code": "java.annotation.added",
+                    "old": "method java.util.Map<java.lang.Integer, java.util.Collection<java.lang.String>> org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties::getCustomNamespaces()",
+                    "new": "method java.util.Map<java.lang.Integer, java.util.Collection<java.lang.String>> org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties::getCustomNamespaces()",
+                    "annotation": "@org.xwiki.properties.annotation.PropertyHidden",
+                    "justification": "No a breakage"
+                  }
+                ]
+              }
+            }
+          ]]></analysisConfiguration>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
