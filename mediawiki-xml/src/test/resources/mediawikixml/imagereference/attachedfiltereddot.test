@@ -155,7 +155,7 @@
             </entry>
             <entry>
               <string>content</string>
-              <string>[[[[image:File_with_ä.png||alt="centre" title="centre"]]&gt;&gt;attach:file_with_ä.png]]</string>
+              <string>[[[[image:File_with_ä.png||alt="centre" title="centre"]]&gt;&gt;attach:File_with_ä.png]]</string>
             </entry>
             <entry>
               <string>syntax</string>

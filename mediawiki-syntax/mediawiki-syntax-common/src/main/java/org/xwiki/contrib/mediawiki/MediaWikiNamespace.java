@@ -22,6 +22,8 @@ package org.xwiki.contrib.mediawiki;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Holds various metadata related to a MediaWiki namespace.
  * 
@@ -118,6 +120,46 @@ public class MediaWikiNamespace
     public boolean isCapitalized()
     {
         return !isCaseSensitive();
+    }
+
+    private static String normalizeMediaWikiPageName(boolean capitalize, String pageName)
+    {
+        // MediaWiki automatically replace white space with underscore in pages or files
+        String cleanReference = pageName.replace(' ', '_');
+        // ... and also reduces several underscores into a single one
+        cleanReference = cleanReference.replaceAll("_{2,}", "_");
+
+        if (capitalize) {
+            // MediaWiki automatically capitalize references to pages or files by default
+            cleanReference = StringUtils.capitalize(cleanReference);
+        }
+
+        return cleanReference;
+    }
+
+    /**
+     * Normalize a MediaWiki reference according to the namespace configuration.
+     * 
+     * @param namespace the namespace to use for normalization (if null, the reference will be capitalized by default)
+     * @param pageName the reference to normalize
+     * @return the normalized reference
+     * @since 2.1.2
+     */
+    public static String normalizeMediaWikiPageName(MediaWikiNamespace namespace, String pageName)
+    {
+        return normalizeMediaWikiPageName(namespace == null || namespace.isCapitalized(), pageName);
+    }
+
+    /**
+     * Normalize a MediaWiki reference according to the namespace configuration.
+     * 
+     * @param reference the reference to normalize
+     * @return the normalized reference
+     * @since 2.1.2
+     */
+    public String normalizeMediaWikiReference(String reference)
+    {
+        return normalizeMediaWikiPageName(isCapitalized(), reference);
     }
 
     @Override

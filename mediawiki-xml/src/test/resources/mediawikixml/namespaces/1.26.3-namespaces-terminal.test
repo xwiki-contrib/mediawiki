@@ -29,7 +29,7 @@
 [[.Space.Page]]
 [[Regular]]
 [[No_namespace:Page]]
-[[User.username]]</string>
+[[User.Username]]</string>
             </entry>
             <entry>
               <string>syntax</string>
@@ -210,7 +210,7 @@
   </wikiDocument>
 </wikiSpace>
 <wikiSpace name="User">
-  <wikiDocument name="username">
+  <wikiDocument name="Username">
     <wikiDocumentLocale>
       <wikiDocumentRevision revision="1">
         <p>

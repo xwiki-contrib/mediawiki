@@ -34,7 +34,7 @@
 [[.Space.Page]]
 [[.Space.Page]]
 [[attach:File.txt]]
-[[User.username]]
+[[User.Username]]
 [[]]
 [[.Space.Page]]
 [[]]
@@ -316,7 +316,7 @@
   </wikiSpace>
 </wikiSpace>
 <wikiSpace name="User">
-  <wikiSpace name="username">
+  <wikiSpace name="Username">
     <wikiDocument name="WebHome">
       <wikiDocumentLocale>
         <wikiDocumentRevision revision="1">

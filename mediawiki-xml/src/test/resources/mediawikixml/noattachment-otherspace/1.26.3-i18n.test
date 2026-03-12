@@ -35,8 +35,8 @@
 [[.Space.Page]]
 [[attach:filespace.File\.txt@File.txt]]
 [[attach:filespace.File\.txt@File.txt]]
-[[Utilisateur.username]]
-[[Utilisateur.username]]
+[[Utilisateur.Username]]
+[[Utilisateur.Username]]
 
 |=col1|=col2
 |cell11|cell12
@@ -313,7 +313,7 @@
   </wikiSpace>
 </wikiSpace>
 <wikiSpace name="Utilisateur">
-  <wikiSpace name="username">
+  <wikiSpace name="Username">
     <wikiDocument name="WebHome">
       <wikiDocumentLocale>
         <wikiDocumentRevision revision="1">

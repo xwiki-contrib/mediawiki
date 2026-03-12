@@ -37,7 +37,6 @@ import org.apache.tika.mime.MediaType;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
-import org.xwiki.contrib.mediawiki.MediaWikiNamespace;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties.FigureSupport;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties.ReferenceType;
@@ -282,29 +281,11 @@ public class EventWikiModel extends WikiModel
 
     private String cleanReference(String namespace, String reference)
     {
-        return cleanReference(this.properties.getMediaWikiNamespaces().getNamespace(namespace), reference);
-    }
-
-    private String cleanReference(MediaWikiNamespace namespace, String reference)
-    {
-        return cleanReference(namespace == null || namespace.isCapitalized(), reference);
-    }
-
-    private String cleanReference(boolean capitalize, String reference)
-    {
-        String cleanReference = reference;
-
         if (this.properties.getReferenceType() == ReferenceType.MEDIAWIKI) {
-            // MediaWiki automatically replace white space with underscore in pages or files
-            cleanReference = cleanReference.replace(' ', '_');
-
-            if (capitalize) {
-                // MediaWiki automatically capitalize references to pages or files by default
-                cleanReference = StringUtils.capitalize(cleanReference);
-            }
+            return this.properties.getMediaWikiNamespaces().normalizeMediaWikiPageName(namespace, reference);
         }
 
-        return cleanReference;
+        return reference;
     }
 
     private ResourceReference toResourceReference(String topic, String hashSection)

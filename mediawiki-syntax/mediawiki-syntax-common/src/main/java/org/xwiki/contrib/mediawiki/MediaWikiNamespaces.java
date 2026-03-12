@@ -157,7 +157,7 @@ public class MediaWikiNamespaces
      */
     public MediaWikiNamespace getNamespace(String name)
     {
-        return this.nameToNamespace.get(name.toLowerCase());
+        return name != null ? this.nameToNamespace.get(name.toLowerCase()) : null;
     }
 
     /**
@@ -176,7 +176,7 @@ public class MediaWikiNamespaces
      */
     public String resolve(String name)
     {
-        MediaWikiNamespace namespace = this.nameToNamespace.get(name.toLowerCase());
+        MediaWikiNamespace namespace = getNamespace(name);
         if (namespace != null) {
             return namespace.getName();
         }
@@ -234,5 +234,16 @@ public class MediaWikiNamespaces
     public Map<Integer, MediaWikiNamespace> getNamespaces()
     {
         return this.keyToNamespace;
+    }
+
+    /**
+     * @param namespace the namespace where the page is located
+     * @param pageName the page name to normalize
+     * @return the normalized page name
+     * @since 2.1.2
+     */
+    public String normalizeMediaWikiPageName(String namespace, String pageName)
+    {
+        return MediaWikiNamespace.normalizeMediaWikiPageName(getNamespace(namespace), pageName);
     }
 }

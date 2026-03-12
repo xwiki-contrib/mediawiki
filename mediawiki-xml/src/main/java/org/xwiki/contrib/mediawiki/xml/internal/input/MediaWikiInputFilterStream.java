@@ -214,10 +214,8 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
             pageName = decodeLinkReference(pageName);
         }
 
-        // MediaWiki replaces white spaces with underscores in the URL
-        pageName = pageName.replace(' ', '_');
-        // ... and also reduces several underscores into a single one
-        pageName = pageName.replaceAll("_{2,}", "_");
+        // Normalize page name according to MediaWiki rules and namespace configuration
+        pageName = this.namespaces.normalizeMediaWikiPageName(namespace, pageName);
 
         // Maybe convert MediaWiki home page name into XWiki home page name
         if (this.properties.isConvertToXWiki() && pageName.equals(this.mainPageName)) {
