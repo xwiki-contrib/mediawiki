@@ -247,7 +247,7 @@ public class EventConverter implements ITextConverter, Initializable
         try {
             traverse(nodes, model);
         } catch (FilterException e) {
-            new IOException("Failed to send event", e);
+            throw new IOException("Failed to send event", e);
         }
     }
 
