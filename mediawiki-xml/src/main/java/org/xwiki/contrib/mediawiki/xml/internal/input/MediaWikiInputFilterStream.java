@@ -598,6 +598,9 @@ public class MediaWikiInputFilterStream extends AbstractBeanInputFilterStream<Me
         // Set force framed image caption
         parserProperties.setForceFramedCaption(this.properties.isForceFramedCaption());
 
+        // Set the macro content syntax
+        parserProperties.setMacroContentSyntax(this.properties.getMacroContentSyntax());
+
         return parserProperties;
     }
 

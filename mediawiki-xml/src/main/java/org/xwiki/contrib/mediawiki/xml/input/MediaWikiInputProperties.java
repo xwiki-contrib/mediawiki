@@ -27,6 +27,7 @@ import org.xwiki.model.EntityType;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyName;
+import org.xwiki.rendering.syntax.Syntax;
 
 /**
  * MediaWiki XML input properties.
@@ -111,6 +112,11 @@ public class MediaWikiInputProperties extends XMLInputProperties
      * @see #isForceFramedCaption()
      */
     private boolean forceFramedCaption;
+
+    /**
+     * @see #getMacroContentSyntax()
+     */
+    private Syntax macroContentSyntax;
 
     /**
      * @return the folder or package containing files
@@ -364,5 +370,25 @@ public class MediaWikiInputProperties extends XMLInputProperties
     public void setForceFramedCaption(boolean forceFramedCaption)
     {
         this.forceFramedCaption = forceFramedCaption;
+    }
+
+    /**
+     * @return the syntax to use to convert rich macro content
+     * @since 2.2.0
+     */
+    @PropertyName("Macro content syntax")
+    @PropertyDescription("The syntax to use to convert rich macro content. The default is current default syntax.")
+    public Syntax getMacroContentSyntax()
+    {
+        return this.macroContentSyntax;
+    }
+
+    /**
+     * @param macroContentSyntax the syntax to use to convert rich macro content
+     * @since 2.2.0
+     */
+    public void setMacroContentSyntax(Syntax macroContentSyntax)
+    {
+        this.macroContentSyntax = macroContentSyntax;
     }
 }

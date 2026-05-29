@@ -26,6 +26,7 @@ import org.xwiki.rendering.listener.Format;
 
 import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.wiki.tags.HTMLTag;
+import org.xwiki.rendering.listener.Listener;
 
 public class FontEventGenerator extends AbstractEventGenerator<HTMLTag>
 {
@@ -61,7 +62,7 @@ public class FontEventGenerator extends AbstractEventGenerator<HTMLTag>
     }
 
     @Override
-    public void begin()
+    public void begin(Listener l, boolean inline)
     {
         StringBuilder builder = new StringBuilder();
 
@@ -93,12 +94,12 @@ public class FontEventGenerator extends AbstractEventGenerator<HTMLTag>
             this.parameters.put("style", builder.toString());
         }
 
-        getListener().beginFormat(Format.NONE, getParameters());
+        l.beginFormat(Format.NONE, getParameters());
     }
 
     @Override
-    public void end()
+    public void end(Listener l, boolean inline)
     {
-        getListener().endFormat(Format.NONE, getParameters());
+        l.endFormat(Format.NONE, getParameters());
     }
 }

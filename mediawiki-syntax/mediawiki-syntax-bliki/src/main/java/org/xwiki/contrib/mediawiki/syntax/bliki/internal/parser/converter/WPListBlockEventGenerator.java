@@ -34,6 +34,7 @@ import info.bliki.wiki.filter.WPList;
 import info.bliki.wiki.filter.WPList.InternalList;
 import info.bliki.wiki.filter.WPListElement;
 import info.bliki.wiki.model.IWikiModel;
+import org.xwiki.rendering.listener.Listener;
 
 public class WPListBlockEventGenerator extends BeginEndBlockEventGenerator<WPList>
 {
@@ -43,11 +44,11 @@ public class WPListBlockEventGenerator extends BeginEndBlockEventGenerator<WPLis
     }
 
     @Override
-    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties, boolean inline, Listener l) throws FilterException
     {
         for (Object element : this.token.getNestedElements()) {
             if (element instanceof InternalList) {
-                traverse((InternalList) element, model);
+                traverse((InternalList) element, model, inline, l);
             }
         }
     }
@@ -73,77 +74,77 @@ public class WPListBlockEventGenerator extends BeginEndBlockEventGenerator<WPLis
         return generator;
     }
 
-    private void traverse(InternalList list, IWikiModel model) throws FilterException
+    private void traverse(InternalList list, IWikiModel model, boolean inline, Listener l) throws FilterException
     {
         BeginEndBlockEventGenerator blockEvent = createListBlockEvent(list);
 
-        blockEvent.begin();
+        blockEvent.begin(l, inline);
 
-        traverseElements(list, model);
+        traverseElements(list, model, inline, l);
 
-        blockEvent.end();
+        blockEvent.end(l, inline);
     }
 
-    private void begingListElement(char c)
+    private void beginListElement(Listener l, char c)
     {
         switch (c) {
             case WPList.DL_DD_CHAR:
-                getListener().beginDefinitionDescription();
+                l.beginDefinitionDescription();
                 break;
 
             case WPList.DL_DT_CHAR:
-                getListener().beginDefinitionTerm();
+                l.beginDefinitionTerm();
                 break;
 
             default:
-                getListener().beginListItem();
+                l.beginListItem();
                 break;
         }
     }
 
-    private void endListElement(char c)
+    private void endListElement(Listener l, char c)
     {
         switch (c) {
             case WPList.DL_DD_CHAR:
-                getListener().endDefinitionDescription();
+                l.endDefinitionDescription();
                 break;
 
             case WPList.DL_DT_CHAR:
-                getListener().endDefinitionTerm();
+                l.endDefinitionTerm();
                 break;
 
             default:
-                getListener().endListItem();
+                l.endListItem();
                 break;
         }
     }
 
-    private void traverseElements(InternalList list, IWikiModel model) throws FilterException
+    private void traverseElements(InternalList list, IWikiModel model, boolean inline, Listener l) throws FilterException
     {
         boolean itemOpen = false;
 
         char currentChar = list.getChar();
 
-        begingListElement(currentChar);
+        beginListElement(l, currentChar);
 
         for (Object element : list) {
             if (element instanceof InternalList) {
-                traverse((InternalList) element, model);
+                traverse((InternalList) element, model, inline, l);
             } else if (element instanceof WPListElement) {
                 if (itemOpen) {
-                    endListElement(currentChar);
+                    endListElement(l, currentChar);
 
                     char[] temp = getSequence((WPListElement) element);
                     currentChar = temp[temp.length - 1];
 
-                    begingListElement(currentChar);
+                    beginListElement(l, currentChar);
                 }
                 itemOpen = true;
-                this.converter.traverse(((WPListElement) element).getTagStack(), model);
+                this.converter.traverse(((WPListElement) element).getTagStack(), model, inline, l);
             }
         }
 
-        endListElement(currentChar);
+        endListElement(l, currentChar);
     }
 
     // FIXME: getrid of this hack when

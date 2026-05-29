@@ -25,6 +25,7 @@ import org.xwiki.rendering.block.AbstractBlock;
 
 import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.wiki.model.IWikiModel;
+import org.xwiki.rendering.listener.Listener;
 
 public class OnBlockEventGenerator<T extends BaseToken> extends AbstractBlockEventGenerator<T>
 {
@@ -34,8 +35,8 @@ public class OnBlockEventGenerator<T extends BaseToken> extends AbstractBlockEve
     }
 
     @Override
-    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties, boolean inline, Listener l) throws FilterException
     {
-        this.block.traverse(getListener());
+        this.block.traverse(l);
     }
 }

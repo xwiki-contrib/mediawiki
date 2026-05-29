@@ -75,9 +75,22 @@ public class BlikiMediaWikiStreamParser implements StreamParser
     @Override
     public void parse(Reader source, Listener listener) throws ParseException
     {
+        parse(source, listener, false);
+    }
+
+    /**
+     * @param source the source to parse
+     * @param listener the listener to which to write the result to
+     * @param inline whether the source should be parsed to inline events
+     * @throws ParseException if something wrong happens
+     * @since 2.2.0
+     */
+    public void parse(Reader source, Listener listener, boolean inline) throws ParseException
+    {
         MediaWikiSyntaxInputProperties properties = new MediaWikiSyntaxInputProperties();
         properties.setSource(new DefaultReaderInputSource(source));
         properties.setReferenceType(ReferenceType.XWIKI);
+        properties.setInline(inline);
 
         BeanInputFilterStreamFactory<MediaWikiSyntaxInputProperties> beanFilter =
             (BeanInputFilterStreamFactory<MediaWikiSyntaxInputProperties>) this.filter;

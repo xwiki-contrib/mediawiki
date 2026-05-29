@@ -24,28 +24,33 @@ import org.xwiki.filter.FilterException;
 
 import info.bliki.htmlcleaner.TagNode;
 import info.bliki.wiki.model.IWikiModel;
+import org.xwiki.rendering.listener.Listener;
 
 public class ParagraphEventGenerator extends AbstractEventGenerator<TagNode>
 {
     @Override
-    public void begin()
+    public void begin(Listener l, boolean inline)
     {
-        getListener().beginParagraph(this.token.getAttributes());
+        if (!inline) {
+            l.beginParagraph(this.token.getAttributes());
+        }
     }
 
     @Override
-    public void end()
+    public void end(Listener l, boolean inline)
     {
-        getListener().endParagraph(this.token.getAttributes());
+        if (!inline) {
+            l.endParagraph(this.token.getAttributes());
+        }
     }
 
     @Override
-    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties, boolean inline, Listener l) throws FilterException
     {
         // FIXME: hack to workaround
         // https://bitbucket.org/axelclk/info.bliki.wiki/issues/32/standalone-generate-an-empty-ptag-followed
         if (!this.token.getChildren().isEmpty()) {
-            super.traverse(model, properties);
+            super.traverse(model, properties, inline, l);
         }
     }
 }

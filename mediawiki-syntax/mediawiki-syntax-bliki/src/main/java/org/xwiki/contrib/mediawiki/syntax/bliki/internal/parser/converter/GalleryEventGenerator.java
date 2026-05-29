@@ -26,11 +26,12 @@ import java.io.StringReader;
 import org.apache.commons.lang3.StringUtils;
 
 import info.bliki.wiki.model.IWikiModel;
+import org.xwiki.filter.FilterException;
 
 public class GalleryEventGenerator extends MacroEventGenerator
 {
     @Override
-    protected String createContent(IWikiModel model)
+    protected String createContent(IWikiModel model) throws FilterException
     {
         String source = super.createContent(model);
 

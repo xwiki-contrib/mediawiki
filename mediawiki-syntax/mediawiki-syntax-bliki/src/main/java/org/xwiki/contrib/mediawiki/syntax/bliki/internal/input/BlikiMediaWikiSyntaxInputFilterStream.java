@@ -98,7 +98,6 @@ public class BlikiMediaWikiSyntaxInputFilterStream
 
         MetaData metaData = new MetaData();
         metaData.addMetaData(MetaData.SYNTAX, BlikiMediaWikiStreamParser.SYNTAX);
-
         wrappingListener.beginDocument(metaData);
 
         try {

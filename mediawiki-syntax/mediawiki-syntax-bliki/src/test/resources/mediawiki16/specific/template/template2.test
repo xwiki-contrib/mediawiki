@@ -6,5 +6,9 @@
 .expect|event/1.0
 .#-----------------------------------------------------
 beginDocument
-onMacroStandalone [template] [2=param2] [param1]
+onMacroStandalone [template] [2=param2] [beginDocument [[syntax]=[MediaWiki 1.6]]
+beginParagraph
+onWord [param1]
+endParagraph
+endDocument [[syntax]=[MediaWiki 1.6]]]
 endDocument

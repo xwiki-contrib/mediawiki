@@ -25,6 +25,7 @@ import org.xwiki.filter.FilterException;
 import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.TagNode;
 import info.bliki.wiki.model.IWikiModel;
+import org.xwiki.rendering.listener.Listener;
 
 public class VerbatimEventGenerator extends AbstractEventGenerator<TagNode>
 {
@@ -46,8 +47,8 @@ public class VerbatimEventGenerator extends AbstractEventGenerator<TagNode>
     }
 
     @Override
-    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties, boolean inline, Listener l) throws FilterException
     {
-        getListener().onVerbatim(this.content, this.inline, this.token.getAttributes());
+        l.onVerbatim(this.content, this.inline, this.token.getAttributes());
     }
 }

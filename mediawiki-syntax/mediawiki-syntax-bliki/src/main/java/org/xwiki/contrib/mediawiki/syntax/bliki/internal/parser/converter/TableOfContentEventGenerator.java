@@ -40,10 +40,10 @@ public class TableOfContentEventGenerator extends AbstractEventGenerator<TableOf
     }
 
     @Override
-    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties, boolean inline, Listener l) throws FilterException
     {
         if (this.token.isShowToC() && (this.token.isTOCIdentifier() || !properties.isNoToc())) {
-            getListener().onMacro("toc", Listener.EMPTY_PARAMETERS, null, false);
+            l.onMacro("toc", Listener.EMPTY_PARAMETERS, null, false);
         }
     }
 }

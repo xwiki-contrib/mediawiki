@@ -38,16 +38,16 @@ public class BoldItalicEventGenerator extends AbstractEventGenerator<WPBoldItali
     }
 
     @Override
-    public void begin()
+    public void begin(Listener l, boolean inline)
     {
-        getListener().beginFormat(Format.BOLD, this.token.getAttributes());
-        getListener().beginFormat(Format.ITALIC, Listener.EMPTY_PARAMETERS);
+        l.beginFormat(Format.BOLD, this.token.getAttributes());
+        l.beginFormat(Format.ITALIC, Listener.EMPTY_PARAMETERS);
     }
 
     @Override
-    public void end()
+    public void end(Listener l, boolean inline)
     {
-        getListener().endFormat(Format.ITALIC, Listener.EMPTY_PARAMETERS);
-        getListener().endFormat(Format.BOLD, this.token.getAttributes());
+        l.endFormat(Format.ITALIC, Listener.EMPTY_PARAMETERS);
+        l.endFormat(Format.BOLD, this.token.getAttributes());
     }
 }

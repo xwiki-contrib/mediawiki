@@ -20,18 +20,19 @@
 package org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser.converter;
 
 import org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser.model.LinkTag;
+import org.xwiki.rendering.listener.Listener;
 
 public class LinkEventGenerator extends AbstractEventGenerator<LinkTag>
 {
     @Override
-    public void begin()
+    public void begin(Listener l, boolean inline)
     {
-        getListener().beginLink(this.token.getReference(), this.token.isFreestanding(), this.token.getAttributes());
+        l.beginLink(this.token.getReference(), this.token.isFreestanding(), this.token.getAttributes());
     }
 
     @Override
-    public void end()
+    public void end(Listener l, boolean inline)
     {
-        getListener().endLink(this.token.getReference(), this.token.isFreestanding(), this.token.getAttributes());
+        l.endLink(this.token.getReference(), this.token.isFreestanding(), this.token.getAttributes());
     }
 }
