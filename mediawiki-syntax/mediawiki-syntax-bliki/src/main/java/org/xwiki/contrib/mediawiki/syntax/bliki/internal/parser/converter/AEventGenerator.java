@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.xwiki.rendering.listener.Listener;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
 
@@ -75,18 +76,18 @@ public class AEventGenerator extends AbstractEventGenerator<ATag>
     }
 
     @Override
-    public void begin()
+    public void begin(Listener l, boolean inline)
     {
         if (this.reference != null) {
-            getListener().beginLink(this.reference, false, this.parameters);
+            l.beginLink(this.reference, false, this.parameters);
         }
     }
 
     @Override
-    public void end()
+    public void end(Listener l, boolean inline)
     {
         if (this.reference != null) {
-            getListener().endLink(this.reference, false, this.parameters);
+            l.endLink(this.reference, false, this.parameters);
         }
     }
 }

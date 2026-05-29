@@ -33,7 +33,7 @@ import info.bliki.wiki.model.IWikiModel;
 public class WPTableBlockEventGenerator extends AbstractEventGenerator<WPTable>
 {
     @Override
-    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties, boolean inline, Listener l) throws FilterException
     {
         // Caption
         // Since there is no support for table caption in XWiki Rendering we have to hack it some other way
@@ -44,60 +44,60 @@ public class WPTableBlockEventGenerator extends AbstractEventGenerator<WPTable>
             if (firstRow.getNumColumns() > 0 && firstRow.getType() == WPCell.CAPTION) {
                 caption = true;
 
-                getListener().beginGroup(Listener.EMPTY_PARAMETERS);
+                l.beginGroup(Listener.EMPTY_PARAMETERS);
 
-                getListener().beginGroup(Listener.EMPTY_PARAMETERS);
-                this.converter.traverse(firstRow.get(0).getTagStack(), model);
-                getListener().endGroup(Listener.EMPTY_PARAMETERS);
+                l.beginGroup(Listener.EMPTY_PARAMETERS);
+                this.converter.traverse(firstRow.get(0).getTagStack(), model, inline, l);
+                l.endGroup(Listener.EMPTY_PARAMETERS);
             }
         }
 
         // Table
-        getListener().beginTable(this.token.getAttributes());
+        l.beginTable(this.token.getAttributes());
 
         for (int i = 0; i < this.token.getRowsSize(); ++i) {
-            traverse(this.token.get(i), model);
+            traverse(this.token.get(i), model, inline, l);
         }
 
-        getListener().endTable(this.token.getAttributes());
+        l.endTable(this.token.getAttributes());
 
         if (caption) {
-            getListener().endGroup(Listener.EMPTY_PARAMETERS);
+            l.endGroup(Listener.EMPTY_PARAMETERS);
         }
     }
 
-    private void traverse(WPRow row, IWikiModel model) throws FilterException
+    private void traverse(WPRow row, IWikiModel model, boolean inline, Listener l) throws FilterException
     {
         Map<String, String> attributes = row.getAttributes();
 
-        getListener().beginTableRow(attributes);
+        l.beginTableRow(attributes);
 
         for (int i = 0; i < row.getNumColumns(); ++i) {
             if (row.getType() != WPCell.CAPTION) {
                 // Ignored because it's handled before the table
-                traverse(row.get(i), model);
+                traverse(row.get(i), model, inline, l);
             }
         }
 
-        getListener().endTableRow(attributes);
+        l.endTableRow(attributes);
     }
 
-    private void traverse(WPCell cell, IWikiModel model) throws FilterException
+    private void traverse(WPCell cell, IWikiModel model, boolean inline, Listener l) throws FilterException
     {
         Map<String, String> attributes =
             cell.getNodeAttributes() != null ? cell.getNodeAttributes() : Listener.EMPTY_PARAMETERS;
 
         switch (cell.getType()) {
             case WPCell.TH:
-                getListener().beginTableHeadCell(attributes);
-                this.converter.traverse(cell.getTagStack(), model);
-                getListener().endTableHeadCell(attributes);
+                l.beginTableHeadCell(attributes);
+                this.converter.traverse(cell.getTagStack(), model, inline, l);
+                l.endTableHeadCell(attributes);
                 break;
 
             default:
-                getListener().beginTableCell(attributes);
-                this.converter.traverse(cell.getTagStack(), model);
-                getListener().endTableCell(attributes);
+                l.beginTableCell(attributes);
+                this.converter.traverse(cell.getTagStack(), model, inline, l);
+                l.endTableCell(attributes);
                 break;
         }
     }

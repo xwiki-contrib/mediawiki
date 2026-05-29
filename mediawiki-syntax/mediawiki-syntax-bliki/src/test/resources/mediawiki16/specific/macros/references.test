@@ -19,7 +19,40 @@ onWord [pretty]
 onSpace
 onWord [big]
 onSpecialSymbol [.]
-onMacroInline [footnote] [] [E. Miller, The Sun, (New York: Academic Press, 2005), 23-5.]
+onMacroInline [footnote] [] [beginDocument
+onWord [E]
+onSpecialSymbol [.]
+onSpace
+onWord [Miller]
+onSpecialSymbol [,]
+onSpace
+beginFormat [ITALIC]
+onWord [The]
+onSpace
+onWord [Sun]
+endFormat [ITALIC]
+onSpecialSymbol [,]
+onSpace
+onSpecialSymbol [(]
+onWord [New]
+onSpace
+onWord [York]
+onSpecialSymbol [:]
+onSpace
+onWord [Academic]
+onSpace
+onWord [Press]
+onSpecialSymbol [,]
+onSpace
+onWord [2005]
+onSpecialSymbol [)]
+onSpecialSymbol [,]
+onSpace
+onWord [23]
+onSpecialSymbol [-]
+onWord [5]
+onSpecialSymbol [.]
+endDocument]
 onSpace
 onWord [The]
 onSpace
@@ -37,7 +70,48 @@ onWord [so]
 onSpace
 onWord [big]
 onSpecialSymbol [.]
-onMacroInline [footnote] [] [R. Smith, "Size of the Moon", Scientific American, 46 (April 1978): 44-6.]
+onMacroInline [footnote] [] [beginDocument
+beginFormat [ITALIC]
+onWord [R]
+onSpecialSymbol [.]
+onSpace
+onWord [Smith]
+onSpecialSymbol [,]
+onSpace
+onSpecialSymbol ["]
+onWord [Size]
+onSpace
+onWord [of]
+onSpace
+onWord [the]
+onSpace
+onWord [Moon]
+onSpecialSymbol ["]
+onSpecialSymbol [,]
+onSpace
+endFormat [ITALIC]
+onWord [Scientific]
+onSpace
+onWord [American]
+beginFormat [ITALIC]
+onSpecialSymbol [,]
+onSpace
+onWord [46]
+onSpace
+onSpecialSymbol [(]
+onWord [April]
+onSpace
+onWord [1978]
+onSpecialSymbol [)]
+onSpecialSymbol [:]
+onSpace
+onWord [44]
+onSpecialSymbol [-]
+onWord [6]
+onSpecialSymbol [.]
+endFormat [ITALIC]
+endDocument]
 endParagraph
-onMacroStandalone [putFootnotes] [] []
+onMacroStandalone [putFootnotes] [] [beginDocument
+endDocument]
 endDocument

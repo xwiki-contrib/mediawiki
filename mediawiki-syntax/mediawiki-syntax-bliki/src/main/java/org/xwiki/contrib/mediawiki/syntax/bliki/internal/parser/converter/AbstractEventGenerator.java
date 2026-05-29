@@ -58,11 +58,6 @@ public abstract class AbstractEventGenerator<T extends BaseToken> implements Eve
         return (AbstractEventGenerator) super.clone();
     }
 
-    protected Listener getListener()
-    {
-        return this.converter.getListener();
-    }
-
     public Map<String, String> getParameters()
     {
         if (this.token instanceof TagNode) {
@@ -72,26 +67,26 @@ public abstract class AbstractEventGenerator<T extends BaseToken> implements Eve
         return Listener.EMPTY_PARAMETERS;
     }
 
-    protected void begin() throws FilterException
+    protected void begin(Listener l, boolean inline) throws FilterException
     {
         // To overwrite
     }
 
-    protected void end() throws FilterException
+    protected void end(Listener l, boolean inline) throws FilterException
     {
         // To overwrite
     }
 
     @Override
-    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties, boolean inline, Listener l) throws FilterException
     {
-        begin();
+        begin(l, inline);
 
         if (this.token instanceof TagNode) {
-            this.converter.traverse(((TagNode) this.token).getChildren(), model);
+            this.converter.traverse(((TagNode) this.token).getChildren(), model, inline, l);
         }
 
-        end();
+        end(l, inline);
     }
 
     public String getAttributeKey(Map<String, String> attributes, String targetKey)

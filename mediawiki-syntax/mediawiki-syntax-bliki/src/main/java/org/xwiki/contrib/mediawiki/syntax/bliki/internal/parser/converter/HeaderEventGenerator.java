@@ -30,6 +30,7 @@ import info.bliki.htmlcleaner.TagNode;
 import info.bliki.wiki.model.Configuration;
 import info.bliki.wiki.model.IWikiModel;
 import info.bliki.wiki.tags.HTMLBlockTag;
+import org.xwiki.rendering.listener.Listener;
 
 public class HeaderEventGenerator extends AbstractEventGenerator<HTMLBlockTag>
 {
@@ -46,7 +47,7 @@ public class HeaderEventGenerator extends AbstractEventGenerator<HTMLBlockTag>
     }
 
     @Override
-    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties, boolean inline, Listener l) throws FilterException
     {
         List<Object> children = this.token.getChildren();
 
@@ -62,11 +63,11 @@ public class HeaderEventGenerator extends AbstractEventGenerator<HTMLBlockTag>
                 }
             }
 
-            getListener().beginHeader(this.level, id, this.token.getAttributes());
+            l.beginHeader(this.level, id, this.token.getAttributes());
 
-            this.converter.traverse(children, model);
+            this.converter.traverse(children, model, inline, l);
 
-            getListener().endHeader(this.level, id, this.token.getAttributes());
+            l.endHeader(this.level, id, this.token.getAttributes());
         }
     }
 }

@@ -35,9 +35,9 @@ import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
+import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.component.phase.Initializable;
-import org.xwiki.component.phase.InitializationException;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser.BlikiMediaWikiStreamParser;
 import org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser.model.GalleryXMacroTag;
@@ -63,6 +63,7 @@ import org.xwiki.rendering.listener.Format;
 import org.xwiki.rendering.listener.HeaderLevel;
 import org.xwiki.rendering.listener.InlineFilterListener;
 import org.xwiki.rendering.listener.Listener;
+import org.xwiki.rendering.listener.MetaData;
 import org.xwiki.rendering.parser.ParseException;
 import org.xwiki.rendering.parser.StreamParser;
 
@@ -92,6 +93,11 @@ import info.bliki.wiki.tags.TemplateTag;
 import info.bliki.wiki.tags.WPBoldItalicTag;
 import info.bliki.wiki.tags.util.INoBodyParsingTag;
 import info.bliki.wiki.tags.util.TagStack;
+import org.xwiki.rendering.renderer.PrintRenderer;
+import org.xwiki.rendering.renderer.PrintRendererFactory;
+import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
+import org.xwiki.rendering.syntax.Syntax;
+import org.xwiki.rendering.transformation.RenderingContext;
 
 @Component(roles = EventConverter.class)
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
@@ -112,6 +118,9 @@ public class EventConverter implements ITextConverter, Initializable
 
     @Inject
     private Logger logger;
+
+    @Inject
+    private RenderingContext renderingContext;
 
     private Listener listener;
 
@@ -232,20 +241,15 @@ public class EventConverter implements ITextConverter, Initializable
         this.properties = properties;
     }
 
-    Listener getListener()
-    {
-        return this.listener;
-    }
-
     @Override
-    public void nodesToText(List<? extends Object> nodes, Appendable resultBuffer, IWikiModel model) throws IOException
+    public void nodesToText(List<?> nodes, Appendable resultBuffer, IWikiModel model) throws IOException
     {
         // Refactor a few things
-        cleanup((List<Object>) nodes, model);
+        cleanup((List<Object>) nodes);
 
         // Produce events
         try {
-            traverse(nodes, model);
+            traverse(nodes, model, this.properties.isInline(), this.listener);
         } catch (FilterException e) {
             throw new IOException("Failed to send event", e);
         }
@@ -290,16 +294,16 @@ public class EventConverter implements ITextConverter, Initializable
         }
     }
 
-    private TagToken cleanup(TagToken token, IWikiModel model)
+    private TagToken cleanup(TagToken token)
     {
         if (token instanceof TagNode) {
-            cleanup((TagNode) token, model);
+            cleanup((TagNode) token);
         }
 
         return token;
     }
 
-    private void cleanup(TagNode node, IWikiModel model)
+    private void cleanup(TagNode node)
     {
         if (node.getParents() != null) {
             // Clean leading and trailing white spaces
@@ -308,11 +312,11 @@ public class EventConverter implements ITextConverter, Initializable
         }
     }
 
-    private void cleanup(List<Object> nodes, IWikiModel model)
+    private void cleanup(List<Object> nodes)
     {
         for (int i = 0; i < nodes.size(); ++i) {
             Object child = nodes.get(i);
-            Object cleanChild = cleanup(child, model);
+            Object cleanChild = cleanup(child);
 
             if (cleanChild != child) {
                 nodes.set(i, cleanChild);
@@ -320,21 +324,21 @@ public class EventConverter implements ITextConverter, Initializable
         }
     }
 
-    private Object cleanup(Object node, IWikiModel model)
+    private Object cleanup(Object node)
     {
         if (node instanceof BaseToken) {
-            return cleanup((BaseToken) node, model);
+            return cleanup((BaseToken) node);
         }
 
         return node;
     }
 
-    private BaseToken cleanup(BaseToken token, IWikiModel model)
+    private BaseToken cleanup(BaseToken token)
     {
         BaseToken cleanToken = token;
 
         if (token instanceof TagToken) {
-            cleanToken = cleanup((TagToken) token, model);
+            cleanToken = cleanup((TagToken) token);
         } else if (token instanceof ContentToken) {
             String content = ((ContentToken) token).getContent();
 
@@ -355,7 +359,7 @@ public class EventConverter implements ITextConverter, Initializable
         return cleanToken;
     }
 
-    void traverse(List<? extends Object> nodes, IWikiModel model) throws FilterException
+    void traverse(List<?> nodes, IWikiModel model, boolean inline, Listener l) throws FilterException
     {
         if (nodes != null && !nodes.isEmpty()) {
             try {
@@ -369,7 +373,7 @@ public class EventConverter implements ITextConverter, Initializable
                 }
 
                 for (Object child : nodes) {
-                    traverse(child, model);
+                    traverse(child, model, inline, l);
                 }
             } finally {
                 model.decrementRecursionLevel();
@@ -377,36 +381,35 @@ public class EventConverter implements ITextConverter, Initializable
         }
     }
 
-    void traverse(Object node, IWikiModel model) throws FilterException
+    void traverse(Object node, IWikiModel model, boolean inline, Listener l) throws FilterException
     {
         if (node instanceof BaseToken) {
-            traverse((BaseToken) node, model);
+            traverse((BaseToken) node, model, inline, l);
         }
     }
 
-    void traverse(TagStack tagStack, IWikiModel model) throws FilterException
+    void traverse(TagStack tagStack, IWikiModel model, boolean inline, Listener l) throws FilterException
     {
         if (tagStack != null) {
-            traverse(tagStack.getNodeList(), model);
+            traverse(tagStack.getNodeList(), model, inline, l);
         }
-
     }
 
     @Override
     public void imageNodeToText(TagNode imageTagNode, ImageFormat imageFormat, Appendable resultBuffer,
-        IWikiModel model) throws IOException
+        IWikiModel model)
     {
         // Don't care
     }
 
-    void traverse(BaseToken token, IWikiModel model) throws FilterException
+    void traverse(BaseToken token, IWikiModel model, boolean inline, Listener l) throws FilterException
     {
         if (token instanceof TagToken) {
-            traverse((TagToken) token, model);
+            traverse((TagToken) token, model, inline, l);
         } else if (token instanceof ContentToken) {
             try {
                 InlineFilterListener inlineListener = new InlineFilterListener();
-                inlineListener.setWrappedListener(this.listener);
+                inlineListener.setWrappedListener(l);
 
                 String content = ((ContentToken) token).getContent();
 
@@ -429,15 +432,15 @@ public class EventConverter implements ITextConverter, Initializable
         }
     }
 
-    private void traverse(TagToken token, IWikiModel model) throws FilterException
+    private void traverse(TagToken token, IWikiModel model, boolean inline, Listener l) throws FilterException
     {
         EventGenerator blockEvent = createEventGenerator(token);
 
         if (blockEvent != null) {
-            blockEvent.traverse(model, this.properties);
+            blockEvent.traverse(model, this.properties, inline, l);
         } else {
             if (token instanceof TagNode) {
-                traverse(((TagNode) token).getChildren(), model);
+                traverse(((TagNode) token).getChildren(), model, inline, l);
             }
         }
     }
@@ -477,5 +480,51 @@ public class EventConverter implements ITextConverter, Initializable
     public boolean renderLinks()
     {
         return true;
+    }
+
+    public PrintRenderer createPrintRenderer()
+    {
+        Syntax macroContentSyntax = this.properties.getMacroContentSyntax();
+        if (macroContentSyntax == null) {
+            macroContentSyntax = renderingContext.getTargetSyntax();
+            if (macroContentSyntax == null) {
+                return null;
+            }
+        }
+
+        PrintRendererFactory f;
+
+        try {
+            f = componentManager.getInstance(PrintRendererFactory.class, macroContentSyntax.toIdString());
+        } catch (ComponentLookupException e) {
+            logger.error("Failed to create a macro content renderer for syntax [{}], will fall back to pure text",
+                    macroContentSyntax, e);
+            return null;
+        }
+
+        return f.createRenderer(new DefaultWikiPrinter());
+    }
+
+    public String convertContent(String content, boolean inline)
+    {
+        PrintRenderer printRenderer = createPrintRenderer();
+        if (printRenderer == null) {
+            return content;
+        }
+        try {
+            if (mediaWikiParser instanceof BlikiMediaWikiStreamParser) {
+                ((BlikiMediaWikiStreamParser) mediaWikiParser).parse(new StringReader(content), printRenderer, inline);
+            } else {
+                mediaWikiParser.parse(new StringReader(content), printRenderer);
+            }
+        } catch (ParseException e) {
+            this.logger.error("Failed to convert content", e);
+            return content;
+        }
+        String converted = printRenderer.getPrinter().toString();
+        if (inline) {
+            converted = StringUtils.strip(converted, "\n");
+        }
+        return converted;
     }
 }

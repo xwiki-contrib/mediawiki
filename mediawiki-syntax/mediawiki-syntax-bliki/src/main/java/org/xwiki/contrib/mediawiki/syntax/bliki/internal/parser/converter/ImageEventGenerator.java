@@ -24,12 +24,13 @@ import org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser.model.ImageTag;
 import org.xwiki.filter.FilterException;
 
 import info.bliki.wiki.model.IWikiModel;
+import org.xwiki.rendering.listener.Listener;
 
 public class ImageEventGenerator extends AbstractEventGenerator<ImageTag>
 {
     @Override
-    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties, boolean inline, Listener l) throws FilterException
     {
-        getListener().onImage(this.token.getReference(), this.token.isFreestanding(), this.token.getAttributes());
+        l.onImage(this.token.getReference(), this.token.isFreestanding(), this.token.getAttributes());
     }
 }

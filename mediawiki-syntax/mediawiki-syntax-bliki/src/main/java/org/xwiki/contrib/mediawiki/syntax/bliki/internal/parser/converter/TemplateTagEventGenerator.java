@@ -28,6 +28,7 @@ import org.xwiki.filter.FilterException;
 import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.wiki.model.IWikiModel;
 import info.bliki.wiki.tags.TemplateTag;
+import org.xwiki.rendering.listener.Listener;
 
 /**
  * @version $Id$
@@ -49,7 +50,8 @@ public class TemplateTagEventGenerator extends AbstractEventGenerator<TemplateTa
     }
 
     @Override
-    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties, boolean inline, Listener l)
+            throws FilterException
     {
         String prefix = properties.getTemplateMacroPrefix();
 
@@ -67,6 +69,9 @@ public class TemplateTagEventGenerator extends AbstractEventGenerator<TemplateTa
             }
         }
 
-        getListener().onMacro(macroName, macroParameters, content, false);
+        if (content != null) {
+            content = this.converter.convertContent(content, inline);
+        }
+        l.onMacro(macroName, macroParameters, content, inline);
     }
 }

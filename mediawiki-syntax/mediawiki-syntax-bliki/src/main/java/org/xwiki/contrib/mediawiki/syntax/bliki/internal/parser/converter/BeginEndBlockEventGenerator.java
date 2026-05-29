@@ -22,6 +22,7 @@ package org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser.converter;
 import org.xwiki.rendering.block.AbstractBlock;
 
 import info.bliki.htmlcleaner.BaseToken;
+import org.xwiki.rendering.listener.Listener;
 
 public class BeginEndBlockEventGenerator<T extends BaseToken> extends AbstractBlockEventGenerator<T>
 {
@@ -31,14 +32,14 @@ public class BeginEndBlockEventGenerator<T extends BaseToken> extends AbstractBl
     }
 
     @Override
-    public void begin()
+    public void begin(Listener l, boolean inline)
     {
-        this.block.before(getListener());
+        this.block.before(l);
     }
 
     @Override
-    public void end()
+    public void end(Listener l, boolean inline)
     {
-        this.block.after(getListener());
+        this.block.after(l);
     }
 }

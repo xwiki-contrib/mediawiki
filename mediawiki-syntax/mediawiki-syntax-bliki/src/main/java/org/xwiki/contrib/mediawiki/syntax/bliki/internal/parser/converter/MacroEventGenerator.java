@@ -19,6 +19,7 @@
  */
 package org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser.converter;
 
+import info.bliki.wiki.tags.HTMLTag;
 import org.apache.commons.lang3.StringUtils;
 import org.xwiki.contrib.mediawiki.syntax.MediaWikiSyntaxInputProperties;
 import org.xwiki.contrib.mediawiki.syntax.bliki.internal.parser.model.XMacroTag;
@@ -27,6 +28,9 @@ import org.xwiki.filter.FilterException;
 import info.bliki.htmlcleaner.TagNode;
 import info.bliki.wiki.model.Configuration;
 import info.bliki.wiki.model.IWikiModel;
+import org.xwiki.rendering.listener.Listener;
+import org.xwiki.rendering.listener.MetaData;
+import org.xwiki.rendering.renderer.PrintRenderer;
 
 public class MacroEventGenerator extends AbstractEventGenerator<TagNode>
 {
@@ -48,6 +52,7 @@ public class MacroEventGenerator extends AbstractEventGenerator<TagNode>
     public MacroEventGenerator(String id, boolean inline)
     {
         this.id = id;
+        this.inline = inline;
     }
 
     protected String getId()
@@ -63,26 +68,43 @@ public class MacroEventGenerator extends AbstractEventGenerator<TagNode>
         return this.id;
     }
 
-    protected String createContent(IWikiModel model)
+    protected String createContent(IWikiModel model) throws FilterException
     {
         if (this.token instanceof XMacroTag) {
             return ((XMacroTag) this.token).getMacroContent();
-        } else {
+        }
+
+        PrintRenderer printRenderer = this.converter.createPrintRenderer();
+        if (printRenderer == null) {
             String content = this.token.getBodyString();
 
-            if (!isInline()) {
-                // Remove leading and trailing newline
-                content = StringUtils.removeStart(content, "\r");
-                content = StringUtils.removeStart(content, "\n");
-                content = StringUtils.removeEnd(content, "\n");
-                content = StringUtils.removeEnd(content, "\r");
-            }
+            content = maybeRemoveTrailingNewLines(content);
 
             return content;
         }
+        // The print renderer apparently doesn't like receiving events outside a document. Some stuff is missing if we
+        // don't wrap them between a "begin document" and an "end document" events
+        printRenderer.beginDocument(MetaData.EMPTY);
+        this.converter.traverse(this.token.getChildren(), model, isInline(), printRenderer);
+        printRenderer.endDocument(MetaData.EMPTY);
+        return maybeRemoveTrailingNewLines(printRenderer.getPrinter().toString());
     }
 
-    public String getContent(IWikiModel model)
+    String maybeRemoveTrailingNewLines(String s)
+    {
+        if (!isInline()) {
+            return s;
+        }
+        // Remove leading and trailing newline
+        String content = s;
+        content = StringUtils.removeStart(content, "\r");
+        content = StringUtils.removeStart(content, "\n");
+        content = StringUtils.removeEnd(content, "\n");
+        content = StringUtils.removeEnd(content, "\r");
+        return content;
+    }
+
+    public String getContent(IWikiModel model) throws FilterException
     {
         if (this.content == null) {
             this.content = createContent(model);
@@ -105,8 +127,9 @@ public class MacroEventGenerator extends AbstractEventGenerator<TagNode>
     }
 
     @Override
-    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties, boolean inline, Listener l)
+            throws FilterException
     {
-        getListener().onMacro(getId(), getParameters(), getContent(model), isInline());
+        l.onMacro(getId(), getParameters(), getContent(model), isInline());
     }
 }

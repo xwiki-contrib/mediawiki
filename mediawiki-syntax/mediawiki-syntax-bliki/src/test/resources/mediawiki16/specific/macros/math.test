@@ -11,11 +11,19 @@ Formula <math>a+b</math>
 .#-----------------------------------------------------
 beginDocument
 beginParagraph
-onMacroInline [formula] [] [a+b]
+onMacroInline [formula] [] [beginDocument
+onWord [a]
+onSpecialSymbol [+]
+onWord [b]
+endDocument]
 endParagraph
 beginParagraph
 onWord [Formula]
 onSpace
-onMacroInline [formula] [] [a+b]
+onMacroInline [formula] [] [beginDocument
+onWord [a]
+onSpecialSymbol [+]
+onWord [b]
+endDocument]
 endParagraph
 endDocument

@@ -26,6 +26,7 @@ import org.xwiki.filter.UnknownFilter;
 import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.htmlcleaner.TagNode;
 import info.bliki.htmlcleaner.TagToken;
+import org.xwiki.rendering.listener.Listener;
 
 public class UnknownEventGenerator extends AbstractEventGenerator<TagToken>
 {
@@ -55,23 +56,23 @@ public class UnknownEventGenerator extends AbstractEventGenerator<TagToken>
     }
 
     @Override
-    protected void begin() throws FilterException
+    protected void begin(Listener l, boolean inline) throws FilterException
     {
-        if (getListener() instanceof UnknownFilter) {
+        if (l instanceof UnknownFilter) {
             if (!this.on) {
-                ((UnknownFilter) getListener()).beginUnknwon(this.id, this.parameters);
+                ((UnknownFilter) l).beginUnknwon(this.id, this.parameters);
             }
         }
     }
 
     @Override
-    protected void end() throws FilterException
+    protected void end(Listener l, boolean inline) throws FilterException
     {
-        if (getListener() instanceof UnknownFilter) {
+        if (l instanceof UnknownFilter) {
             if (!this.on) {
-                ((UnknownFilter) getListener()).endUnknwon(this.id, this.parameters);
+                ((UnknownFilter) l).endUnknwon(this.id, this.parameters);
             } else {
-                ((UnknownFilter) getListener()).onUnknwon(this.id, this.parameters);
+                ((UnknownFilter) l).onUnknwon(this.id, this.parameters);
             }
         }
     }

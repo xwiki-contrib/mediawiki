@@ -1,0 +1,52 @@
+.#------------------------------------------------------------------------------
+.expect|filter+xml
+.#------------------------------------------------------------------------------
+<wikiSpace name="Main">
+  <wikiSpace name="Test_Wiki_syntax_in_macro_content">
+    <wikiDocument name="WebHome">
+      <wikiDocumentLocale>
+        <wikiDocumentRevision revision="1">
+          <p>
+            <parameters>
+              <entry>
+                <string>revision_minor</string>
+                <boolean>false</boolean>
+              </entry>
+              <entry>
+                <string>title</string>
+                <string>Test Wiki syntax in macro content</string>
+              </entry>
+              <entry>
+                <string>revision_date</string>
+                <date>2017-01-26 07:21:19.0 UTC</date>
+              </entry>
+              <entry>
+                <string>revision_author</string>
+                <string>TEST Test</string>
+              </entry>
+              <entry>
+                <string>content</string>
+                <string>Before ref{{footnote}}{{citation}}citation 1 ;{{citation}}Nested citation with link [[Abraham Lincoln]] after nested citation.{{/citation}}before end citation.{{/citation}} after citation {{lien}}Charles Samuels{{/lien}} end ref{{/footnote}} before second ref {{footnote}}« //A staged fall, used in theatrical and film comedy// » [[url:http://perdu.com]] ; « //vous êtes ici// » [[url:https://perdu.com]]{{/footnote}}.</string>
+              </entry>
+              <entry>
+                <string>syntax</string>
+                <org.xwiki.rendering.syntax.Syntax>
+                  <type>
+                    <name>XWiki</name>
+                    <id>xwiki</id>
+                  </type>
+                  <version>2.1</version>
+                </org.xwiki.rendering.syntax.Syntax>
+              </entry>
+            </parameters>
+          </p>
+        </wikiDocumentRevision>
+      </wikiDocumentLocale>
+    </wikiDocument>
+  </wikiSpace>
+</wikiSpace>
+.#------------------------------------------------------------------------------
+.input|mediawiki+xml
+.configuration.source=refcitation.xml
+.configuration.macroContentSyntax=xwiki/2.1
+.#------------------------------------------------------------------------------

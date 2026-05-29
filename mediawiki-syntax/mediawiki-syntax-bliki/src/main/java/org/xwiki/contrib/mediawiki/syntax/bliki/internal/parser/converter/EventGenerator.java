@@ -24,6 +24,7 @@ import org.xwiki.filter.FilterException;
 
 import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.wiki.model.IWikiModel;
+import org.xwiki.rendering.listener.Listener;
 
 public interface EventGenerator extends Cloneable
 {
@@ -31,7 +32,8 @@ public interface EventGenerator extends Cloneable
 
     EventGenerator clone() throws CloneNotSupportedException;
 
-    void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException;
+    void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties, boolean inline, Listener l)
+        throws FilterException;
 
     BaseToken getToken();
 }

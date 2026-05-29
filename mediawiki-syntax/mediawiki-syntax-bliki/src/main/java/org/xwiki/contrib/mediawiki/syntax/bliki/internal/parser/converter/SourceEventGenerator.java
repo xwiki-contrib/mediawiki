@@ -28,6 +28,7 @@ import org.xwiki.filter.FilterException;
 import info.bliki.htmlcleaner.BaseToken;
 import info.bliki.wiki.model.IWikiModel;
 import info.bliki.wiki.tags.SourceTag;
+import org.xwiki.rendering.listener.Listener;
 
 public class SourceEventGenerator extends AbstractEventGenerator<SourceTag>
 {
@@ -60,9 +61,9 @@ public class SourceEventGenerator extends AbstractEventGenerator<SourceTag>
     }
 
     @Override
-    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties) throws FilterException
+    public void traverse(IWikiModel model, MediaWikiSyntaxInputProperties properties, boolean inline, Listener l) throws FilterException
     {
-        getListener().onMacro("code", this.parameters, this.content, this.inline);
+        l.onMacro("code", this.parameters, this.content, this.inline);
     }
 
     @Override
