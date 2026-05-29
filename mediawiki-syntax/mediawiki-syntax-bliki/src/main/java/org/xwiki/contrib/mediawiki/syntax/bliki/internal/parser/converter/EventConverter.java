@@ -118,7 +118,7 @@ public class EventConverter implements ITextConverter, Initializable
     private MediaWikiSyntaxInputProperties properties;
 
     @Override
-    public void initialize() throws InitializationException
+    public void initialize()
     {
         this.generatorMap.put(new BrTag().getName(), new OnBlockEventGenerator<BrTag>(new NewLineBlock()));
         this.generatorMap.put(new HrTag().getName(), new OnBlockEventGenerator<HrTag>(new HorizontalLineBlock()));

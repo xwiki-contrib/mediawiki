@@ -107,6 +107,9 @@ public class MediaWikiInputProperties extends XMLInputProperties
      */
     private String forbiddenCharacters;
 
+    /**
+     * @see #isForceFramedCaption()
+     */
     private boolean forceFramedCaption;
 
     /**

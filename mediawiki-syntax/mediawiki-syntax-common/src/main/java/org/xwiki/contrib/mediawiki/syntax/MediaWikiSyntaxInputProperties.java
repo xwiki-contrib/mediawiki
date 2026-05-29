@@ -108,12 +108,21 @@ public class MediaWikiSyntaxInputProperties extends DefaultFilterStreamPropertie
      */
     private boolean noToc;
 
+    /**
+     * @see #getTemplateMacroPrefix()
+     */
     private String templateMacroPrefix = "";
 
-    // TODO: change the default to FIGURE when when moving to a version of XWiki will full support for image figure with
-    // link around it
+    /**
+     * @see #getFigureSupport()
+     * TODO: change the default to FIGURE when when moving to a version of XWiki will full support for image figures
+     * with a link around it
+     */
     private FigureSupport figureSupport = FigureSupport.DIV;
 
+    /**
+     * @see #isForceFramedCaption()
+     */
     private boolean forceFramedCaption;
 
     /**
