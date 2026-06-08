@@ -53,6 +53,7 @@
     <module>mediawiki-syntax</module>
     <module>mediawiki-syntax10override</module>
     <module>mediawiki-xml</module>
+    <module>mediawiki-xip</module>
   </modules>
   <build>
     <plugins>
