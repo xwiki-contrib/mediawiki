@@ -30,8 +30,8 @@
   <groupId>org.xwiki.contrib.mediawiki</groupId>
   <artifactId>mediawiki</artifactId>
   <version>2.2.2-SNAPSHOT</version>
-  <name>MediaWiki - Parent POM</name>
-  <description>Parent POM for MediaWiki modules</description>
+  <name>MediaWiki</name>
+  <description>Various tools to manipulate MediaWiki content in XWiki.</description>
   <packaging>pom</packaging>
   <properties>
     <xwiki.release.jira.skip>false</xwiki.release.jira.skip>
